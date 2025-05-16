@@ -1,0 +1,182 @@
+/* css/main.css */
+
+@font-face {
+    font-family: 'Sprintura Demo';
+    src: url('../Sprintura Demo.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SinkinSans-300Light';
+    src: url('../SinkinSans-300Light.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    font-family: 'Sprintura Demo', sans-serif;
+    overflow: hidden;
+    position: relative;
+}
+
+.back-arrow {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 30px;
+    display: none;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.back-arrow:hover {
+    color: #1e90ff;
+}
+
+.main-categories,
+.sub-categories {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    list-style: none;
+    text-align: center;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.main-categories li,
+.sub-categories li {
+    margin: 6px 0;
+}
+
+.main-categories li a,
+.sub-categories li a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 20px;
+    transition: color 0.3s;
+    position: relative;
+    display: inline-block;
+}
+
+.main-categories.animate li {
+    opacity: 0;
+    transform: translateX(-50px);
+    animation: slideInLeft 0.5s forwards;
+}
+
+.main-categories.animate li:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.main-categories.animate li:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.main-categories.animate li:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.main-categories.animate li:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+@keyframes slideInLeft {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.main-categories.active {
+    transform: translate(calc(-50% - 100vw), -50%);
+    opacity: 0;
+}
+
+.sub-categories.hidden {
+    transform: translate(calc(-50% + 100vw), -50%);
+    opacity: 0;
+}
+
+.sub-categories.show {
+    opacity: 1;
+}
+
+.main-categories li a:hover,
+.sub-categories li a:hover {
+    color: #1e90ff;
+}
+
+.sub-categories li a .tooltip {
+    font-family: SinkinSans-300Light, sans-serif;
+    visibility: hidden;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 8px 12px;
+    border: 1px solid #999;
+    border-radius: 8px;
+    position: absolute;
+    left: 110%;
+    text-align: left;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: normal;
+    width: 600px;
+    max-width: 600px;
+    display: inline-block;
+    z-index: 1;
+    transition: visibility 0.3s, opacity 0.3s;
+    opacity: 0;
+    font-size: 15px;
+}
+
+.sub-categories li a:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+@media (max-width: 600px) {
+    .main-categories li a,
+    .sub-categories li a {
+        font-size: 15px;
+    }
+
+    .sub-categories li a .tooltip {
+        width: auto;
+        max-width: 300px;
+        font-size: 14px;
+    }
+}
+
+/* ——— LEFT ALIGN FOR VIDEOGAME-GUIDES & APPS ONLY ——— */
+.sub-categories.left-align {
+    left: 20px;
+    transform: translateY(-50%);
+    text-align: left;
+}
+
+.sub-categories.left-align li a {
+    white-space: nowrap;
+}
+
+/* ——— LETTER HEADER STYLE ——— */
+.sub-categories li.letter {
+    font-size: 24px;
+    font-weight: bold;
+    color: #1e90ff;
+    margin: 16px 0 6px;
+    pointer-events: none;
+}
