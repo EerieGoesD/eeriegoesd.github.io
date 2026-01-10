@@ -1,7 +1,7 @@
 // js/main.js
 
 const SHEET_ID = "1F3kGkaIt-A9PIdsLiHkHbrmnRSrXlMvuaqRsZO0XtsM";
-const SHEET_NAME = "Form_Responses"; // must match the sheet tab name exactly
+const SHEET_NAME = "Web Data";
 
 document.addEventListener("DOMContentLoaded", () => {
   const backArrow = document.getElementById("back-arrow");
@@ -220,3 +220,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
