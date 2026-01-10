@@ -1,0 +1,230 @@
+<!-- privacy/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy Policy | EERIE</title>
+    <meta name="robots" content="noindex" />
+
+    <style>
+      :root {
+        --bg: #000;
+        --fg: #fff;
+        --muted: #bdbdbd;
+        --accent: #1e90ff;
+        --card: #0b0b0b;
+        --border: #222;
+      }
+
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        line-height: 1.55;
+      }
+
+      .wrap {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 28px 16px 60px;
+      }
+
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+
+      .top {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      h1 {
+        font-size: 28px;
+        margin: 0;
+        letter-spacing: 0.2px;
+      }
+
+      .meta {
+        color: var(--muted);
+        font-size: 13px;
+        white-space: nowrap;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 18px;
+        margin: 14px 0;
+      }
+
+      h2 {
+        font-size: 18px;
+        margin: 0 0 10px;
+      }
+
+      h3 {
+        font-size: 15px;
+        margin: 14px 0 8px;
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      p { margin: 8px 0; }
+      ul { margin: 8px 0 8px 18px; padding: 0; }
+      li { margin: 6px 0; }
+
+      .pill {
+        display: inline-block;
+        font-size: 12px;
+        padding: 2px 8px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        color: var(--muted);
+        margin-left: 8px;
+        vertical-align: middle;
+      }
+
+      .footer {
+        margin-top: 20px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      code {
+        background: #111;
+        border: 1px solid #1f1f1f;
+        padding: 1px 6px;
+        border-radius: 6px;
+        color: #e0e0e0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <div class="top">
+        <h1>Privacy Policy</h1>
+        <div class="meta">Last updated: 2026-01-10</div>
+      </div>
+
+      <div class="card">
+        <h2>Scope</h2>
+        <p>
+          This Privacy Policy applies to:
+        </p>
+        <ul>
+          <li>
+            All Chrome browser extensions published by <strong>EERIE</strong> (the developer/publisher), including the extension
+            <strong>Image 2 Text by EERIE</strong> / <strong>Region OCR</strong>.
+          </li>
+          <li>
+            The website <a href="https://eeriegoesd.com/" rel="noopener noreferrer">eeriegoesd.com</a>.
+          </li>
+        </ul>
+        <p>
+          If a specific extension has different behavior, it will be stated in that extension’s store listing and/or in an extension-specific section on this page.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Browser extensions</h2>
+        <p>
+          EERIE extensions are designed to run locally in your browser. Unless explicitly stated otherwise in an extension’s store listing,
+          EERIE extensions do not send your content to any external server.
+        </p>
+
+        <h3>What data extensions process</h3>
+        <ul>
+          <li>
+            <strong>Website content</strong> (only when you use the extension): some extensions may process content from the current page in order to perform their function.
+            <span class="pill">example: OCR</span>
+          </li>
+          <li>
+            <strong>User interaction</strong>: clicks needed to operate the extension (e.g., selecting an area for OCR).
+          </li>
+        </ul>
+
+        <h3>What data extensions store</h3>
+        <ul>
+          <li>
+            <strong>Local extension storage</strong> (optional, feature-dependent): some extensions may store settings or the last result locally on your device
+            using Chrome’s extension storage (e.g., <code>chrome.storage</code>) so you can see it in the popup later.
+          </li>
+        </ul>
+
+        <h3>Image 2 Text by EERIE / Region OCR (specific)</h3>
+        <ul>
+          <li>
+            When you click <strong>Select area → OCR</strong>, the extension captures the visible tab image, crops the region you select, and runs OCR locally in your browser.
+          </li>
+          <li>
+            The recognized text may be stored locally as the <strong>last OCR result</strong> so it can appear in the popup until you clear it.
+          </li>
+          <li>
+            No OCR images/text are sent to EERIE servers.
+          </li>
+        </ul>
+
+        <h3>Sharing</h3>
+        <p>
+          EERIE extensions do not sell, rent, or share user data with third parties, except if a specific extension clearly discloses a third-party integration in its store listing.
+        </p>
+
+        <h3>Retention and deletion</h3>
+        <ul>
+          <li>Stored extension data (if any) remains on your device.</li>
+          <li>You can clear stored results/settings from the extension UI (if provided) or by removing extension data in Chrome.</li>
+          <li>Uninstalling the extension removes its locally stored data.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Website (eeriegoesd.com)</h2>
+
+        <h3>Analytics</h3>
+        <p>
+          The website may use Google Analytics (via Google tag / gtag.js) to understand basic usage (e.g., page views and general interaction patterns).
+          This data is processed by Google and may use cookies or similar technologies depending on your browser settings.
+        </p>
+
+        <h3>Third-party resources</h3>
+        <p>
+          The website may load third-party resources such as fonts (e.g., Google Fonts). Your browser may connect to those providers to fetch the resources.
+        </p>
+
+        <h3>Data sharing</h3>
+        <p>
+          Website analytics data (if enabled) may be processed by Google as a service provider. EERIE does not sell personal data.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Security</h2>
+        <p>
+          For extensions, processing is intended to occur locally in your browser unless a store listing explicitly states otherwise.
+          For the website, standard hosting and third-party services may process limited technical data as described above.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Contact</h2>
+        <p>
+          For questions about this policy: <a href="https://eeriegoesd.com/" rel="noopener noreferrer">eeriegoesd.com</a>
+        </p>
+      </div>
+
+      <div class="footer">
+        This page is intended to satisfy Chrome Web Store privacy policy requirements for EERIE-published extensions and to describe website privacy practices.
+      </div>
+    </div>
+  </body>
+</html>
