@@ -1,7 +1,7 @@
 // js/main.js
 
-const SHEET_ID = "placeholder for now just for testing but ill add smth later";
-const SHEET_NAME = "Form_Responses";
+const SHEET_ID = "1F3kGkaIt-A9PIdsLiHkHbrmnRSrXlMvuaqRsZO0XtsM";
+const SHEET_NAME = "Form_Responses"; // must match the sheet tab name exactly
 
 document.addEventListener("DOMContentLoaded", () => {
   const backArrow = document.getElementById("back-arrow");
@@ -27,16 +27,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function cellValue(cell) {
     if (!cell) return "";
-    // Prefer formatted value (v may be a Date/number); fall back to v.
     if (typeof cell.f === "string") return cell.f;
     if (cell.v == null) return "";
     return String(cell.v);
   }
 
   async function fetchItemsByCategoryKey() {
-    if (!SHEET_ID || SHEET_ID === "placeholder for now just for testing but ill add smth later") {
-      throw new Error("Missing SHEET_ID");
-    }
+    if (!SHEET_ID) throw new Error("Missing SHEET_ID");
 
     const res = await fetch(gvizUrl(), { cache: "no-store" });
     if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
@@ -48,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const cols = table?.cols || [];
     const rows = table?.rows || [];
 
-    // Map column labels -> index (expects headers like: categoryKey, category, name, link, tooltip)
+    // Expected headers: categoryKey, category, name, link, tooltip
     const colIndex = new Map();
     cols.forEach((c, i) => {
       const label = (c?.label || "").trim();
