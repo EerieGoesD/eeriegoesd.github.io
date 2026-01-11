@@ -1,5 +1,3 @@
-/* css/main.css */
-
 @font-face {
   font-family: 'Sprintura Demo';
   src: url('../Sprintura Demo.otf') format('opentype');
@@ -79,24 +77,13 @@ body {
   animation: slideInLeft 0.5s forwards;
 }
 
-.main-categories.animate li:nth-child(1) {
-  animation-delay: 0.1s;
-}
-.main-categories.animate li:nth-child(2) {
-  animation-delay: 0.2s;
-}
-.main-categories.animate li:nth-child(3) {
-  animation-delay: 0.3s;
-}
-.main-categories.animate li:nth-child(4) {
-  animation-delay: 0.4s;
-}
+.main-categories.animate li:nth-child(1) { animation-delay: 0.1s; }
+.main-categories.animate li:nth-child(2) { animation-delay: 0.2s; }
+.main-categories.animate li:nth-child(3) { animation-delay: 0.3s; }
+.main-categories.animate li:nth-child(4) { animation-delay: 0.4s; }
 
 @keyframes slideInLeft {
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .main-categories.active {
@@ -118,6 +105,7 @@ body {
   color: #1e90ff;
 }
 
+/* Tooltip (kept for non-app categories only) */
 .sub-categories li a .tooltip {
   font-family: SinkinSans-300Light, sans-serif;
   visibility: hidden;
@@ -177,4 +165,111 @@ body {
   color: #1e90ff;
   margin: 16px 0 6px;
   pointer-events: none;
+}
+
+/* ==============================
+   APPS: CLICK-TO-EXPAND PANEL
+   ============================== */
+
+.sub-categories .app-item {
+  margin: 10px 0;
+}
+
+.sub-categories .app-row {
+  display: block;
+}
+
+/* App title button */
+.sub-categories .app-title {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: #fff;
+  font-size: 20px;
+  font-family: 'Sprintura Demo', sans-serif;
+  position: relative;
+  display: inline-block;
+  transition: color 0.3s;
+}
+
+.sub-categories .app-title:hover {
+  color: #1e90ff;
+}
+
+/* Expand/collapse container */
+.sub-categories .app-panel {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: max-height 0.35s ease, opacity 0.25s ease, transform 0.25s ease;
+  margin-top: 0;
+  border-left: 2px solid rgba(30, 144, 255, 0.5);
+  padding-left: 0;
+}
+
+.sub-categories .app-row.is-open .app-panel {
+  max-height: 600px;
+  opacity: 1;
+  transform: translateY(0);
+  margin-top: 10px;
+  padding-left: 14px;
+}
+
+/* Matrix-like description text */
+.sub-categories .app-desc {
+  font-family: 'Share Tech Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 14px;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.92);
+  white-space: pre-wrap;
+  text-shadow: 0 0 10px rgba(30, 144, 255, 0.18);
+}
+
+/* Text reveal effect */
+.sub-categories .app-row.is-open .app-desc {
+  animation: matrixReveal 0.45s ease-out both;
+}
+
+@keyframes matrixReveal {
+  from {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    filter: blur(1px);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    filter: blur(0);
+  }
+}
+
+.sub-categories .app-links {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Pill buttons */
+.sub-categories .pill {
+  font-family: 'Share Tech Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  color: #fff;
+  border: 1px solid rgba(30, 144, 255, 0.65);
+  padding: 6px 10px;
+  border-radius: 999px;
+  display: inline-block;
+  transition: transform 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.sub-categories .pill:hover {
+  color: #1e90ff;
+  border-color: #1e90ff;
+  transform: translateY(-1px);
 }
