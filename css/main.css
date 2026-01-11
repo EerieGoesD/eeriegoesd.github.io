@@ -160,7 +160,7 @@ body {
 
 /* ——— LETTER HEADER STYLE ——— */
 .sub-categories li.letter {
-  font-size: 24px;
+  font-size: 16px;
   font-weight: bold;
   color: #1e90ff;
   margin: 16px 0 6px;
@@ -196,6 +196,19 @@ body {
 
 .sub-categories .app-title:hover {
   color: #1e90ff;
+}
+
+/* ADD THIS (directly below the hover rule) */
+.sub-categories .app-title:hover,
+.sub-categories .app-title:active,
+.sub-categories .app-title:focus,
+.sub-categories .app-title:focus-visible {
+  color: #fff; /* closed titles stay white */
+}
+
+/* Open (expanded) title stays red */
+.sub-categories .app-row.is-open .app-title {
+  color: #bf4b60;
 }
 
 /* Expand/collapse container */
@@ -272,4 +285,78 @@ body {
   color: #1e90ff;
   border-color: #1e90ff;
   transform: translateY(-1px);
+}
+/* =========================
+   MOBILE FIXES (iPhone/Android)
+   ========================= */
+
+html {
+  text-size-adjust: 100%;
+}
+
+@supports (-webkit-touch-callout: none) {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  .sub-categories,
+  .sub-categories .app-row.is-open .app-panel {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 600px) {
+  .main-categories,
+  .sub-categories {
+    width: min(92vw, 520px);
+    max-width: 92vw;
+  }
+
+  .sub-categories.left-align {
+    left: 16px;
+    right: 16px;
+    width: auto;
+    max-width: none;
+    transform: translateY(-50%);
+    overflow-x: hidden;
+  }
+
+  .sub-categories.left-align li a,
+  .sub-categories .app-title {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .sub-categories .app-title {
+    font-size: 13px;
+    line-height: 1.25;
+  }
+
+  .sub-categories {
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 8px 0;
+  }
+
+  .sub-categories .app-row.is-open .app-panel {
+    max-height: 55vh;
+    overflow-y: auto;
+  }
+
+  .sub-categories .app-links {
+    gap: 6px;
+  }
+
+  .sub-categories .pill {
+    white-space: normal;
+    line-height: 1.2;
+  }
+
+  .sub-categories .app-desc {
+    font-size: 13px;
+    line-height: 1.35;
+  }
 }
