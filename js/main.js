@@ -1,5 +1,3 @@
-// js/main.js
-
 const SHEET_ID = "1F3kGkaIt-A9PIdsLiHkHbrmnRSrXlMvuaqRsZO0XtsM";
 const SHEET_NAME = "Web Data";
 
@@ -35,7 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
   async function fetchItemsByCategoryKey() {
     if (!SHEET_ID) throw new Error("Missing SHEET_ID");
 
-    const res = await fetch(gvizUrl(), { cache: "no-store" });
+    // Allow browser caching (removes forced refetch on every page load)
+    const res = await fetch(gvizUrl(), { cache: "default" });
     if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
 
     const text = await res.text();
@@ -164,9 +163,14 @@ document.addEventListener("DOMContentLoaded", () => {
     setLoading();
 
     try {
+      // If prefetch failed earlier, retry here.
       if (!itemsByCategoryKeyPromise) {
-        itemsByCategoryKeyPromise = fetchItemsByCategoryKey();
+        itemsByCategoryKeyPromise = fetchItemsByCategoryKey().catch((err) => {
+          itemsByCategoryKeyPromise = null; // allow retry on next click
+          throw err;
+        });
       }
+
       const itemsByKey = await itemsByCategoryKeyPromise;
 
       populateSubCategories(categoryKey, itemsByKey[categoryKey] || []);
@@ -185,6 +189,12 @@ document.addEventListener("DOMContentLoaded", () => {
       setError(`Failed to load items. (${e?.message || "unknown error"})`);
     }
   }
+
+  // Prefetch immediately so the first click has no fetch delay
+  itemsByCategoryKeyPromise = fetchItemsByCategoryKey().catch((err) => {
+    itemsByCategoryKeyPromise = null; // allow retry on click
+    throw err;
+  });
 
   mainLinks.forEach((link) => {
     link.addEventListener("click", (e) => {
@@ -220,4 +230,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-
