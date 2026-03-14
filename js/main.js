@@ -454,9 +454,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   mainLinks.forEach((link) => {
     link.addEventListener("click", (e) => {
-      e.preventDefault();
       const key = link.getAttribute("data-category");
-      if (!key) return;
+      if (!key) return; // let non-category links (e.g. Inquiry) navigate normally
+      e.preventDefault();
       openCategory(key);
     });
   });
