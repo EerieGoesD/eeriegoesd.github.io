@@ -2,12 +2,15 @@ const SHEET_ID = "1F3kGkaIt-A9PIdsLiHkHbrmnRSrXlMvuaqRsZO0XtsM";
 const SHEET_NAME = "Web Data";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const backArrow = document.getElementById("back-arrow");
-  const mainCategories = document.querySelector(".main-categories");
+  const navPanel = document.querySelector(".nav-panel");
+  const divider = document.getElementById("divider");
+  const contentPanel = document.getElementById("content-panel");
   const subCategories = document.getElementById("sub-categories");
-  const mainLinks = document.querySelectorAll(".main-categories li a");
+  const menuLinks = document.querySelectorAll(".terminal-menu li a");
+  const menuItems = document.querySelectorAll(".terminal-menu li");
 
   let itemsByCategoryKeyPromise = null;
+  let activeCategory = null;
 
   function gvizUrl() {
     return `https://docs.google.com/spreadsheets/d/${encodeURIComponent(
@@ -16,7 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function parseGvizJson(text) {
-    // Google returns: /*O_o*/\ngoogle.visualization.Query.setResponse(<json>);
     const start = text.indexOf("{");
     const end = text.lastIndexOf("}");
     if (start === -1 || end === -1) throw new Error("Unexpected GViz response");
@@ -33,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function normalizeUrl(url) {
     const s = (url || "").trim();
     if (!s) return "";
-    if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(s)) return s; // has scheme
+    if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(s)) return s;
     if (s.startsWith("www.")) return `https://${s}`;
     return s;
   }
@@ -47,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return false;
   }
 
-  // Local file:// workaround: load GViz via <script> to bypass fetch CORS limits on opaque origins.
   function fetchGvizViaScript() {
     return new Promise((resolve, reject) => {
       let done = false;
@@ -66,11 +67,9 @@ document.addEventListener("DOMContentLoaded", () => {
       window.google.visualization.Query.setResponse = (resp) => {
         if (done) return;
         done = true;
-
         if (prevSetResponse) {
           window.google.visualization.Query.setResponse = prevSetResponse;
         }
-
         resolve(resp);
       };
 
@@ -81,22 +80,15 @@ document.addEventListener("DOMContentLoaded", () => {
       script.onerror = () => {
         if (done) return;
         done = true;
-
         if (prevSetResponse) window.google.visualization.Query.setResponse = prevSetResponse;
-
         cleanup(script);
-        if (!prevGoogle) {
-          // leave window.google as-is
-        }
         reject(new Error("Failed to load GViz script (network error)."));
       };
 
       const t = setTimeout(() => {
         if (done) return;
         done = true;
-
         if (prevSetResponse) window.google.visualization.Query.setResponse = prevSetResponse;
-
         cleanup(script);
         reject(new Error("GViz script loaded but did not return data in time."));
       }, 10000);
@@ -129,9 +121,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const cols = table?.cols || [];
     const rows = table?.rows || [];
 
-    // Required headers: categoryKey, category, name, link, tooltip
-    // Optional download headers:
-    // - github, chrome, microsoft, store, steam, gamefaqs, google-drive
     const colIndex = new Map();
     cols.forEach((c, i) => {
       const label = (c?.label || "").trim();
@@ -143,7 +132,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const idxName = colIndex.get("name");
     const idxLink = colIndex.get("link");
     const idxTooltip = colIndex.get("tooltip");
-
     const idxGithub = colIndex.get("github");
     const idxChrome = colIndex.get("chrome");
     const idxMicrosoft = colIndex.get("microsoft");
@@ -188,8 +176,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isProbablyUrl(gamefaqs)) downloads.push({ label: "GameFAQs", url: gamefaqs });
       if (isProbablyUrl(googleDrive)) downloads.push({ label: "Google Drive", url: googleDrive });
 
-      // Keep legacy requirement for non-guides: link must exist.
-      // For videogame-guides: allow missing link if at least one download URL exists.
       const hasLink = !!link;
       const hasDownloads = downloads.length > 0;
       if (categoryKey === "videogame-guides") {
@@ -213,7 +199,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function setLoading() {
     subCategories.innerHTML = "";
     const li = document.createElement("li");
-    li.textContent = "Loading…";
+    li.textContent = "loading\u2026";
+    li.style.color = "rgba(255,255,255,0.4)";
     subCategories.appendChild(li);
   }
 
@@ -221,6 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
     subCategories.innerHTML = "";
     const li = document.createElement("li");
     li.textContent = msg;
+    li.style.color = "#e84a8a";
     subCategories.appendChild(li);
   }
 
@@ -229,8 +217,22 @@ document.addEventListener("DOMContentLoaded", () => {
     openRows.forEach((row) => row.classList.remove("is-open"));
   }
 
+  function setActiveLink(categoryKey) {
+    menuLinks.forEach((l) => l.classList.remove("active"));
+    menuItems.forEach((li) => li.classList.remove("is-active"));
+
+    if (categoryKey) {
+      const link = document.querySelector(`.terminal-menu li a[data-category="${categoryKey}"]`);
+      if (link) {
+        link.classList.add("active");
+        link.closest("li").classList.add("is-active");
+      }
+    }
+  }
+
   function populateSubCategories(categoryKey, items) {
     subCategories.innerHTML = "";
+    subCategories.scrollTop = 0;
 
     const list = (items || []).slice();
 
@@ -263,7 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
         subCategories.appendChild(headerLi);
       }
 
-      // APPS: click-to-expand only (NO hover tooltip)
+      // APPS: click-to-expand
       if (categoryKey === "apps") {
         const li = document.createElement("li");
         li.classList.add("app-item");
@@ -284,8 +286,6 @@ document.addEventListener("DOMContentLoaded", () => {
         desc.textContent = item.tooltip ? String(item.tooltip) : "No description.";
         panel.appendChild(desc);
 
-        // Links area: show download links (GitHub / Chrome / etc).
-        // If none provided, fallback to the original 'link' as "Open".
         const links = document.createElement("div");
         links.classList.add("app-links");
 
@@ -326,7 +326,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // VIDEOGAME-GUIDES: same click-to-expand logic as apps (NO hover tooltip)
+      // VIDEOGAME-GUIDES: click-to-expand
       if (categoryKey === "videogame-guides") {
         const li = document.createElement("li");
         li.classList.add("app-item");
@@ -350,7 +350,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const links = document.createElement("div");
         links.classList.add("app-links");
 
-        // Show website button only if provided
         if (item.link) {
           const open = document.createElement("a");
           open.classList.add("pill");
@@ -361,7 +360,6 @@ document.addEventListener("DOMContentLoaded", () => {
           links.appendChild(open);
         }
 
-        // Show extra buttons (GitHub / Steam / GameFAQs / Google Drive / etc) when provided
         const hasDownloads = Array.isArray(item.downloads) && item.downloads.length > 0;
         if (hasDownloads) {
           item.downloads.forEach((d) => {
@@ -390,7 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Non-app categories: original hover tooltip behavior stays
+      // Non-expandable categories (music, contacts): hover tooltip
       const li = document.createElement("li");
       const a = document.createElement("a");
       a.href = item.link;
@@ -401,7 +399,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (item.tooltip) {
         const tooltip = document.createElement("span");
         tooltip.classList.add("tooltip");
-        tooltip.innerHTML = String(item.tooltip).replace(/\n/g, "<br>");
+        tooltip.textContent = String(item.tooltip);
         a.appendChild(tooltip);
       }
 
@@ -412,12 +410,56 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!list.length) {
       const li = document.createElement("li");
       li.textContent = "No items yet.";
+      li.style.color = "rgba(255,255,255,0.4)";
       subCategories.appendChild(li);
     }
   }
 
+  function showContentPanel() {
+    divider.classList.add("visible");
+    contentPanel.classList.add("visible");
+    navPanel.classList.add("collapsed");
+  }
+
+  function hideContentPanel() {
+    subCategories.style.opacity = "0";
+    divider.classList.remove("visible");
+    contentPanel.classList.remove("visible");
+    navPanel.classList.remove("collapsed");
+    activeCategory = null;
+    setActiveLink(null);
+    setTimeout(() => {
+      subCategories.innerHTML = "";
+      subCategories.style.opacity = "1";
+    }, 350);
+  }
+
+  function fade(opacity) {
+    return new Promise((resolve) => {
+      subCategories.style.opacity = opacity;
+      setTimeout(resolve, 150);
+    });
+  }
+
   async function openCategory(categoryKey) {
-    setLoading();
+    // Toggle off if clicking the same category
+    if (activeCategory === categoryKey) {
+      hideContentPanel();
+      return;
+    }
+
+    const isSwitch = activeCategory !== null;
+    activeCategory = categoryKey;
+    setActiveLink(categoryKey);
+
+    // Fade out current content
+    if (isSwitch) {
+      await fade("0");
+    } else {
+      subCategories.style.opacity = "0";
+    }
+
+    showContentPanel();
 
     try {
       if (!itemsByCategoryKeyPromise) {
@@ -428,22 +470,15 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const itemsByKey = await itemsByCategoryKeyPromise;
-
       populateSubCategories(categoryKey, itemsByKey[categoryKey] || []);
-
-      if (categoryKey === "videogame-guides" || categoryKey === "apps") {
-        subCategories.classList.add("left-align");
-      } else {
-        subCategories.classList.remove("left-align");
-      }
-
-      mainCategories.classList.add("active");
-      subCategories.classList.remove("hidden");
-      subCategories.classList.add("show");
-      backArrow.style.display = "block";
     } catch (e) {
       setError(`Failed to load items. (${e?.message || "unknown error"})`);
     }
+
+    // Fade in new content
+    requestAnimationFrame(() => {
+      subCategories.style.opacity = "1";
+    });
   }
 
   // Prefetch immediately
@@ -452,37 +487,21 @@ document.addEventListener("DOMContentLoaded", () => {
     throw err;
   });
 
-  mainLinks.forEach((link) => {
+  // Initial animation
+  navPanel.classList.add("animate");
+
+  menuLinks.forEach((link) => {
     link.addEventListener("click", (e) => {
       const key = link.getAttribute("data-category");
-      if (!key) return; // let non-category links (e.g. Inquiry) navigate normally
+      if (!key) return;
       e.preventDefault();
       openCategory(key);
     });
   });
 
-  backArrow.addEventListener("click", () => {
-    mainCategories.classList.remove("active");
-    subCategories.classList.remove("show");
-    subCategories.classList.add("hidden");
-    backArrow.style.display = "none";
-
-    mainCategories.classList.remove("animate");
-    void mainCategories.offsetWidth;
-    mainCategories.classList.add("animate");
-
-    setTimeout(() => {
-      subCategories.innerHTML = "";
-    }, 500);
-  });
-
-  document.addEventListener("click", (e) => {
-    if (
-      !e.target.closest(".main-categories") &&
-      !e.target.closest(".sub-categories") &&
-      e.target !== backArrow
-    ) {
-      if (mainCategories.classList.contains("active")) backArrow.click();
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && activeCategory) {
+      hideContentPanel();
     }
   });
 });

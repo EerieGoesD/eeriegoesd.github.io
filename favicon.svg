@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Mirrored E built from rectangles — stretched edge to edge -->
+  <!-- Top bar -->
+  <rect x="0" y="2" width="64" height="12" fill="#f0f0f0"/>
+  <!-- Middle bar -->
+  <rect x="0" y="26" width="48" height="12" fill="#f0f0f0"/>
+  <!-- Bottom bar -->
+  <rect x="0" y="50" width="64" height="12" fill="#f0f0f0"/>
+  <!-- Vertical spine (right side for mirrored E) -->
+  <rect x="50" y="2" width="14" height="60" fill="#f0f0f0"/>
+</svg>
