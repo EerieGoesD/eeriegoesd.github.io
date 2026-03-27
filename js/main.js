@@ -11,6 +11,148 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let itemsByCategoryKeyPromise = null;
   let activeCategory = null;
+  let contentRevealTimer = null;
+
+  /* ── SVG Snake ── */
+  const svgNS = "http://www.w3.org/2000/svg";
+  const layoutEl = document.querySelector(".layout");
+  const snakeSvg = document.createElementNS(svgNS, "svg");
+  snakeSvg.setAttribute("aria-hidden", "true");
+  snakeSvg.style.cssText =
+    "position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10;";
+
+  function makeLine() {
+    const l = document.createElementNS(svgNS, "line");
+    l.setAttribute("stroke", "rgba(30,144,255,0.4)");
+    l.setAttribute("stroke-width", "1");
+    l.setAttribute("shape-rendering", "crispEdges");
+    snakeSvg.appendChild(l);
+    return l;
+  }
+  const snakeH = makeLine();
+  const snakeVUp = makeLine();
+  const snakeVDown = makeLine();
+  snakeSvg.style.opacity = "0";
+  layoutEl.appendChild(snakeSvg);
+
+  function isMobile() {
+    return window.innerWidth <= 700;
+  }
+
+  function animateSnake(categoryKey, immediate) {
+    if (isMobile()) return;
+
+    const link = document.querySelector(
+      `.terminal-menu li a[data-category="${categoryKey}"]`
+    );
+    if (!link) return;
+
+    const lr = layoutEl.getBoundingClientRect();
+    const ar = link.getBoundingClientRect();
+    const dr = divider.getBoundingClientRect();
+
+    // Snap to half-pixels so 1px strokes render crisply
+    const startX = Math.round(ar.right - lr.left + 10) + 0.5;
+    const startY = Math.round(ar.top + ar.height / 2 - lr.top) + 0.5;
+    const jX = Math.round(dr.left + dr.width / 2 - lr.left) + 0.5;
+
+    snakeH.setAttribute("x1", startX);
+    snakeH.setAttribute("y1", startY);
+    snakeH.setAttribute("x2", jX);
+    snakeH.setAttribute("y2", startY);
+
+    snakeVUp.setAttribute("x1", jX);
+    snakeVUp.setAttribute("y1", startY);
+    snakeVUp.setAttribute("x2", jX);
+    snakeVUp.setAttribute("y2", 0);
+
+    snakeVDown.setAttribute("x1", jX);
+    snakeVDown.setAttribute("y1", startY);
+    snakeVDown.setAttribute("x2", jX);
+    snakeVDown.setAttribute("y2", lr.height);
+
+    const hLen = Math.abs(jX - startX);
+    const vUpLen = startY;
+    const vDownLen = lr.height - startY;
+
+    snakeSvg.style.transition = "none";
+    snakeSvg.style.opacity = "1";
+
+    if (immediate) {
+      [snakeH, snakeVUp, snakeVDown].forEach((l) => {
+        l.style.transition = "none";
+        l.style.strokeDasharray = "none";
+        l.style.strokeDashoffset = "0";
+        l.style.opacity = "1";
+      });
+      return;
+    }
+
+    // Reset all lines hidden
+    [snakeH, snakeVUp, snakeVDown].forEach((l) => {
+      l.style.transition = "none";
+      l.style.opacity = "1";
+    });
+    snakeH.style.strokeDasharray = hLen;
+    snakeH.style.strokeDashoffset = hLen;
+    snakeVUp.style.strokeDasharray = vUpLen;
+    snakeVUp.style.strokeDashoffset = vUpLen;
+    snakeVDown.style.strokeDasharray = vDownLen;
+    snakeVDown.style.strokeDashoffset = vDownLen;
+
+    // Force reflow
+    snakeH.getBoundingClientRect();
+
+    // Horizontal draws first
+    const hDur = 0.25;
+    snakeH.style.transition = `stroke-dashoffset ${hDur}s ease-out`;
+    snakeH.style.strokeDashoffset = "0";
+
+    // Verticals start just before horizontal finishes — seamless corner turn
+    const vDelay = hDur - 0.04;
+    const vDur = 0.35;
+    const vEase = "cubic-bezier(0.16, 1, 0.3, 1)";
+    snakeVUp.style.transition = `stroke-dashoffset ${vDur}s ${vEase} ${vDelay}s`;
+    snakeVUp.style.strokeDashoffset = "0";
+    snakeVDown.style.transition = `stroke-dashoffset ${vDur}s ${vEase} ${vDelay}s`;
+    snakeVDown.style.strokeDashoffset = "0";
+  }
+
+  function hideSnake() {
+    if (isMobile()) return;
+
+    // Read current dasharray lengths for the reverse
+    const hLen = parseFloat(snakeH.style.strokeDasharray) || 0;
+    const vUpLen = parseFloat(snakeVUp.style.strokeDasharray) || 0;
+    const vDownLen = parseFloat(snakeVDown.style.strokeDasharray) || 0;
+
+    if (!hLen) {
+      snakeSvg.style.transition = "opacity 0.2s ease";
+      snakeSvg.style.opacity = "0";
+      return;
+    }
+
+    // Step 1: Verticals collapse back to junction
+    const vDur = 0.15;
+    const vEase = "ease-in";
+    snakeVUp.style.transition = `stroke-dashoffset ${vDur}s ${vEase}`;
+    snakeVUp.style.strokeDashoffset = vUpLen;
+    snakeVDown.style.transition = `stroke-dashoffset ${vDur}s ${vEase}`;
+    snakeVDown.style.strokeDashoffset = vDownLen;
+
+    // Step 2: Horizontal retracts right after verticals
+    const hDelay = vDur - 0.03;
+    const hDur = 0.12;
+    snakeH.style.transition = `stroke-dashoffset ${hDur}s ease-in ${hDelay}s`;
+    snakeH.style.strokeDashoffset = hLen;
+
+    // Hide SVG after full sequence
+    const totalDur = (hDelay + hDur) * 1000 + 30;
+    setTimeout(() => {
+      snakeSvg.style.transition = "none";
+      snakeSvg.style.opacity = "0";
+    }, totalDur);
+  }
 
   function gvizUrl() {
     return `https://docs.google.com/spreadsheets/d/${encodeURIComponent(
@@ -422,22 +564,42 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function hideContentPanel() {
-    subCategories.style.opacity = "0";
-    divider.classList.remove("visible");
-    contentPanel.classList.remove("visible");
-    navPanel.classList.remove("collapsed");
+    if (contentRevealTimer) {
+      clearTimeout(contentRevealTimer);
+      contentRevealTimer = null;
+    }
     activeCategory = null;
     setActiveLink(null);
+
+    if (isMobile()) {
+      hideSnake();
+      subCategories.style.opacity = "0";
+      divider.classList.remove("visible");
+      contentPanel.classList.remove("visible");
+      navPanel.classList.remove("collapsed");
+      setTimeout(() => {
+        subCategories.innerHTML = "";
+        subCategories.style.opacity = "1";
+      }, 350);
+      return;
+    }
+
+    // Desktop: everything starts at once
+    subCategories.style.opacity = "0";
+    contentPanel.classList.remove("visible");
+    hideSnake();
     setTimeout(() => {
+      divider.classList.remove("visible");
+      navPanel.classList.remove("collapsed");
       subCategories.innerHTML = "";
       subCategories.style.opacity = "1";
-    }, 350);
+    }, 280);
   }
 
   function fade(opacity) {
     return new Promise((resolve) => {
       subCategories.style.opacity = opacity;
-      setTimeout(resolve, 150);
+      setTimeout(resolve, 60);
     });
   }
 
@@ -455,11 +617,22 @@ document.addEventListener("DOMContentLoaded", () => {
     // Fade out current content
     if (isSwitch) {
       await fade("0");
+      animateSnake(categoryKey, true);
+      showContentPanel();
     } else {
       subCategories.style.opacity = "0";
+      animateSnake(categoryKey, false);
+      // Delay content reveal until snake reaches the divider and verticals begin
+      if (!isMobile()) {
+        if (contentRevealTimer) clearTimeout(contentRevealTimer);
+        contentRevealTimer = setTimeout(() => {
+          showContentPanel();
+          contentRevealTimer = null;
+        }, 400);
+      } else {
+        showContentPanel();
+      }
     }
-
-    showContentPanel();
 
     try {
       if (!itemsByCategoryKeyPromise) {
