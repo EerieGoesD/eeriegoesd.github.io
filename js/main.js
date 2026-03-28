@@ -433,6 +433,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const hasDownloads = Array.isArray(item.downloads) && item.downloads.length > 0;
 
+        if (item.link) {
+          const a = document.createElement("a");
+          a.classList.add("pill");
+          a.href = item.link;
+          a.target = item.link.startsWith("mailto:") ? "_self" : "_blank";
+          a.rel = "noopener noreferrer";
+          a.textContent = "Open";
+          links.appendChild(a);
+        }
+
         if (hasDownloads) {
           item.downloads.forEach((d) => {
             const a = document.createElement("a");
@@ -443,14 +453,6 @@ document.addEventListener("DOMContentLoaded", () => {
             a.textContent = d.label;
             links.appendChild(a);
           });
-        } else {
-          const a = document.createElement("a");
-          a.classList.add("pill");
-          a.href = item.link;
-          a.target = item.link.startsWith("mailto:") ? "_self" : "_blank";
-          a.rel = "noopener noreferrer";
-          a.textContent = "Open";
-          links.appendChild(a);
         }
 
         panel.appendChild(links);
