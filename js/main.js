@@ -320,7 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const hasLink = !!link;
       const hasDownloads = downloads.length > 0;
-      if (categoryKey === "videogame-guides") {
+      if (categoryKey === "videogame-guides" || categoryKey === "apps") {
         if (!hasLink && !hasDownloads) continue;
       } else {
         if (!hasLink) continue;
