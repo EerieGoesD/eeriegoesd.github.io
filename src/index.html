@@ -55,15 +55,43 @@
     />
     <link rel="stylesheet" href="css/main.css" />
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K00TNSHNQ2"></script>
+    <!-- Google tag (gtag.js) - consent-gated -->
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
+      function gtag() { dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag('consent', 'default', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        wait_for_update: 500
+      });
+
+      function initGtag() {
+        if (document.getElementById('gtag-script')) return;
+        var s = document.createElement('script');
+        s.id = 'gtag-script';
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=G-K00TNSHNQ2';
+        document.head.appendChild(s);
+        gtag('consent', 'update', { analytics_storage: 'granted' });
+        gtag('js', new Date());
+        gtag('config', 'G-K00TNSHNQ2');
       }
-      gtag('js', new Date());
-      gtag('config', 'G-K00TNSHNQ2');
+
+      function hideBanner() {
+        document.getElementById('cookieBanner').style.display = 'none';
+      }
+      function acceptCookies() {
+        localStorage.setItem('cookie-consent', 'accepted');
+        hideBanner();
+        initGtag();
+      }
+      function rejectCookies() {
+        localStorage.setItem('cookie-consent', 'rejected');
+        hideBanner();
+      }
     </script>
   </head>
   <body oncontextmenu="return false">
@@ -94,6 +122,21 @@
     </div>
 
     <a href="privacy/" class="privacy-link">Privacy Policy</a>
+
+    <div id="cookieBanner" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0a0a10;border-top:1px solid rgba(30,144,255,.25);padding:14px 24px;display:none;flex-wrap:wrap;align-items:center;justify-content:center;gap:16px;font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(255,255,255,.5);">
+      <span>This site uses cookies for traffic analytics.</span>
+      <a href="privacy/" style="color:#1e90ff;text-decoration:none;">Learn more</a>
+      <button onclick="acceptCookies()" style="font-family:'Share Tech Mono',monospace;font-size:12px;padding:6px 16px;border-radius:2px;cursor:pointer;border:1px solid #1e90ff;background:#1e90ff;color:#fff;">Accept</button>
+      <button onclick="rejectCookies()" style="font-family:'Share Tech Mono',monospace;font-size:12px;padding:6px 16px;border-radius:2px;cursor:pointer;border:1px solid rgba(30,144,255,.35);background:transparent;color:rgba(255,255,255,.5);">Decline</button>
+    </div>
+
+    <script>
+      try {
+        var c = localStorage.getItem('cookie-consent');
+        if (!c) document.getElementById('cookieBanner').style.display = 'flex';
+        else if (c === 'accepted') initGtag();
+      } catch(e) { document.getElementById('cookieBanner').style.display = 'flex'; }
+    </script>
 
     <script src="js/main.js"></script>
   </body>
