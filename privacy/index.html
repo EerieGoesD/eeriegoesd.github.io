@@ -8,131 +8,147 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Privacy Policy | EERIE</title>
     <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#050508" />
+    <meta name="color-scheme" content="dark" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet" />
 
     <style>
-      :root {
-        --bg: #000;
-        --fg: #fff;
-        --muted: #bdbdbd;
-        --accent: #1e90ff;
-        --card: #0b0b0b;
-        --border: #222;
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body {
+        height: 100%;
+        background: #050508;
+        color: #f0f0f0;
+        font-family: 'Share Tech Mono', 'Courier New', monospace;
+        line-height: 1.6;
+        overflow-x: hidden;
       }
 
-      * { box-sizing: border-box; }
-      html, body { height: 100%; }
-      body {
-        margin: 0;
-        background: var(--bg);
-        color: var(--fg);
-        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-        line-height: 1.55;
+      body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 9999;
+        background: repeating-linear-gradient(
+          to bottom,
+          transparent 0px, transparent 3px,
+          rgba(0,0,0,.08) 3px, rgba(0,0,0,.08) 4px
+        );
+      }
+
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 9998;
+        background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,.4) 100%);
       }
 
       .wrap {
-        max-width: 920px;
+        max-width: 720px;
         margin: 0 auto;
-        padding: 28px 16px 60px;
+        padding: 32px 24px 60px;
       }
 
-      a { color: var(--accent); text-decoration: none; }
-      a:hover { text-decoration: underline; }
+      a { color: rgba(30,144,255,.5); text-decoration: none; transition: color .3s, text-shadow .3s; }
+      a:hover { color: #1e90ff; text-shadow: 0 0 8px rgba(30,144,255,.4); }
 
-      .top {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 16px;
-        margin-bottom: 18px;
+      .back {
+        display: inline-block;
+        margin-bottom: 20px;
+        font-size: 13px;
+        color: rgba(255,255,255,.3);
+        letter-spacing: 1px;
+        transition: color .3s, text-shadow .3s;
+      }
+      .back:hover { color: #1e90ff; text-shadow: 0 0 8px rgba(30,144,255,.4); }
+
+      .header {
+        margin-bottom: 24px;
+        border-bottom: 1px solid rgba(30,144,255,.15);
+        padding-bottom: 16px;
       }
 
       h1 {
-        font-size: 28px;
-        margin: 0;
-        letter-spacing: 0.2px;
+        font-size: 22px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        color: #f0f0f0;
+        margin-bottom: 6px;
       }
+      h1::before { content: '> '; color: rgba(30,144,255,.3); }
 
       .meta {
-        color: var(--muted);
-        font-size: 13px;
-        white-space: nowrap;
+        font-size: 11px;
+        color: rgba(255,255,255,.25);
+        letter-spacing: .5px;
       }
 
-      .card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 18px 18px;
-        margin: 14px 0;
+      .section {
+        margin: 20px 0;
+        padding-left: 18px;
+        border-left: 1px solid rgba(30,144,255,.15);
       }
 
       h2 {
-        font-size: 18px;
-        margin: 0 0 10px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #e84a8a;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
       }
+      h2::before { content: '_ '; color: #e84a8a; }
 
-      h3 {
-        font-size: 15px;
-        margin: 14px 0 8px;
-        color: var(--muted);
-        font-weight: 600;
-      }
-
-      p { margin: 8px 0; }
-      ul { margin: 8px 0 8px 18px; padding: 0; }
-      li { margin: 6px 0; }
-
-      .pill {
-        display: inline-block;
-        font-size: 12px;
-        padding: 2px 8px;
-        border: 1px solid var(--border);
-        border-radius: 999px;
-        color: var(--muted);
-        margin-left: 8px;
-        vertical-align: middle;
-      }
-
-      .footer {
-        margin-top: 20px;
-        color: var(--muted);
+      p {
         font-size: 13px;
+        color: rgba(255,255,255,.55);
+        margin: 8px 0;
+        line-height: 1.7;
       }
 
-      code {
-        background: #111;
-        border: 1px solid #1f1f1f;
-        padding: 1px 6px;
-        border-radius: 6px;
-        color: #e0e0e0;
+      .contact-link {
+        color: #1e90ff;
+      }
+      .contact-link:hover {
+        text-shadow: 0 0 10px rgba(30,144,255,.6);
+      }
+
+      @media (max-width: 700px) {
+        .wrap { padding: 24px 16px 40px; }
+        h1 { font-size: 18px; }
       }
     </style>
   </head>
 
   <body>
     <div class="wrap">
-      <a href="/" style="display:inline-block;margin-bottom:14px;font-size:14px;color:var(--muted);text-decoration:none;">&larr; Back</a>
-      <div class="top">
-        <h1>Privacy Policy</h1>
-        <div class="meta">Last updated: 2026-03-31</div>
+      <a href="/" class="back">&lt; back</a>
+
+      <div class="header">
+        <h1>privacy_policy</h1>
+        <div class="meta">last updated: 2026-03-31</div>
       </div>
 
-      <div class="card">
-        <h2>Website - Google Analytics</h2>
+      <div class="section">
+        <h2>analytics</h2>
         <p>
           This website uses Google Analytics (gtag.js) to collect anonymous usage data such as page views and general interaction patterns.
           This data is processed by Google and may involve cookies depending on your browser settings.
           No personal data is sold or shared beyond what Google Analytics collects.
         </p>
         <p>
-          The website may also load third-party resources such as Google Fonts, which causes your browser to connect to Google’s servers.
+          The website may also load third-party resources such as Google Fonts, which causes your browser to connect to Google's servers.
         </p>
       </div>
 
-      <div class="card">
-        <h2>Contact</h2>
+      <div class="section">
+        <h2>contact</h2>
         <p>
-          Questions about this policy: <a href="mailto:eeriegoesd@gmail.com">eeriegoesd@gmail.com</a>
+          Questions about this policy: <a href="mailto:eeriegoesd@gmail.com" class="contact-link">eeriegoesd@gmail.com</a>
         </p>
       </div>
     </div>
