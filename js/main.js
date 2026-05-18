@@ -316,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isProbablyUrl(store)) downloads.push({ label: "Store", url: store });
       if (isProbablyUrl(steam)) downloads.push({ label: "Steam", url: steam });
       if (isProbablyUrl(gamefaqs)) downloads.push({ label: "GameFAQs", url: gamefaqs });
-      if (isProbablyUrl(googleDrive)) downloads.push({ label: "Google Drive", url: googleDrive });
+      if (isProbablyUrl(googleDrive)) downloads.push({ label: "Spreadsheet", url: googleDrive });
 
       const hasLink = !!link;
       const hasDownloads = downloads.length > 0;
