@@ -277,6 +277,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const idxGithub = colIndex.get("github");
     const idxChrome = colIndex.get("chrome");
     const idxMicrosoft = colIndex.get("microsoft");
+    const idxMacos = colIndex.get("macos");
     const idxStore = colIndex.get("store");
     const idxSteam = colIndex.get("steam");
     const idxGamefaqs = colIndex.get("gamefaqs");
@@ -304,6 +305,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const github = normalizeUrl(cellValue(cells[idxGithub]));
       const chrome = normalizeUrl(cellValue(cells[idxChrome]));
       const microsoft = normalizeUrl(cellValue(cells[idxMicrosoft]));
+      const macos = normalizeUrl(cellValue(cells[idxMacos]));
       const store = normalizeUrl(cellValue(cells[idxStore]));
       const steam = normalizeUrl(cellValue(cells[idxSteam]));
       const gamefaqs = normalizeUrl(cellValue(cells[idxGamefaqs]));
@@ -313,6 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isProbablyUrl(github)) downloads.push({ label: "GitHub", url: github });
       if (isProbablyUrl(chrome)) downloads.push({ label: "Chrome Web Store", url: chrome });
       if (isProbablyUrl(microsoft)) downloads.push({ label: "Microsoft Store", url: microsoft });
+      if (isProbablyUrl(macos)) downloads.push({ label: "Mac App Store", url: macos });
       if (isProbablyUrl(store)) downloads.push({ label: "Store", url: store });
       if (isProbablyUrl(steam)) downloads.push({ label: "Steam", url: steam });
       if (isProbablyUrl(gamefaqs)) downloads.push({ label: "GameFAQs", url: gamefaqs });
