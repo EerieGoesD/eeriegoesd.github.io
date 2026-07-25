@@ -1,5 +1,4 @@
-const SHEET_ID = "1F3kGkaIt-A9PIdsLiHkHbrmnRSrXlMvuaqRsZO0XtsM";
-const SHEET_NAME = "Web Data";
+const DATA_URL = "data.json";
 
 document.addEventListener("DOMContentLoaded", () => {
   const navPanel = document.querySelector(".nav-panel");
@@ -154,26 +153,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, totalDur);
   }
 
-  function gvizUrl() {
-    return `https://docs.google.com/spreadsheets/d/${encodeURIComponent(
-      SHEET_ID
-    )}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
-  }
-
-  function parseGvizJson(text) {
-    const start = text.indexOf("{");
-    const end = text.lastIndexOf("}");
-    if (start === -1 || end === -1) throw new Error("Unexpected GViz response");
-    return JSON.parse(text.slice(start, end + 1));
-  }
-
-  function cellValue(cell) {
-    if (!cell) return "";
-    if (typeof cell.f === "string") return cell.f;
-    if (cell.v == null) return "";
-    return String(cell.v);
-  }
-
   function normalizeUrl(url) {
     const s = (url || "").trim();
     if (!s) return "";
@@ -191,97 +170,11 @@ document.addEventListener("DOMContentLoaded", () => {
     return false;
   }
 
-  function fetchGvizViaScript() {
-    return new Promise((resolve, reject) => {
-      let done = false;
-
-      const cleanup = (script) => {
-        if (script && script.parentNode) script.parentNode.removeChild(script);
-      };
-
-      const prevGoogle = window.google;
-      window.google = window.google || {};
-      window.google.visualization = window.google.visualization || {};
-      window.google.visualization.Query = window.google.visualization.Query || {};
-
-      const prevSetResponse = window.google.visualization.Query.setResponse;
-
-      window.google.visualization.Query.setResponse = (resp) => {
-        if (done) return;
-        done = true;
-        if (prevSetResponse) {
-          window.google.visualization.Query.setResponse = prevSetResponse;
-        }
-        resolve(resp);
-      };
-
-      const script = document.createElement("script");
-      script.src = gvizUrl();
-      script.async = true;
-
-      script.onerror = () => {
-        if (done) return;
-        done = true;
-        if (prevSetResponse) window.google.visualization.Query.setResponse = prevSetResponse;
-        cleanup(script);
-        reject(new Error("Failed to load GViz script (network error)."));
-      };
-
-      const t = setTimeout(() => {
-        if (done) return;
-        done = true;
-        if (prevSetResponse) window.google.visualization.Query.setResponse = prevSetResponse;
-        cleanup(script);
-        reject(new Error("GViz script loaded but did not return data in time."));
-      }, 10000);
-
-      const originalResolve = resolve;
-      resolve = (resp) => {
-        clearTimeout(t);
-        cleanup(script);
-        originalResolve(resp);
-      };
-
-      document.head.appendChild(script);
-    });
-  }
-
   async function fetchItemsByCategoryKey() {
-    if (!SHEET_ID) throw new Error("Missing SHEET_ID");
-
-    let data;
-    if (location.protocol === "file:") {
-      data = await fetchGvizViaScript();
-    } else {
-      const res = await fetch(gvizUrl(), { cache: "default" });
-      if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
-      const text = await res.text();
-      data = parseGvizJson(text);
-    }
-
-    const table = data?.table;
-    const cols = table?.cols || [];
-    const rows = table?.rows || [];
-
-    const colIndex = new Map();
-    cols.forEach((c, i) => {
-      const label = (c?.label || "").trim();
-      if (label) colIndex.set(label, i);
-    });
-
-    const idxCategoryKey = colIndex.get("categoryKey");
-    const idxCategory = colIndex.get("category");
-    const idxName = colIndex.get("name");
-    const idxLink = colIndex.get("link");
-    const idxTooltip = colIndex.get("tooltip");
-    const idxGithub = colIndex.get("github");
-    const idxChrome = colIndex.get("chrome");
-    const idxMicrosoft = colIndex.get("microsoft");
-    const idxMacos = colIndex.get("macos");
-    const idxStore = colIndex.get("store");
-    const idxSteam = colIndex.get("steam");
-    const idxGamefaqs = colIndex.get("gamefaqs");
-    const idxGoogleDrive = colIndex.get("google-drive");
+    const res = await fetch(DATA_URL, { cache: "no-cache" });
+    if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+    const data = await res.json();
+    const entries = Array.isArray(data?.entries) ? data.entries : [];
 
     const out = {
       music: [],
@@ -290,26 +183,24 @@ document.addEventListener("DOMContentLoaded", () => {
       contacts: []
     };
 
-    for (const r of rows) {
-      const cells = r?.c || [];
-
-      const categoryKey = (cellValue(cells[idxCategoryKey]) || "").trim();
-      const category = (cellValue(cells[idxCategory]) || "").trim();
-      const name = (cellValue(cells[idxName]) || "").trim();
-      const link = normalizeUrl(cellValue(cells[idxLink]));
-      const tooltip = cellValue(cells[idxTooltip]) || "";
+    for (const e of entries) {
+      const categoryKey = (e.categoryKey || "").trim();
+      const category = (e.category || "").trim();
+      const name = (e.name || "").trim();
+      const link = normalizeUrl(e.link);
+      const tooltip = e.tooltip || "";
 
       if (!categoryKey || !name) continue;
       if (!out[categoryKey]) continue;
 
-      const github = normalizeUrl(cellValue(cells[idxGithub]));
-      const chrome = normalizeUrl(cellValue(cells[idxChrome]));
-      const microsoft = normalizeUrl(cellValue(cells[idxMicrosoft]));
-      const macos = normalizeUrl(cellValue(cells[idxMacos]));
-      const store = normalizeUrl(cellValue(cells[idxStore]));
-      const steam = normalizeUrl(cellValue(cells[idxSteam]));
-      const gamefaqs = normalizeUrl(cellValue(cells[idxGamefaqs]));
-      const googleDrive = normalizeUrl(cellValue(cells[idxGoogleDrive]));
+      const github = normalizeUrl(e.github);
+      const chrome = normalizeUrl(e.chrome);
+      const microsoft = normalizeUrl(e.microsoft);
+      const macos = normalizeUrl(e.macos);
+      const store = normalizeUrl(e.store);
+      const steam = normalizeUrl(e.steam);
+      const gamefaqs = normalizeUrl(e.gamefaqs);
+      const googleDrive = normalizeUrl(e["google-drive"]);
 
       const downloads = [];
       if (isProbablyUrl(github)) downloads.push({ label: "GitHub", url: github });
