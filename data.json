@@ -674,6 +674,21 @@
       "steam": "",
       "gamefaqs": "",
       "google-drive": ""
+    },
+    {
+      "categoryKey": "apps",
+      "category": "Utility",
+      "name": "Lock Finder",
+      "link": "",
+      "tooltip": "A lock finder to show which program is holding a file open.",
+      "github": "",
+      "chrome": "",
+      "microsoft": "https://apps.microsoft.com/detail/9PFTS1QWGW2W?hl=en-us&gl=PT&ocid=pdpshare",
+      "macos": "",
+      "store": "",
+      "steam": "",
+      "gamefaqs": "",
+      "google-drive": ""
     }
   ]
 }
