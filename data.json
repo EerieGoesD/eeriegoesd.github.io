@@ -706,7 +706,8 @@
       "google-drive": "",
       "nexus": "",
       "steamworkshop": "",
-      "modio": "https://mod.io/g/melvoridle/m/synergy-guard#description"
+      "modio": "https://mod.io/g/melvoridle/m/synergy-guard#description",
+      "type": "mod"
     }
   ]
 }

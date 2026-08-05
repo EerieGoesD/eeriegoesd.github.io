@@ -11,6 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let itemsByCategoryKeyPromise = null;
   let activeCategory = null;
   let contentRevealTimer = null;
+  let gamingSub = "guide";
+  let lastGamingItems = null;
 
   /* ── SVG Snake ── */
   const svgNS = "http://www.w3.org/2000/svg";
@@ -189,6 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const name = (e.name || "").trim();
       const link = normalizeUrl(e.link);
       const tooltip = e.tooltip || "";
+      const type = (e.type || "").trim().toLowerCase();
 
       if (!categoryKey || !name) continue;
       if (!out[categoryKey]) continue;
@@ -227,6 +230,7 @@ document.addEventListener("DOMContentLoaded", () => {
         name,
         link: link || null,
         tooltip: tooltip || null,
+        type: type || null,
         downloads
       });
     }
@@ -272,7 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
     subCategories.innerHTML = "";
     subCategories.scrollTop = 0;
 
-    const list = (items || []).slice();
+    let list = (items || []).slice();
 
     if (categoryKey === "apps") {
       list.sort(
@@ -282,6 +286,29 @@ document.addEventListener("DOMContentLoaded", () => {
       );
     } else {
       list.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    // Gaming splits into Guides and Mods. A toggle sits above the list and the
+    // rows shown follow it. Entries with no type are guides.
+    if (categoryKey === "videogame-guides") {
+      lastGamingItems = items;
+      const toggle = document.createElement("li");
+      toggle.classList.add("gaming-toggle");
+      [["guide", "Guides"], ["mod", "Mods"]].forEach(([value, label]) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.classList.add("gt-btn");
+        if (gamingSub === value) b.classList.add("on");
+        b.textContent = label;
+        b.addEventListener("click", () => {
+          if (gamingSub === value) return;
+          gamingSub = value;
+          populateSubCategories("videogame-guides", lastGamingItems);
+        });
+        toggle.appendChild(b);
+      });
+      subCategories.appendChild(toggle);
+      list = list.filter((it) => (it.type || "guide") === gamingSub);
     }
 
     let lastGroup = null;
@@ -449,7 +476,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!list.length) {
       const li = document.createElement("li");
-      li.textContent = "No items yet.";
+      if (categoryKey === "videogame-guides") {
+        li.textContent = gamingSub === "mod" ? "No mods yet." : "No guides yet.";
+      } else {
+        li.textContent = "No items yet.";
+      }
       li.style.color = "rgba(255,255,255,0.4)";
       subCategories.appendChild(li);
     }
