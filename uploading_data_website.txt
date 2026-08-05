@@ -1,0 +1,108 @@
+================================================================================
+UPLOADING DATA TO THE WEBSITE (eeriegoesd.com / eeriegoesd.github.io)
+================================================================================
+Reference for adding an app, guide, mod, music link or contact to the site.
+Read this whole file BEFORE uploading anything.
+
+The site reads one file: data.json, at this repo's root. Edit it, commit, push,
+and the change is live in a minute or two. Nothing else needs touching.
+
+--------------------------------------------------------------------------------
+THE WORKFLOW
+--------------------------------------------------------------------------------
+1. The user gives you a thing: an app, a mod, or a URL (Steam guide, mod.io page,
+   GitHub repo, and so on).
+2. Open the URL and read the REAL title, the game, and what it actually does.
+   Do not invent any of it.
+3. Pick the category, and for gaming the type (guide or mod) and the game.
+4. Write a title and description following the STYLE rules below.
+5. Add one entry to data.json (schema below).
+6. Syntax-check, commit, push.
+
+--------------------------------------------------------------------------------
+THE FILE
+--------------------------------------------------------------------------------
+Shape: { "entries": [ { ...one object per item... } ] }
+Missing keys are treated as empty. Keep each entry's keys in the order listed
+under ENTRY FIELDS so diffs stay small.
+
+--------------------------------------------------------------------------------
+CATEGORIES (categoryKey)
+--------------------------------------------------------------------------------
+  apps               shown under "Software"
+  music              shown under "Music"
+  videogame-guides   shown under "Gaming"
+  contacts           shown under "Contact"
+
+--------------------------------------------------------------------------------
+ENTRY FIELDS
+--------------------------------------------------------------------------------
+  categoryKey   one of the four above. Required.
+  category      grouping label:
+                  - apps: a heading like "Chrome Extension" or "Media".
+                  - videogame-guides: the GAME name, e.g. "Melvor Idle".
+                    Gaming is grouped by this on the site.
+                  - music / contacts: leave empty.
+  name          the display title. Required. See STYLE.
+  type          gaming only: "guide" or "mod". Empty counts as guide. The Gaming
+                panel has a Guides | Mods toggle that filters on this.
+  link          the primary URL. Shows as an "Open" pill (apps) or a "Website"
+                pill (gaming). For music/contacts this is the only link, and a
+                mailto: address is fine.
+  tooltip       the description shown when the row is expanded. See STYLE.
+
+  Link/store fields (each one becomes its own pill when filled):
+  github        -> GitHub
+  chrome        -> Chrome Web Store
+  microsoft     -> Microsoft Store
+  macos         -> Mac App Store
+  store         -> Store
+  steam         -> Steam
+  gamefaqs      -> GameFAQs
+  nexus         -> Nexus Mods
+  steamworkshop -> Steam Workshop
+  modio         -> mod.io
+  google-drive  -> Spreadsheet
+
+--------------------------------------------------------------------------------
+WHEN AN ENTRY ACTUALLY SHOWS
+--------------------------------------------------------------------------------
+  - apps and videogame-guides: need a link OR at least one store/link field.
+    An entry with neither is silently skipped.
+  - music and contacts: need a link.
+
+--------------------------------------------------------------------------------
+STYLE (titles and descriptions)
+--------------------------------------------------------------------------------
+  - Objective and to the point. Say what it does, nothing else.
+  - No marketing fluff, no filler, no AI-slop, no watery phrasing.
+  - Drop parenthetical tails and restatements. If the title says it, the
+    description does not repeat it.
+  - Titles: short. The game name is already the group header, so the title does
+    not need to repeat the game.
+        BAD:  Skip the 2K and Gearbox Intro Videos (Straight to the Main Menu)
+        GOOD: Skip the 2K and Gearbox Intro Videos
+  - Descriptions: one or two plain sentences. What it does and how, briefly.
+  - Use the source's own facts. Do not embellish beyond what the page says.
+
+--------------------------------------------------------------------------------
+COMMON SOURCES
+--------------------------------------------------------------------------------
+  Steam guide  -> URL in `steam`, game name in `category`, type "guide".
+  mod.io mod   -> URL in `modio`, game name in `category`, type "mod".
+  Nexus mod    -> URL in `nexus`, plus github/steamworkshop if given.
+  If a page is rate-limited or JS-only, read its title/description from the
+  page's meta tags (og:title, og:description) instead.
+
+--------------------------------------------------------------------------------
+PUBLISHING
+--------------------------------------------------------------------------------
+  git add data.json
+  git commit -m "Add <thing>"
+  git push
+
+  Live in a minute or two on eeriegoesd.com. Hard refresh to see it.
+
+(The Site Data Editor desktop app edits this same file through a UI. For
+AI-driven uploads, edit data.json directly as above.)
+================================================================================
