@@ -422,7 +422,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "",
+      "category": "Dragon Quest VIII: Journey of the Cursed King",
       "name": "Dragon Quest VIII Tracker (Alchemy, Inventory, Craftable, Optimizer)",
       "link": "https://eeriegoesd.com/dragon-quest-viii-recipe-helper/",
       "tooltip": "Equipment optimizer, item craft tracker for Dragon Quest VIII + other features.",
@@ -437,7 +437,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "",
+      "category": "Dark Souls: Remastered",
       "name": "Dark Souls Remastered Equipment Planner",
       "link": "http://eeriegoesd.com/dark_souls_equipment_planner/",
       "tooltip": "Equipment loadout optimizer for Dark Souls.",
@@ -452,7 +452,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "",
+      "category": "Shenmue I & II",
       "name": "Shenmue 1 Collection Tracker",
       "link": "http://eeriegoesd.com/shenmue-collection-tracker/",
       "tooltip": "Capsules, Cassettes, Scrolls tracker for Shenmue.",
@@ -467,7 +467,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "",
+      "category": "Shenmue I & II",
       "name": "Cheat Engine Tables",
       "link": "",
       "tooltip": "Cheat Engine tables for single-player games compiled by me.",
@@ -482,7 +482,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "",
+      "category": "Resident Evil 5",
       "name": "Resident Evil 5 - Weapon DPS Spreadsheet",
       "link": "",
       "tooltip": "DPS spreadsheet of all standard weapons in RE5.",
@@ -497,7 +497,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "",
+      "category": "Shenmue I & II",
       "name": "Shenmue 1 Achievements Guide",
       "link": "",
       "tooltip": "A comprehensive step-by-step guide on how to get all Steam trophies for the first Shenmue game.",
@@ -512,7 +512,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "",
+      "category": "Dark Souls III",
       "name": "DARK SOULS™ III Armor Spreadsheet + Calculator",
       "link": "",
       "tooltip": "All the armor in the game in one spreadsheet with all stats and sorting method to decide the best armor for you.",
@@ -527,7 +527,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "",
+      "category": "Grand Theft Auto: San Andreas",
       "name": "Grand Theft Auto: San Andreas - Clothing + Tattoos Spreadsheet",
       "link": "",
       "tooltip": "A spreadsheet containing all clothes from all stores sorted by either Respect %, Sex Appeal %, Price and Store Name. Tattoos Included.",
@@ -542,7 +542,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "",
+      "category": "Shenmue I & II",
       "name": "Shenmue I & II (Steam) Original Graphics Settings Setup",
       "link": "",
       "tooltip": "Optimal settings to replicate Shenmue's original graphics as closely as possible in the Steam version.",
@@ -557,7 +557,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "",
+      "category": "Dark Souls III",
       "name": "DARK SOULS™ III Script (Weapon DPS Calculator)",
       "link": "",
       "tooltip": "This guide adds a DPS (Damage Per Second) column to the Dark Souls 3 Weapon Attack Table on soulsplanner.com. Using weapon-specific BPM values based on community tests (Poutsos' weapon speed tests).",
@@ -572,7 +572,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "",
+      "category": "Call of Cthulhu",
       "name": "Call of Cthulhu Reference Guide & Game Lore",
       "link": "",
       "tooltip": "Complete reference to all in-game journal entries in Call of Cthulhu, serving as a comprehensive story compendium.",
@@ -587,7 +587,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "",
+      "category": "Resident Evil 5",
       "name": "Resident Evil 5 - All BSAA Emblems + Treasures + Eggs + Weapons",
       "link": "",
       "tooltip": "A guide showcasing the locations of Resident Evil 5 collectibles with screenshots.",
@@ -602,7 +602,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "",
+      "category": "Blasphemous",
       "name": "Blasphemous Speedrun Guide",
       "link": "",
       "tooltip": "A quick step-by-step guide taken off of Kitokys \"All Bosses\" Glitchless speedrun. I find things easier for me whenever they're presented in a text form, so I'm going to provide all the steps taken, which will also help you hit the Bronze Medal achievement.",
@@ -617,7 +617,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "",
+      "category": "Hitman: Codename 47",
       "name": "Hitman: Codename 47 - Launch Errors and Fixes (Steam)",
       "link": "",
       "tooltip": "List of some crashes and can occur when launching this game and how to fix them.",
@@ -632,7 +632,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "",
+      "category": "Dark Souls: Remastered",
       "name": "DARK SOULS™: REMASTERED Weapon DPS Script",
       "link": "",
       "tooltip": "A Tampermonkey script that adds a “DPS R1” column to the Dark Souls weapon table on soulsplanner.com/darksouls/weaponatk.\nIt uses per-weapon R1 attack speed (APS) with boss/enemy resistance calculator (Regular / Strike / Slash / Thrust + Magic / Fire / Lightning).\nThe guide explains the exact formulas used for damage after defense, Bleed damage over time, Black Knight vs Chaos Demon bonus, and Occult vs Occult-weak bonus.\nUnder its assumptions (pure R1 spam, no downtime), you can sort by DPS and see the mathematically optimal weapon for any given boss or custom enemy setup.",
@@ -647,7 +647,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "",
+      "category": "Another Lost Phone: Laura's Story",
       "name": "Another Lost Phone: Laura's Story - Complete Phone Log (Chronological)",
       "link": "https://steamcommunity.com/sharedfiles/filedetails/?id=3758941546",
       "tooltip": "The complete contents of Laura's phone, arranged in chronological order from first entry to last.",
@@ -662,7 +662,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "",
+      "category": "Another Lost Phone: Laura's Story",
       "name": "Another Lost Phone: Laura's Story - All Passwords + GPS Code",
       "link": "https://steamcommunity.com/sharedfiles/filedetails/?id=3758961229",
       "tooltip": "Every password and access code in Laura's phone: WiFi, SecuryChest, CloudSave, and the GPS unlock pattern.",
@@ -711,7 +711,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "Borderlands GOTY",
+      "category": "Borderlands Game of the Year",
       "name": "Skip Intro Videos",
       "type": "guide",
       "link": "",
