@@ -689,6 +689,24 @@
       "steam": "",
       "gamefaqs": "",
       "google-drive": ""
+    },
+    {
+      "categoryKey": "videogame-guides",
+      "category": "",
+      "name": "Synergy Guard",
+      "link": "",
+      "tooltip": "",
+      "github": "https://github.com/eeriegoesd/melvor-idle-mods",
+      "chrome": "",
+      "microsoft": "",
+      "macos": "",
+      "store": "",
+      "steam": "",
+      "gamefaqs": "",
+      "google-drive": "",
+      "nexus": "",
+      "steamworkshop": "",
+      "modio": "https://mod.io/g/melvoridle/m/synergy-guard#description"
     }
   ]
 }

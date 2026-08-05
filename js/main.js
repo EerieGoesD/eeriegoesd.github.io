@@ -200,6 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const store = normalizeUrl(e.store);
       const steam = normalizeUrl(e.steam);
       const gamefaqs = normalizeUrl(e.gamefaqs);
+      const modio = normalizeUrl(e.modio);
       const googleDrive = normalizeUrl(e["google-drive"]);
 
       const downloads = [];
@@ -210,6 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isProbablyUrl(store)) downloads.push({ label: "Store", url: store });
       if (isProbablyUrl(steam)) downloads.push({ label: "Steam", url: steam });
       if (isProbablyUrl(gamefaqs)) downloads.push({ label: "GameFAQs", url: gamefaqs });
+      if (isProbablyUrl(modio)) downloads.push({ label: "mod.io", url: modio });
       if (isProbablyUrl(googleDrive)) downloads.push({ label: "Spreadsheet", url: googleDrive });
 
       const hasLink = !!link;
