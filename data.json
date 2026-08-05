@@ -712,7 +712,7 @@
     {
       "categoryKey": "videogame-guides",
       "category": "Borderlands GOTY",
-      "name": "Skip the 2K and Gearbox Intro Videos",
+      "name": "Skip Intro Videos",
       "type": "guide",
       "link": "",
       "tooltip": "Removes the 2K and Gearbox startup logos so Borderlands boots straight to the main menu, using a simple file rename with no mods or tools. Also shows how to put them back.",
