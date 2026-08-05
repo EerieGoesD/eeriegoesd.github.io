@@ -294,7 +294,7 @@ document.addEventListener("DOMContentLoaded", () => {
       lastGamingItems = items;
       const toggle = document.createElement("li");
       toggle.classList.add("gaming-toggle");
-      [["guide", "Guides"], ["mod", "Mods"]].forEach(([value, label]) => {
+      [["guide", "Guides"], ["mod", "Mods"], ["steamdeck", "Steam Deck"]].forEach(([value, label]) => {
         const b = document.createElement("button");
         b.type = "button";
         b.classList.add("gt-btn");
@@ -475,7 +475,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!list.length) {
       const li = document.createElement("li");
       if (categoryKey === "videogame-guides") {
-        li.textContent = gamingSub === "mod" ? "No mods yet." : "No guides yet.";
+        li.textContent = gamingSub === "mod" ? "No mods yet." : gamingSub === "steamdeck" ? "Nothing here yet." : "No guides yet.";
       } else {
         li.textContent = "No items yet.";
       }

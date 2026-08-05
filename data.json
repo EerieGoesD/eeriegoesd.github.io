@@ -107,7 +107,7 @@
     },
     {
       "categoryKey": "videogame-guides",
-      "category": "Steam Deck",
+      "category": "",
       "name": "Steam Deck Optimal Emulator Settings",
       "link": "https://docs.google.com/spreadsheets/d/1YnPPKWyN7HMj3jVfkBqrcHzXrPMOlFt2NohQJC8EQVQ/edit?usp=sharing",
       "tooltip": "Spreadsheet of optimal emulator settings for Steam Deck and PC, organized by 4 use cases (FPS, authentic feel, visuals, recording). 7 emulators covered. More details in the link (Google Sheets).",
@@ -118,7 +118,8 @@
       "store": "",
       "steam": "",
       "gamefaqs": "",
-      "google-drive": "https://docs.google.com/spreadsheets/d/1YnPPKWyN7HMj3jVfkBqrcHzXrPMOlFt2NohQJC8EQVQ/edit?usp=sharing"
+      "google-drive": "https://docs.google.com/spreadsheets/d/1YnPPKWyN7HMj3jVfkBqrcHzXrPMOlFt2NohQJC8EQVQ/edit?usp=sharing",
+      "type": "steamdeck"
     },
     {
       "categoryKey": "apps",
