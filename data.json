@@ -708,6 +708,25 @@
       "steamworkshop": "",
       "modio": "https://mod.io/g/melvoridle/m/synergy-guard#description",
       "type": "mod"
+    },
+    {
+      "categoryKey": "videogame-guides",
+      "category": "Borderlands GOTY",
+      "name": "Skip the 2K and Gearbox Intro Videos (Straight to the Main Menu)",
+      "type": "guide",
+      "link": "",
+      "tooltip": "Removes the 2K and Gearbox startup logos so Borderlands boots straight to the main menu, using a simple file rename with no mods or tools. Also shows how to put them back.",
+      "github": "",
+      "chrome": "",
+      "microsoft": "",
+      "macos": "",
+      "store": "",
+      "steam": "https://steamcommunity.com/sharedfiles/filedetails/?id=3777151351",
+      "gamefaqs": "",
+      "google-drive": "",
+      "nexus": "",
+      "steamworkshop": "",
+      "modio": ""
     }
   ]
 }
