@@ -278,7 +278,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let list = (items || []).slice();
 
-    if (categoryKey === "apps") {
+    if (categoryKey === "apps" || categoryKey === "videogame-guides") {
       list.sort(
         (a, b) =>
           (a.category || "").localeCompare(b.category || "") ||
@@ -316,10 +316,8 @@ document.addEventListener("DOMContentLoaded", () => {
     list.forEach((item) => {
       let group = null;
 
-      if (categoryKey === "apps") {
+      if (categoryKey === "apps" || categoryKey === "videogame-guides") {
         group = item.category || null;
-      } else if (categoryKey === "videogame-guides") {
-        group = item.name.charAt(0).toUpperCase();
       }
 
       if (group !== lastGroup && group !== null) {
