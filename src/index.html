@@ -1137,54 +1137,32 @@
             tt = e.tooltip || "",
             tp = (e.type || "").trim().toLowerCase();
           if (!ck || !nm || !out[ck]) continue;
-          const gh = nu(e.github),
-            ch = nu(e.chrome),
-            ms = nu(e.microsoft),
-            mc = nu(e.macos),
-            st = nu(e.store),
-            sm = nu(e.steam),
-            gf = nu(e.gamefaqs),
-            mi = nu(e.modio),
-            gd = nu(e["google-drive"]),
-            rp = nu(e.report),
+          const rp = nu(e.report),
             sf = nu(e.suggest),
             dl = [];
-          if (iu(gh)) dl.push({
-            label: "GitHub",
-            url: gh
-          });
-          if (iu(ch)) dl.push({
-            label: "Chrome Web Store",
-            url: ch
-          });
-          if (iu(ms)) dl.push({
-            label: "Microsoft Store",
-            url: ms
-          });
-          if (iu(mc)) dl.push({
-            label: "Mac App Store",
-            url: mc
-          });
-          if (iu(st)) dl.push({
-            label: "Store",
-            url: st
-          });
-          if (iu(sm)) dl.push({
-            label: "Steam",
-            url: sm
-          });
-          if (iu(gf)) dl.push({
-            label: "GameFAQs",
-            url: gf
-          });
-          if (iu(mi)) dl.push({
-            label: "mod.io",
-            url: mi
-          });
-          if (iu(gd)) dl.push({
-            label: "Spreadsheet",
-            url: gd
-          });
+          /* Fixed order: the official stores first, then GitHub, then the rest.
+             One list, so adding a place to get something means one line here. */
+          const PLACES = [
+            ["googleplay", "Google Play Store"],
+            ["macos", "Mac App Store"],
+            ["microsoft", "Microsoft Store"],
+            ["github", "GitHub"],
+            ["chrome", "Chrome Web Store"],
+            ["steam", "Steam"],
+            ["steamworkshop", "Steam Workshop"],
+            ["nexus", "Nexus Mods"],
+            ["modio", "mod.io"],
+            ["gamefaqs", "GameFAQs"],
+            ["store", "Store"],
+            ["google-drive", "Spreadsheet"]
+          ];
+          for (const [key, label] of PLACES) {
+            const u = nu(e[key]);
+            if (iu(u)) dl.push({
+              label: label,
+              url: u
+            });
+          }
           /* Whether the entry is worth showing is decided on the real links
              alone. The two ways to get in touch are added after that test, so
              an entry with nothing but contact buttons stays hidden. */
