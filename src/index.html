@@ -1142,6 +1142,7 @@
             gf = nu(e.gamefaqs),
             mi = nu(e.modio),
             gd = nu(e["google-drive"]),
+            rp = nu(e.report),
             dl = [];
           if (iu(gh)) dl.push({
             label: "GitHub",
@@ -1178,6 +1179,11 @@
           if (iu(gd)) dl.push({
             label: "Spreadsheet",
             url: gd
+          });
+          /* Report Issue goes last, after the download links. */
+          if (iu(rp)) dl.push({
+            label: "Report Issue",
+            url: rp
           });
           if (ck === "videogame-guides" || ck === "apps") {
             if (!lk && !dl.length) continue
