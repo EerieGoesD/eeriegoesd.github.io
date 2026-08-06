@@ -533,11 +533,14 @@
       }
     }
 
+    /* Both rows run on the same fixed column width, so the buttons line up
+       down the page and no label makes its button wider than its neighbour. */
     .sub-categories .app-links {
       margin-top: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 8px;
+      max-width: 542px
     }
 
     .sub-categories .app-contact {
@@ -686,6 +689,10 @@
 
       .sub-categories .app-desc {
         font-size: 12px
+      }
+
+      .sub-categories .app-links {
+        grid-template-columns: repeat(auto-fill, minmax(148px, 1fr))
       }
 
       .sub-categories .pill {
