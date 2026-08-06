@@ -925,7 +925,7 @@
       "name": "No Backpack Limit",
       "type": "mod",
       "link": "",
-      "tooltip": "Set your own backpack size.\n\n- Backpack slots: how many slots you get. Game default is 15",
+      "tooltip": "Set your own backpack size.\n\n- Backpack slots: how many slots you get",
       "github": "https://github.com/EerieGoesD/borderlands-1-goty-mods/tree/main/NoBackpackLimit",
       "chrome": "",
       "microsoft": "",
