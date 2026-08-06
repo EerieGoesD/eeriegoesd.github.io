@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>eerie:~$</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="canonical" href="https://eeriegoesd.github.io/" />
+  <meta name="description" content="EERIE - software developer, music producer, and gaming guide creator. Browse apps, Chrome extensions, music, and videogame guides." />
+  <meta name="keywords" content="EERIE, software developer, Chrome extensions, gaming guides, music producer, indie developer" />
+  <meta name="author" content="EERIE" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="EERIE - Software, Music & Gaming" />
+  <meta property="og:description" content="Software developer, music producer, and gaming guide creator. Browse apps, Chrome extensions, music, and videogame guides." />
+  <meta property="og:url" content="https://eeriegoesd.github.io/" />
+  <meta property="og:site_name" content="EERIE" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="EERIE - Software, Music & Gaming" />
+  <meta name="twitter:description" content="Software developer, music producer, and gaming guide creator. Browse apps, Chrome extensions, music, and videogame guides." />
+  <meta name="theme-color" content="#fcfcfd" />
+  <meta name="color-scheme" content="light dark" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"EERIE","url":"https://eeriegoesd.github.io/","sameAs":["https://eeriegoesd.com/"],"description":"Software developer, music producer, and gaming guide creator.","knowsAbout":["Software Development","Chrome Extensions","Music Production","Gaming Guides"]}</script>
+  <style>
+    @font-face {
+      font-family: 'Share Tech Mono';
+      src: url('fonts/ShareTechMono.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap
+    }
+
+    :root {
+      --bg: #fcfcfd;
+      --text: #1c2024;
+      --accent-rgb: 13, 116, 206;
+      --accent2-rgb: 194, 41, 138;
+      --dim-rgb: 28, 32, 36;
+      --tooltip-bg: #ffffff;
+      --tooltip-text: #1c2024;
+      --scanline: rgba(0,0,0,.045);
+      --vignette: rgba(0,0,0,.05)
+    }
+
+    html[data-theme=dark] {
+      --bg: #111113;
+      --text: #edeef0;
+      --accent-rgb: 112, 184, 255;
+      --accent2-rgb: 255, 141, 204;
+      --dim-rgb: 237, 238, 240;
+      --tooltip-bg: #18191b;
+      --tooltip-text: #edeef0;
+      --scanline: rgba(255,255,255,.035);
+      --vignette: rgba(0,0,0,.4)
+    }
+
+    html:not([data-theme=dark]) * {
+      text-shadow: none !important
+    }
+
+    .nav-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px
+    }
+
+    .nav-top .terminal-header {
+      margin-bottom: 0
+    }
+
+    .theme-btn {
+      background: transparent;
+      border: 1px solid rgba(var(--accent-rgb),.35);
+      border-radius: 2px;
+      width: 30px;
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: rgb(var(--accent-rgb));
+      cursor: pointer;
+      transition: border-color .2s, box-shadow .2s, color .2s;
+      padding: 0
+    }
+
+    .theme-btn:hover {
+      border-color: rgb(var(--accent-rgb));
+      box-shadow: 0 0 8px rgba(var(--accent-rgb),.3)
+    }
+
+    .theme-btn svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      display: block
+    }
+
+    .theme-btn .icon-sun {
+      display: none
+    }
+
+    html[data-theme=dark] .theme-btn .icon-sun {
+      display: inline
+    }
+
+    html[data-theme=dark] .theme-btn .icon-moon {
+      display: none
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Share Tech Mono', 'Courier New', monospace;
+      overflow: hidden;
+      position: relative
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      background: repeating-linear-gradient(to bottom, transparent 0px, transparent 3px, var(--scanline) 3px, var(--scanline) 4px)
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9998;
+      background: radial-gradient(ellipse at center, transparent 60%, var(--vignette) 100%)
+    }
+
+    .layout {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      position: relative
+    }
+
+    .nav-panel {
+      flex-shrink: 0;
+      width: 280px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      position: relative
+    }
+
+    .terminal-header {
+      font-size: 13px;
+      color: rgba(var(--accent-rgb),.5);
+      margin-bottom: 8px;
+      letter-spacing: 1px
+    }
+
+    .terminal-header::after {
+      content: '_';
+      animation: blink 1s step-end infinite;
+      color: rgb(var(--accent-rgb))
+    }
+
+    .terminal-menu {
+      list-style: none
+    }
+
+    .terminal-menu li {
+      margin: 10px 0
+    }
+
+    .terminal-menu li a {
+      text-decoration: none;
+      color: var(--text);
+      font-size: 24px;
+      display: inline-block;
+      position: relative;
+      transition: color .3s, text-shadow .3s;
+      letter-spacing: 2px
+    }
+
+    .terminal-menu li a::before {
+      content: '> ';
+      color: rgba(var(--accent-rgb),.3);
+      transition: color .3s, text-shadow .3s
+    }
+
+    .terminal-menu li a:hover {
+      color: rgb(var(--accent-rgb));
+      text-shadow: 0 0 10px rgba(var(--accent-rgb),.6), 0 0 30px rgba(var(--accent-rgb),.15)
+    }
+
+    .terminal-menu li a:hover::before {
+      color: rgb(var(--accent-rgb));
+      text-shadow: 0 0 10px rgba(var(--accent-rgb),.6)
+    }
+
+    .terminal-menu li a.active {
+      color: rgb(var(--accent2-rgb));
+      text-shadow: 0 0 8px rgba(var(--accent2-rgb),.4)
+    }
+
+    .terminal-menu li a.active::before {
+      content: '_ ';
+      color: rgb(var(--accent2-rgb));
+      animation: blink 1s step-end infinite
+    }
+
+    .nav-panel.animate .terminal-menu li {
+      opacity: 0;
+      animation: fadeIn .4s forwards
+    }
+
+    .nav-panel.animate .terminal-header {
+      opacity: 0;
+      animation: fadeIn .3s forwards
+    }
+
+    .nav-panel.animate .theme-btn {
+      opacity: 0;
+      animation: fadeIn .3s forwards
+    }
+
+    .nav-panel.animate .terminal-menu li:nth-child(1) {
+      animation-delay: .1s
+    }
+
+    .nav-panel.animate .terminal-menu li:nth-child(2) {
+      animation-delay: .15s
+    }
+
+    .nav-panel.animate .terminal-menu li:nth-child(3) {
+      animation-delay: .2s
+    }
+
+    .nav-panel.animate .terminal-menu li:nth-child(4) {
+      animation-delay: .25s
+    }
+
+    .nav-panel.animate .terminal-menu li:nth-child(5) {
+      animation-delay: .3s
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1
+      }
+    }
+
+    .divider {
+      width: 1px;
+      flex-shrink: 0
+    }
+
+    .content-panel {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      opacity: 0;
+      clip-path: inset(0 100% 0 0);
+      transition: opacity .25s ease, clip-path .35s ease;
+      display: flex;
+      flex-direction: column
+    }
+
+    .content-panel.visible {
+      opacity: 1;
+      clip-path: inset(0 0 0 0);
+      transition: opacity .3s ease, clip-path .45s cubic-bezier(.16,1,.3,1)
+    }
+
+    .sub-categories {
+      list-style: none;
+      flex: 1;
+      padding: 32px 32px 40px;
+      overflow-y: auto;
+      transition: opacity .08s ease;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(var(--accent-rgb),.25) transparent
+    }
+
+    .sub-categories::-webkit-scrollbar {
+      width: 5px
+    }
+
+    .sub-categories::-webkit-scrollbar-track {
+      background: transparent
+    }
+
+    .sub-categories::-webkit-scrollbar-thumb {
+      background: rgba(var(--accent-rgb),.25);
+      border-radius: 3px
+    }
+
+    .sub-categories li {
+      margin: 5px 0
+    }
+
+    .sub-categories>li>a {
+      text-decoration: none;
+      color: var(--text);
+      font-size: 15px;
+      transition: color .3s, text-shadow .3s;
+      position: relative;
+      display: inline-block
+    }
+
+    .sub-categories>li>a::before {
+      content: '>';
+      color: rgba(var(--accent-rgb),.45);
+      margin-right: 8px;
+      transition: color .3s
+    }
+
+    .sub-categories>li>a:hover {
+      color: rgb(var(--accent-rgb));
+      text-shadow: 0 0 8px rgba(var(--accent-rgb),.6), 0 0 20px rgba(var(--accent-rgb),.2)
+    }
+
+    .sub-categories>li>a:hover::before {
+      color: rgb(var(--accent-rgb))
+    }
+
+    .sub-categories li a .tooltip {
+      font-family: 'Share Tech Mono', monospace;
+      visibility: hidden;
+      background-color: var(--tooltip-bg);
+      color: var(--tooltip-text);
+      padding: 8px 12px;
+      border: 1px solid rgba(var(--accent-rgb),.3);
+      border-radius: 4px;
+      position: absolute;
+      left: 0;
+      top: calc(100% + 6px);
+      text-align: left;
+      white-space: pre-wrap;
+      width: max-content;
+      max-width: min(400px, 50vw);
+      z-index: 1;
+      transition: visibility .3s, opacity .3s;
+      opacity: 0;
+      font-size: 13px
+    }
+
+    .sub-categories li a .tooltip::before {
+      display: none
+    }
+
+    .sub-categories li a:hover .tooltip {
+      visibility: visible;
+      opacity: 1
+    }
+
+    .sub-categories li.letter {
+      font-size: 13px;
+      font-weight: bold;
+      color: rgb(var(--accent-rgb));
+      text-shadow: 0 0 6px rgba(var(--accent-rgb),.4);
+      margin: 20px 0 6px;
+      pointer-events: none;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(var(--accent-rgb),.15);
+      padding-bottom: 4px
+    }
+
+    .sub-categories li.letter:first-child {
+      margin-top: 0
+    }
+
+    .sub-categories .gaming-toggle {
+      display: flex;
+      gap: 6px;
+      max-width: 340px;
+      margin: 0 0 16px
+    }
+
+    .sub-categories .gaming-toggle .gt-btn {
+      flex: 1;
+      padding: 6px 0;
+      text-align: center;
+      white-space: nowrap;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 1px;
+      background: transparent;
+      border: 1px solid rgba(var(--accent-rgb),.3);
+      color: rgba(var(--dim-rgb),.7);
+      cursor: pointer;
+      border-radius: 2px;
+      transition: color .2s, border-color .2s, text-shadow .2s
+    }
+
+    .sub-categories .gaming-toggle .gt-btn:hover {
+      color: rgb(var(--accent-rgb));
+      border-color: rgb(var(--accent-rgb))
+    }
+
+    .sub-categories .gaming-toggle .gt-btn.on {
+      color: rgb(var(--accent2-rgb));
+      border-color: rgb(var(--accent2-rgb));
+      text-shadow: 0 0 8px rgba(var(--accent2-rgb),.4)
+    }
+
+    .sub-categories .app-item {
+      margin: 6px 0
+    }
+
+    .sub-categories .app-row {
+      display: block
+    }
+
+    .sub-categories .app-title {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 15px;
+      font-family: 'Share Tech Mono', monospace;
+      position: relative;
+      display: inline-block;
+      transition: color .3s, text-shadow .3s
+    }
+
+    .sub-categories .app-title::before {
+      content: '>';
+      color: rgba(var(--accent-rgb),.45);
+      margin-right: 8px;
+      transition: color .3s
+    }
+
+    .sub-categories .app-title:hover {
+      color: rgb(var(--accent-rgb));
+      text-shadow: 0 0 8px rgba(var(--accent-rgb),.5)
+    }
+
+    .sub-categories .app-title:hover::before {
+      color: rgb(var(--accent-rgb))
+    }
+
+    .sub-categories .app-row.is-open .app-title {
+      color: rgb(var(--accent2-rgb));
+      text-shadow: 0 0 8px rgba(var(--accent2-rgb),.4)
+    }
+
+    .sub-categories .app-row.is-open .app-title::before {
+      content: '_';
+      color: rgb(var(--accent2-rgb));
+      animation: blink 1s step-end infinite
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0
+      }
+    }
+
+    .sub-categories .app-panel {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height .35s ease, opacity .25s ease;
+      margin-top: 0;
+      border-left: 1px solid rgba(var(--accent-rgb),.2);
+      padding-left: 0
+    }
+
+    .sub-categories .app-row.is-open .app-panel {
+      max-height: 600px;
+      opacity: 1;
+      margin-top: 8px;
+      padding-left: 18px
+    }
+
+    .sub-categories .app-desc {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      color: rgba(var(--dim-rgb),.85);
+      white-space: pre-wrap
+    }
+
+    .sub-categories .app-row.is-open .app-desc {
+      animation: matrixReveal .4s ease-out both
+    }
+
+    @keyframes matrixReveal {
+      from {
+        opacity: 0;
+        clip-path: inset(0 100% 0 0)
+      }
+
+      to {
+        opacity: 1;
+        clip-path: inset(0 0 0 0)
+      }
+    }
+
+    .sub-categories .app-links {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px
+    }
+
+    .sub-categories .pill {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .5px;
+      text-decoration: none;
+      color: rgba(var(--dim-rgb),.85);
+      border: 1px solid rgba(var(--accent-rgb),.35);
+      padding: 5px 10px;
+      border-radius: 2px;
+      display: inline-block;
+      transition: all .2s ease;
+      white-space: nowrap
+    }
+
+    .sub-categories .pill:hover {
+      color: rgb(var(--accent-rgb));
+      border-color: rgb(var(--accent-rgb));
+      box-shadow: 0 0 8px rgba(var(--accent-rgb),.3), inset 0 0 8px rgba(var(--accent-rgb),.05)
+    }
+
+    .privacy-link {
+      position: fixed;
+      bottom: 14px;
+      left: 16px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: rgba(var(--dim-rgb),.5);
+      text-decoration: none;
+      z-index: 10;
+      transition: color .3s, text-shadow .3s;
+      letter-spacing: .5px
+    }
+
+    .privacy-link:hover {
+      color: rgb(var(--accent-rgb));
+      text-shadow: 0 0 6px rgba(var(--accent-rgb),.4)
+    }
+
+    html {
+      text-size-adjust: 100%
+    }
+
+    @supports(-webkit-touch-callout:none) {
+      html {
+        -webkit-text-size-adjust: 100%
+      }
+
+      .sub-categories {
+        -webkit-overflow-scrolling: touch
+      }
+    }
+
+    @media(max-width:700px) {
+      .layout {
+        flex-direction: column
+      }
+
+      .nav-panel {
+        width: 100%;
+        padding: 28px 20px;
+        justify-content: flex-start;
+        flex-shrink: 0
+      }
+
+      .terminal-menu li {
+        margin: 8px 0
+      }
+
+      .terminal-menu li a {
+        font-size: 18px;
+        padding: 4px 0
+      }
+
+      .nav-panel.collapsed {
+        padding: 16px 20px 12px
+      }
+
+      .nav-panel.collapsed .terminal-header {
+        display: none
+      }
+
+      .nav-panel.collapsed .terminal-menu li {
+        display: none
+      }
+
+      .nav-panel.collapsed .terminal-menu li.is-active {
+        display: block;
+        margin: 0
+      }
+
+      .nav-panel.collapsed .terminal-menu li.is-active a {
+        font-size: 15px
+      }
+
+      .divider {
+        width: auto;
+        height: 1px;
+        flex-shrink: 0;
+        background: rgba(var(--accent-rgb),.15);
+        opacity: 0;
+        transition: opacity .2s ease
+      }
+
+      .divider.visible {
+        opacity: 1
+      }
+
+      .content-panel {
+        flex: 1;
+        min-height: 0;
+        clip-path: inset(0 0 100% 0)
+      }
+
+      .sub-categories {
+        padding: 16px 20px 40px
+      }
+
+      .sub-categories>li>a,
+      .sub-categories .app-title {
+        font-size: 14px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        max-width: 100%;
+        text-align: left
+      }
+
+      .sub-categories .app-item {
+        margin: 8px 0
+      }
+
+      .sub-categories .app-desc {
+        font-size: 12px
+      }
+
+      .sub-categories .pill {
+        font-size: 10px;
+        padding: 6px 12px;
+        white-space: normal;
+        line-height: 1.2
+      }
+
+      .sub-categories li a .tooltip {
+        position: static;
+        transform: none;
+        width: auto;
+        max-width: 100%;
+        margin-top: 6px;
+        font-size: 12px
+      }
+
+      .sub-categories li a .tooltip::before {
+        display: none
+      }
+    }
+
+    .privacy-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: rgba(0,0,0,.7);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      justify-content: center;
+      align-items: center;
+      padding: 44px 20px;
+      overflow-y: auto
+    }
+
+    .privacy-overlay.open {
+      display: flex
+    }
+
+    .privacy-modal {
+      position: relative;
+      background: var(--bg);
+      border: 1px solid rgba(var(--accent-rgb),.3);
+      border-radius: 4px;
+      max-width: 640px;
+      width: 100%;
+      padding: 28px 30px;
+      font-family: 'Share Tech Mono', monospace;
+      box-shadow: 0 0 30px rgba(var(--accent-rgb),.15)
+    }
+
+    .privacy-modal .pp-title {
+      font-size: 18px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: var(--text);
+      margin-bottom: 6px
+    }
+
+    .privacy-modal .pp-title::before {
+      content: '> ';
+      color: rgba(var(--accent-rgb),.3)
+    }
+
+    .privacy-modal .pp-meta {
+      font-size: 11px;
+      color: rgba(var(--dim-rgb),.3);
+      letter-spacing: .5px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid rgba(var(--accent-rgb),.15);
+      padding-bottom: 14px
+    }
+
+    .privacy-modal .pp-sec {
+      margin: 16px 0;
+      padding-left: 16px;
+      border-left: 1px solid rgba(var(--accent-rgb),.15)
+    }
+
+    .privacy-modal .pp-h {
+      font-size: 13px;
+      font-weight: bold;
+      color: rgb(var(--accent2-rgb));
+      letter-spacing: 1px;
+      margin-bottom: 8px
+    }
+
+    .privacy-modal .pp-h::before {
+      content: '_ ';
+      color: rgb(var(--accent2-rgb))
+    }
+
+    .privacy-modal p {
+      font-size: 12px;
+      color: rgba(var(--dim-rgb),.6);
+      line-height: 1.7;
+      margin: 6px 0
+    }
+
+    .privacy-modal a {
+      color: rgb(var(--accent-rgb));
+      text-decoration: none;
+      transition: text-shadow .3s
+    }
+
+    .privacy-modal a:hover {
+      text-shadow: 0 0 8px rgba(var(--accent-rgb),.5)
+    }
+
+    .privacy-modal .pp-close {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      background: transparent;
+      border: 1px solid rgba(var(--accent-rgb),.3);
+      color: rgba(var(--dim-rgb),.6);
+      width: 26px;
+      height: 26px;
+      border-radius: 2px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      line-height: 1;
+      transition: border-color .2s, color .2s;
+      font-family: 'Share Tech Mono', monospace
+    }
+
+    .privacy-modal .pp-close:hover {
+      border-color: rgb(var(--accent2-rgb));
+      color: rgb(var(--accent2-rgb))
+    }
+  </style>
+  <script>
+    try {
+      if (localStorage.getItem('eerie.theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark')
+    } catch (e) {}
+  </script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments)
+    }
+    window.gtag = gtag;
+    gtag('consent', 'default', {
+      analytics_storage: 'denied',
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+      wait_for_update: 500
+    });
+
+    function initGtag() {
+      if (document.getElementById('gtag-script')) return;
+      var s = document.createElement('script');
+      s.id = 'gtag-script';
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-K00TNSHNQ2';
+      document.head.appendChild(s);
+      gtag('consent', 'update', {
+        analytics_storage: 'granted'
+      });
+      gtag('js', new Date());
+      gtag('config', 'G-K00TNSHNQ2')
+    }
+
+    function hideBanner() {
+      document.getElementById('cookieBanner').style.display = 'none'
+    }
+
+    function acceptCookies() {
+      localStorage.setItem('cookie-consent', 'accepted');
+      hideBanner();
+      initGtag()
+    }
+
+    function rejectCookies() {
+      localStorage.setItem('cookie-consent', 'rejected');
+      hideBanner()
+    }
+  </script>
+</head>
+
+<body oncontextmenu="return false">
+  <h1 class="sr-only">EERIE - Software, Music & Gaming Guides</h1>
+  <p class="sr-only">Browse software apps, Chrome extensions, music, videogame guides, and more by EERIE.</p>
+  <div class="layout">
+    <nav class="nav-panel" aria-label="Main navigation">
+      <div class="nav-top">
+        <div class="terminal-header" aria-hidden="true">guest@eerie:~$</div><button class="theme-btn" id="themeBtn" title="Toggle light / dark theme" aria-label="Toggle light or dark theme"><svg class="icon-sun" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+          </svg><svg class="icon-moon" viewBox="0 0 24 24">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+          </svg></button>
+      </div>
+      <ul class="terminal-menu" id="terminal-menu">
+        <li><a href="#" data-category="apps">software</a></li>
+        <li><a href="#" data-category="music">music</a></li>
+        <li><a href="#" data-category="videogame-guides">gaming</a></li>
+        <li><a href="#" data-category="contacts">contact</a></li>
+        <li><a href="https://eeriegoesd.com/project-inquiry/" target="_blank" rel="noopener noreferrer">inquiry</a></li>
+      </ul>
+    </nav>
+    <div class="divider" id="divider" aria-hidden="true"></div>
+    <main class="content-panel" id="content-panel">
+      <ul class="sub-categories" id="sub-categories"></ul>
+    </main>
+  </div><a href="privacy/" class="privacy-link" id="privacyLink">Privacy Policy</a>
+  <div class="privacy-overlay" id="privacyOverlay">
+    <div class="privacy-modal" role="dialog" aria-modal="true" aria-label="Privacy Policy"><button class="pp-close" id="ppClose" aria-label="Close">&times;</button>
+      <div class="pp-title">privacy_policy</div>
+      <div class="pp-meta">last updated: 2026-08-06</div>
+      <div class="pp-sec">
+        <div class="pp-h">analytics</div>
+        <p>This website uses Google Analytics (gtag.js) to collect anonymous usage data such as page views and general interaction patterns. This data is processed by Google and may involve cookies depending on your browser settings. No personal data is sold or shared beyond what Google Analytics collects.</p>
+        <p>The site's font is served from this website, not from a third party. Apart from the analytics above, nothing on the page contacts an outside server.</p>
+      </div>
+      <div class="pp-sec">
+        <div class="pp-h">consent</div>
+        <p>Analytics only runs if you accept the cookie banner. If you decline, no analytics cookies are set. To change your choice, clear this site's stored data in your browser and reload to see the banner again.</p>
+      </div>
+      <div class="pp-sec">
+        <div class="pp-h">contact</div>
+        <p>Questions about this policy: <a href="mailto:eeriegoesd@gmail.com">eeriegoesd@gmail.com</a></p>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function() {
+      var ov = document.getElementById("privacyOverlay"),
+        pl = document.getElementById("privacyLink"),
+        pc = document.getElementById("ppClose");
+
+      function op(e) {
+        if (e) e.preventDefault();
+        ov.classList.add("open")
+      }
+
+      function cl() {
+        ov.classList.remove("open")
+      }
+      if (pl) pl.addEventListener("click", op);
+      if (pc) pc.addEventListener("click", cl);
+      if (ov) ov.addEventListener("click", function(e) {
+        if (e.target === ov) cl()
+      });
+      document.addEventListener("keydown", function(e) {
+        if (e.key === "Escape") cl()
+      })
+    })();
+  </script>
+  <div id="cookieBanner" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--bg);border-top:1px solid rgba(var(--accent-rgb),.15);padding:14px 24px;display:none;flex-direction:column;align-items:center;gap:10px;font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(var(--dim-rgb),.35);"><span>> cookies for traffic analytics: <a href="privacy/" style="color:rgba(var(--accent-rgb),.5);text-decoration:none;">learn_more</a></span><span><button onclick="acceptCookies()" style="font-family:'Share Tech Mono',monospace;font-size:12px;padding:5px 14px;border-radius:0;cursor:pointer;border:1px solid rgb(var(--accent2-rgb));background:transparent;color:rgb(var(--accent2-rgb));transition:all .2s;">accept</button> <span style="color:rgba(var(--dim-rgb),.15);">|</span> <button onclick="rejectCookies()" style="font-family:'Share Tech Mono',monospace;font-size:12px;padding:5px 14px;border-radius:0;cursor:pointer;border:1px solid rgba(var(--dim-rgb),.12);background:transparent;color:rgba(var(--dim-rgb),.25);transition:all .2s;">decline</button></span></div>
+  <script>
+    try {
+      var c = localStorage.getItem('cookie-consent');
+      if (!c) document.getElementById('cookieBanner').style.display = 'flex';
+      else if (c === 'accepted') initGtag()
+    } catch (e) {
+      document.getElementById('cookieBanner').style.display = 'flex'
+    }
+  </script>
+  <script>
+    const DATA_URL = "data.json";
+    document.addEventListener("DOMContentLoaded", () => {
+      const a = document.querySelector(".nav-panel"),
+        b = document.getElementById("divider"),
+        c = document.getElementById("content-panel"),
+        d = document.getElementById("sub-categories"),
+        e = document.querySelectorAll(".terminal-menu li a"),
+        f = document.querySelectorAll(".terminal-menu li");
+      let g = null,
+        h = null,
+        i = null,
+        gsub = "guide",
+        lgi = null;
+      const j = "http://www.w3.org/2000/svg",
+        k = document.querySelector(".layout"),
+        l = document.createElementNS(j, "svg");
+      l.setAttribute("aria-hidden", "true");
+      l.style.cssText = "position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10;";
+
+      function ml() {
+        const n = document.createElementNS(j, "line");
+        n.setAttribute("stroke", "rgba(59,158,255,0.45)");
+        n.setAttribute("stroke-width", "1");
+        n.setAttribute("shape-rendering", "crispEdges");
+        l.appendChild(n);
+        return n
+      }
+      const sH = ml(),
+        sVU = ml(),
+        sVD = ml();
+      l.style.opacity = "0";
+      k.appendChild(l);
+
+      function im() {
+        return window.innerWidth <= 700
+      }
+
+      function as(cat, now) {
+        if (im()) return;
+        const ln = document.querySelector(`.terminal-menu li a[data-category="${cat}"]`);
+        if (!ln) return;
+        const lr = k.getBoundingClientRect(),
+          ar = ln.getBoundingClientRect(),
+          dr = b.getBoundingClientRect(),
+          sx = Math.round(ar.right - lr.left + 10) + .5,
+          sy = Math.round(ar.top + ar.height / 2 - lr.top) + .5,
+          jx = Math.round(dr.left + dr.width / 2 - lr.left) + .5;
+        sH.setAttribute("x1", sx);
+        sH.setAttribute("y1", sy);
+        sH.setAttribute("x2", jx);
+        sH.setAttribute("y2", sy);
+        sVU.setAttribute("x1", jx);
+        sVU.setAttribute("y1", sy);
+        sVU.setAttribute("x2", jx);
+        sVU.setAttribute("y2", 0);
+        sVD.setAttribute("x1", jx);
+        sVD.setAttribute("y1", sy);
+        sVD.setAttribute("x2", jx);
+        sVD.setAttribute("y2", lr.height);
+        const hl = Math.abs(jx - sx),
+          vul = sy,
+          vdl = lr.height - sy;
+        l.style.transition = "none";
+        l.style.opacity = "1";
+        if (now) {
+          [sH, sVU, sVD].forEach(n => {
+            n.style.transition = "none";
+            n.style.strokeDasharray = "none";
+            n.style.strokeDashoffset = "0";
+            n.style.opacity = "1"
+          });
+          return
+        } [sH, sVU, sVD].forEach(n => {
+          n.style.transition = "none";
+          n.style.opacity = "1"
+        });
+        sH.style.strokeDasharray = hl;
+        sH.style.strokeDashoffset = hl;
+        sVU.style.strokeDasharray = vul;
+        sVU.style.strokeDashoffset = vul;
+        sVD.style.strokeDasharray = vdl;
+        sVD.style.strokeDashoffset = vdl;
+        sH.getBoundingClientRect();
+        const hd = .25;
+        sH.style.transition = `stroke-dashoffset ${hd}s ease-out`;
+        sH.style.strokeDashoffset = "0";
+        const vd = hd - .04,
+          vt = .35,
+          ve = "cubic-bezier(0.16,1,0.3,1)";
+        sVU.style.transition = `stroke-dashoffset ${vt}s ${ve} ${vd}s`;
+        sVU.style.strokeDashoffset = "0";
+        sVD.style.transition = `stroke-dashoffset ${vt}s ${ve} ${vd}s`;
+        sVD.style.strokeDashoffset = "0"
+      }
+
+      function hs() {
+        if (im()) return;
+        const hl = parseFloat(sH.style.strokeDasharray) || 0,
+          vul = parseFloat(sVU.style.strokeDasharray) || 0,
+          vdl = parseFloat(sVD.style.strokeDasharray) || 0;
+        if (!hl) {
+          l.style.transition = "opacity .2s ease";
+          l.style.opacity = "0";
+          return
+        }
+        const vt = .15;
+        sVU.style.transition = `stroke-dashoffset ${vt}s ease-in`;
+        sVU.style.strokeDashoffset = vul;
+        sVD.style.transition = `stroke-dashoffset ${vt}s ease-in`;
+        sVD.style.strokeDashoffset = vdl;
+        const hd = vt - .03,
+          ht = .12;
+        sH.style.transition = `stroke-dashoffset ${ht}s ease-in ${hd}s`;
+        sH.style.strokeDashoffset = hl;
+        setTimeout(() => {
+          l.style.transition = "none";
+          l.style.opacity = "0"
+        }, (hd + ht) * 1e3 + 30)
+      }
+
+      function nu(u) {
+        const s = (u || "").trim();
+        if (!s) return "";
+        if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(s)) return s;
+        if (s.startsWith("www.")) return `https://${s}`;
+        return s
+      }
+
+      function iu(s) {
+        const v = (s || "").trim();
+        if (!v) return false;
+        if (v.startsWith("mailto:")) return true;
+        if (v.startsWith("http://") || v.startsWith("https://")) return true;
+        if (v.startsWith("www.")) return true;
+        return false
+      }
+      async function fi() {
+        const r = await fetch(DATA_URL, {
+          cache: "no-cache"
+        });
+        if (!r.ok) throw new Error(`Fetch failed: ${r.status}`);
+        const data = await r.json(),
+          entries = Array.isArray(data?.entries) ? data.entries : [],
+          out = {
+            music: [],
+            apps: [],
+            "videogame-guides": [],
+            contacts: []
+          };
+        for (const e of entries) {
+          const ck = (e.categoryKey || "").trim(),
+            ct = (e.category || "").trim(),
+            nm = (e.name || "").trim(),
+            lk = nu(e.link),
+            tt = e.tooltip || "",
+            tp = (e.type || "").trim().toLowerCase();
+          if (!ck || !nm || !out[ck]) continue;
+          const gh = nu(e.github),
+            ch = nu(e.chrome),
+            ms = nu(e.microsoft),
+            mc = nu(e.macos),
+            st = nu(e.store),
+            sm = nu(e.steam),
+            gf = nu(e.gamefaqs),
+            mi = nu(e.modio),
+            gd = nu(e["google-drive"]),
+            dl = [];
+          if (iu(gh)) dl.push({
+            label: "GitHub",
+            url: gh
+          });
+          if (iu(ch)) dl.push({
+            label: "Chrome Web Store",
+            url: ch
+          });
+          if (iu(ms)) dl.push({
+            label: "Microsoft Store",
+            url: ms
+          });
+          if (iu(mc)) dl.push({
+            label: "Mac App Store",
+            url: mc
+          });
+          if (iu(st)) dl.push({
+            label: "Store",
+            url: st
+          });
+          if (iu(sm)) dl.push({
+            label: "Steam",
+            url: sm
+          });
+          if (iu(gf)) dl.push({
+            label: "GameFAQs",
+            url: gf
+          });
+          if (iu(mi)) dl.push({
+            label: "mod.io",
+            url: mi
+          });
+          if (iu(gd)) dl.push({
+            label: "Spreadsheet",
+            url: gd
+          });
+          if (ck === "videogame-guides" || ck === "apps") {
+            if (!lk && !dl.length) continue
+          } else {
+            if (!lk) continue
+          }
+          out[ck].push({
+            category: ct || null,
+            name: nm,
+            link: lk || null,
+            tooltip: tt || null,
+            type: tp || null,
+            downloads: dl
+          })
+        }
+        return out
+      }
+
+      function se(msg) {
+        d.innerHTML = "";
+        const li = document.createElement("li");
+        li.textContent = msg;
+        li.style.color = "rgb(var(--accent2-rgb))";
+        d.appendChild(li)
+      }
+
+      function ca() {
+        d.querySelectorAll(".app-row.is-open").forEach(r => r.classList.remove("is-open"))
+      }
+
+      function sal(ck) {
+        e.forEach(l2 => l2.classList.remove("active"));
+        f.forEach(li => li.classList.remove("is-active"));
+        if (ck) {
+          const ln = document.querySelector(`.terminal-menu li a[data-category="${ck}"]`);
+          if (ln) {
+            ln.classList.add("active");
+            ln.closest("li").classList.add("is-active")
+          }
+        }
+      }
+
+      function ps(ck, items) {
+        d.innerHTML = "";
+        d.scrollTop = 0;
+        let list = (items || []).slice();
+        if (ck === "apps" || ck === "videogame-guides") list.sort((a2, b2) => (a2.category || "").localeCompare(b2.category || "") || a2.name.localeCompare(b2.name));
+        else list.sort((a2, b2) => a2.name.localeCompare(b2.name));
+        if (ck === "videogame-guides") {
+          lgi = items;
+          const tg = document.createElement("li");
+          tg.classList.add("gaming-toggle");
+          [
+            ["guide", "Guides"],
+            ["mod", "Mods"],
+            ["steamdeck", "Steam Deck"]
+          ].forEach(([val, lab]) => {
+            const bt = document.createElement("button");
+            bt.type = "button";
+            bt.classList.add("gt-btn");
+            if (gsub === val) bt.classList.add("on");
+            bt.textContent = lab;
+            bt.addEventListener("click", () => {
+              if (gsub === val) return;
+              gsub = val;
+              ps("videogame-guides", lgi)
+            });
+            tg.appendChild(bt)
+          });
+          d.appendChild(tg);
+          list = list.filter(it => (it.type || "guide") === gsub)
+        }
+        let lg = null;
+        list.forEach(item => {
+          let gr = null;
+          if (ck === "apps" || ck === "videogame-guides") gr = item.category || null;
+          if (gr !== lg && gr !== null) {
+            lg = gr;
+            const hl = document.createElement("li");
+            hl.textContent = gr;
+            hl.classList.add("letter");
+            d.appendChild(hl)
+          }
+          if (ck === "apps" || ck === "videogame-guides") {
+            const li = document.createElement("li");
+            li.classList.add("app-item");
+            const rw = document.createElement("div");
+            rw.classList.add("app-row");
+            const bt = document.createElement("button");
+            bt.type = "button";
+            bt.classList.add("app-title");
+            bt.textContent = item.name;
+            const pn = document.createElement("div");
+            pn.classList.add("app-panel");
+            const ds = document.createElement("div");
+            ds.classList.add("app-desc");
+            ds.textContent = item.tooltip ? String(item.tooltip) : "No description.";
+            pn.appendChild(ds);
+            const lk = document.createElement("div");
+            lk.classList.add("app-links");
+            if (ck === "videogame-guides" && item.link) {
+              const o = document.createElement("a");
+              o.classList.add("pill");
+              o.href = item.link;
+              o.target = item.link.startsWith("mailto:") ? "_self" : "_blank";
+              o.rel = "noopener noreferrer";
+              o.textContent = "Website";
+              lk.appendChild(o)
+            }
+            const hd = Array.isArray(item.downloads) && item.downloads.length > 0;
+            if (ck === "apps" && item.link) {
+              const a2 = document.createElement("a");
+              a2.classList.add("pill");
+              a2.href = item.link;
+              a2.target = item.link.startsWith("mailto:") ? "_self" : "_blank";
+              a2.rel = "noopener noreferrer";
+              a2.textContent = "Open";
+              lk.appendChild(a2)
+            }
+            if (hd) {
+              item.downloads.forEach(dl => {
+                const a2 = document.createElement("a");
+                a2.classList.add("pill");
+                a2.href = dl.url;
+                a2.target = "_blank";
+                a2.rel = "noopener noreferrer";
+                a2.textContent = dl.label;
+                lk.appendChild(a2)
+              })
+            }
+            pn.appendChild(lk);
+            bt.addEventListener("click", () => {
+              const io = rw.classList.contains("is-open");
+              ca();
+              if (!io) rw.classList.add("is-open")
+            });
+            rw.appendChild(bt);
+            rw.appendChild(pn);
+            li.appendChild(rw);
+            d.appendChild(li);
+            return
+          }
+          const li = document.createElement("li");
+          const a2 = document.createElement("a");
+          a2.href = item.link;
+          a2.target = item.link.startsWith("mailto:") ? "_self" : "_blank";
+          a2.rel = "noopener noreferrer";
+          a2.textContent = item.name;
+          if (item.tooltip) {
+            const tp = document.createElement("span");
+            tp.classList.add("tooltip");
+            tp.textContent = String(item.tooltip);
+            a2.appendChild(tp)
+          }
+          li.appendChild(a2);
+          d.appendChild(li)
+        });
+        if (!list.length) {
+          const li = document.createElement("li");
+          li.textContent = ck === "videogame-guides" ? (gsub === "mod" ? "No mods yet." : gsub === "steamdeck" ? "Nothing here yet." : "No guides yet.") : "No items yet.";
+          li.style.color = "rgba(var(--dim-rgb),0.4)";
+          d.appendChild(li)
+        }
+      }
+
+      function sp() {
+        b.classList.add("visible");
+        c.classList.add("visible");
+        a.classList.add("collapsed")
+      }
+
+      function hp() {
+        if (i) {
+          clearTimeout(i);
+          i = null
+        }
+        h = null;
+        sal(null);
+        if (im()) {
+          hs();
+          d.style.opacity = "0";
+          b.classList.remove("visible");
+          c.classList.remove("visible");
+          a.classList.remove("collapsed");
+          setTimeout(() => {
+            d.innerHTML = "";
+            d.style.opacity = "1"
+          }, 350);
+          return
+        }
+        d.style.opacity = "0";
+        c.classList.remove("visible");
+        hs();
+        setTimeout(() => {
+          b.classList.remove("visible");
+          a.classList.remove("collapsed");
+          d.innerHTML = "";
+          d.style.opacity = "1"
+        }, 280)
+      }
+
+      function fd(o) {
+        return new Promise(r => {
+          d.style.opacity = o;
+          setTimeout(r, 60)
+        })
+      }
+      async function oc(ck) {
+        if (h === ck) {
+          hp();
+          return
+        }
+        const sw = h !== null;
+        h = ck;
+        sal(ck);
+        if (sw) {
+          await fd("0");
+          as(ck, true);
+          sp()
+        } else {
+          d.style.opacity = "0";
+          as(ck, false);
+          if (!im()) {
+            if (i) clearTimeout(i);
+            i = setTimeout(() => {
+              sp();
+              i = null
+            }, 400)
+          } else sp()
+        }
+        try {
+          if (!g) g = fi().catch(er => {
+            g = null;
+            throw er
+          });
+          const ib = await g;
+          ps(ck, ib[ck] || [])
+        } catch (er) {
+          se(`Failed to load items. (${er?.message||"unknown error"})`)
+        }
+        requestAnimationFrame(() => {
+          d.style.opacity = "1"
+        })
+      }
+      g = fi().catch(er => {
+        g = null;
+        throw er
+      });
+      a.classList.add("animate");
+      e.forEach(ln => {
+        ln.addEventListener("click", ev => {
+          const ky = ln.getAttribute("data-category");
+          if (!ky) return;
+          ev.preventDefault();
+          oc(ky)
+        })
+      });
+      const _tb = document.getElementById("themeBtn");
+
+      function _at(t) {
+        const v = t === "light" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", v);
+        const mm = document.querySelector('meta[name="theme-color"]');
+        if (mm) mm.setAttribute("content", v === "light" ? "#fcfcfd" : "#111113");
+        try {
+          localStorage.setItem("eerie.theme", v)
+        } catch (e) {}
+      }
+      if (_tb) _tb.addEventListener("click", () => {
+        const cur = document.documentElement.getAttribute("data-theme");
+        _at(cur === "dark" ? "light" : "dark")
+      });
+      if (document.documentElement.getAttribute("data-theme") === "dark") {
+        const _mm = document.querySelector('meta[name="theme-color"]');
+        if (_mm) _mm.setAttribute("content", "#111113")
+      }
+      document.addEventListener("keydown", ev => {
+        if (ev.key === "Escape" && h) hp()
+      })
+    });
+  </script>
+</body>
+
+</html>
