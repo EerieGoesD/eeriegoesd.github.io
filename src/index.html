@@ -1181,7 +1181,14 @@
             label: "Spreadsheet",
             url: gd
           });
-          /* Getting in touch goes last, after the download links. */
+          /* Whether the entry is worth showing is decided on the real links
+             alone. The two ways to get in touch are added after that test, so
+             an entry with nothing but contact buttons stays hidden. */
+          if (ck === "videogame-guides" || ck === "apps") {
+            if (!lk && !dl.length) continue
+          } else {
+            if (!lk) continue
+          }
           if (iu(rp)) dl.push({
             label: "Report Issue",
             url: rp
@@ -1190,11 +1197,6 @@
             label: "Suggest Feature",
             url: sf
           });
-          if (ck === "videogame-guides" || ck === "apps") {
-            if (!lk && !dl.length) continue
-          } else {
-            if (!lk) continue
-          }
           out[ck].push({
             category: ct || null,
             name: nm,
