@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>eerie:~$</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="canonical" href="https://eeriegoesd.github.io/" />
   <meta name="description" content="EERIE - software developer, music producer, and gaming guide creator. Browse apps, Chrome extensions, music, and videogame guides." />
   <meta name="keywords" content="EERIE, software developer, Chrome extensions, gaming guides, music producer, indie developer" />
@@ -27,7 +27,7 @@
   <style>
     @font-face {
       font-family: 'Share Tech Mono';
-      src: url('fonts/ShareTechMono.woff2') format('woff2');
+      src: url('/fonts/ShareTechMono.woff2') format('woff2');
       font-weight: 400;
       font-style: normal;
       font-display: swap
@@ -885,7 +885,7 @@
     <main class="content-panel" id="content-panel">
       <ul class="sub-categories" id="sub-categories"></ul>
     </main>
-  </div><a href="privacy/" class="privacy-link" id="privacyLink">Privacy Policy</a>
+  </div><a href="/privacy/" class="privacy-link" id="privacyLink">Privacy Policy</a>
   <div class="privacy-overlay" id="privacyOverlay">
     <div class="privacy-modal" role="dialog" aria-modal="true" aria-label="Privacy Policy"><button class="pp-close" id="ppClose" aria-label="Close">&times;</button>
       <div class="pp-title">privacy_policy</div>
@@ -929,7 +929,7 @@
       })
     })();
   </script>
-  <div id="cookieBanner" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--bg);border-top:1px solid rgba(var(--accent-rgb),.15);padding:14px 24px;display:none;flex-direction:column;align-items:center;gap:10px;font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(var(--dim-rgb),.35);"><span>> cookies for traffic analytics: <a href="privacy/" style="color:rgba(var(--accent-rgb),.5);text-decoration:none;">learn_more</a></span><span><button onclick="acceptCookies()" style="font-family:'Share Tech Mono',monospace;font-size:12px;padding:5px 14px;border-radius:0;cursor:pointer;border:1px solid rgb(var(--accent2-rgb));background:transparent;color:rgb(var(--accent2-rgb));transition:all .2s;">accept</button> <span style="color:rgba(var(--dim-rgb),.15);">|</span> <button onclick="rejectCookies()" style="font-family:'Share Tech Mono',monospace;font-size:12px;padding:5px 14px;border-radius:0;cursor:pointer;border:1px solid rgba(var(--dim-rgb),.12);background:transparent;color:rgba(var(--dim-rgb),.25);transition:all .2s;">decline</button></span></div>
+  <div id="cookieBanner" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--bg);border-top:1px solid rgba(var(--accent-rgb),.15);padding:14px 24px;display:none;flex-direction:column;align-items:center;gap:10px;font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(var(--dim-rgb),.35);"><span>> cookies for traffic analytics: <a href="/privacy/" style="color:rgba(var(--accent-rgb),.5);text-decoration:none;">learn_more</a></span><span><button onclick="acceptCookies()" style="font-family:'Share Tech Mono',monospace;font-size:12px;padding:5px 14px;border-radius:0;cursor:pointer;border:1px solid rgb(var(--accent2-rgb));background:transparent;color:rgb(var(--accent2-rgb));transition:all .2s;">accept</button> <span style="color:rgba(var(--dim-rgb),.15);">|</span> <button onclick="rejectCookies()" style="font-family:'Share Tech Mono',monospace;font-size:12px;padding:5px 14px;border-radius:0;cursor:pointer;border:1px solid rgba(var(--dim-rgb),.12);background:transparent;color:rgba(var(--dim-rgb),.25);transition:all .2s;">decline</button></span></div>
   <script>
     try {
       var c = localStorage.getItem('cookie-consent');
@@ -940,7 +940,43 @@
     }
   </script>
   <script>
-    const DATA_URL = "data.json";
+    const DATA_URL = "/data.json";
+
+    /* Each of these paths is a real folder on the site holding a copy of this
+       page, so the address stays clean. The page reads its own path on load and
+       opens the matching section, and clicking around keeps the address in step. */
+    const ROUTES = [
+      ["/software/", "apps", null],
+      ["/music/", "music", null],
+      ["/gaming/", "videogame-guides", "guide"],
+      ["/gaming/guides/", "videogame-guides", "guide"],
+      ["/gaming/mods/", "videogame-guides", "mod"],
+      ["/gaming/steam-deck/", "videogame-guides", "steamdeck"],
+      ["/contact/", "contacts", null]
+    ];
+
+    function pathFor(cat, sub) {
+      if (cat === "videogame-guides") {
+        if (sub === "mod") return "/gaming/mods/";
+        if (sub === "steamdeck") return "/gaming/steam-deck/";
+        return "/gaming/guides/";
+      }
+      const hit = ROUTES.find(r => r[1] === cat);
+      return hit ? hit[0] : "/";
+    }
+
+    function routeFromPath() {
+      let p = location.pathname;
+      if (!p.endsWith("/")) p += "/";
+      return ROUTES.find(r => r[0] === p) || null;
+    }
+
+    function setPath(cat, sub) {
+      const want = cat ? pathFor(cat, sub) : "/";
+      if (location.pathname !== want) {
+        try { history.pushState(null, "", want) } catch (e) {}
+      }
+    }
     document.addEventListener("DOMContentLoaded", () => {
       const a = document.querySelector(".nav-panel"),
         b = document.getElementById("divider"),
@@ -1207,6 +1243,7 @@
             bt.addEventListener("click", () => {
               if (gsub === val) return;
               gsub = val;
+              setPath("videogame-guides", gsub);
               ps("videogame-guides", lgi)
             });
             tg.appendChild(bt)
@@ -1396,8 +1433,31 @@
           const ky = ln.getAttribute("data-category");
           if (!ky) return;
           ev.preventDefault();
-          oc(ky)
+          const closing = h === ky;
+          oc(ky);
+          setPath(closing ? null : ky, gsub)
         })
+      });
+
+      /* Opened straight at /gaming/mods/ and the like: show that section at once,
+         with no animation, since the visitor asked for it by address. */
+      (function openFromPath() {
+        const r = routeFromPath();
+        if (!r) return;
+        if (r[2]) gsub = r[2];
+        oc(r[1]);
+      })();
+
+      /* Back and forward buttons move between sections. */
+      window.addEventListener("popstate", () => {
+        const r = routeFromPath();
+        if (!r) {
+          if (h) hp();
+          return;
+        }
+        if (r[2]) gsub = r[2];
+        if (h === r[1]) ps(r[1], lgi);
+        else oc(r[1]);
       });
       const _tb = document.getElementById("themeBtn");
 
@@ -1419,7 +1479,10 @@
         if (_mm) _mm.setAttribute("content", "#111113")
       }
       document.addEventListener("keydown", ev => {
-        if (ev.key === "Escape" && h) hp()
+        if (ev.key === "Escape" && h) {
+          hp();
+          setPath(null, null)
+        }
       })
     });
   </script>
