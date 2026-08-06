@@ -8,8 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Privacy Policy | EERIE</title>
     <meta name="robots" content="noindex" />
-    <meta name="theme-color" content="#050508" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#fcfcfd" />
+    <meta name="color-scheme" content="light dark" />
+
+    <script>try{if(localStorage.getItem('eerie.theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
 
     <style>
       @font-face {
@@ -20,11 +22,33 @@
         font-display: swap;
       }
 
+      /* Radix Colors v3 - same steps as the main page, so this page matches
+         whichever theme the visitor picked there. */
+      :root {
+        --bg: #fcfcfd;
+        --text: #1c2024;
+        --accent-rgb: 13,116,206;
+        --accent2-rgb: 194,41,138;
+        --dim-rgb: 28,32,36;
+        --scanline: rgba(0,0,0,.045);
+        --vignette: rgba(0,0,0,.05);
+      }
+      html[data-theme="dark"] {
+        --bg: #111113;
+        --text: #edeef0;
+        --accent-rgb: 112,184,255;
+        --accent2-rgb: 255,141,204;
+        --dim-rgb: 237,238,240;
+        --scanline: rgba(255,255,255,.035);
+        --vignette: rgba(0,0,0,.4);
+      }
+      html:not([data-theme="dark"]) * { text-shadow: none !important; }
+
       * { box-sizing: border-box; margin: 0; padding: 0; }
       html, body {
         height: 100%;
-        background: #050508;
-        color: #f0f0f0;
+        background: var(--bg);
+        color: var(--text);
         font-family: 'Share Tech Mono', 'Courier New', monospace;
         line-height: 1.6;
         overflow-x: hidden;
@@ -39,7 +63,7 @@
         background: repeating-linear-gradient(
           to bottom,
           transparent 0px, transparent 3px,
-          rgba(0,0,0,.08) 3px, rgba(0,0,0,.08) 4px
+          var(--scanline) 3px, var(--scanline) 4px
         );
       }
 
@@ -49,7 +73,7 @@
         inset: 0;
         pointer-events: none;
         z-index: 9998;
-        background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,.4) 100%);
+        background: radial-gradient(ellipse at center, transparent 60%, var(--vignette) 100%);
       }
 
       .wrap {
@@ -58,22 +82,22 @@
         padding: 32px 24px 60px;
       }
 
-      a { color: rgba(30,144,255,.5); text-decoration: none; transition: color .3s, text-shadow .3s; }
-      a:hover { color: #1e90ff; text-shadow: 0 0 8px rgba(30,144,255,.4); }
+      a { color: rgba(var(--accent-rgb),.5); text-decoration: none; transition: color .3s, text-shadow .3s; }
+      a:hover { color: rgb(var(--accent-rgb)); text-shadow: 0 0 8px rgba(var(--accent-rgb),.4); }
 
       .back {
         display: inline-block;
         margin-bottom: 20px;
         font-size: 13px;
-        color: rgba(255,255,255,.3);
+        color: rgba(var(--dim-rgb),.3);
         letter-spacing: 1px;
         transition: color .3s, text-shadow .3s;
       }
-      .back:hover { color: #1e90ff; text-shadow: 0 0 8px rgba(30,144,255,.4); }
+      .back:hover { color: rgb(var(--accent-rgb)); text-shadow: 0 0 8px rgba(var(--accent-rgb),.4); }
 
       .header {
         margin-bottom: 24px;
-        border-bottom: 1px solid rgba(30,144,255,.15);
+        border-bottom: 1px solid rgba(var(--accent-rgb),.15);
         padding-bottom: 16px;
       }
 
@@ -81,44 +105,44 @@
         font-size: 22px;
         font-weight: bold;
         letter-spacing: 2px;
-        color: #f0f0f0;
+        color: var(--text);
         margin-bottom: 6px;
       }
-      h1::before { content: '> '; color: rgba(30,144,255,.3); }
+      h1::before { content: '> '; color: rgba(var(--accent-rgb),.3); }
 
       .meta {
         font-size: 11px;
-        color: rgba(255,255,255,.25);
+        color: rgba(var(--dim-rgb),.25);
         letter-spacing: .5px;
       }
 
       .section {
         margin: 20px 0;
         padding-left: 18px;
-        border-left: 1px solid rgba(30,144,255,.15);
+        border-left: 1px solid rgba(var(--accent-rgb),.15);
       }
 
       h2 {
         font-size: 14px;
         font-weight: bold;
-        color: #e84a8a;
+        color: rgb(var(--accent2-rgb));
         letter-spacing: 1px;
         margin-bottom: 10px;
       }
-      h2::before { content: '_ '; color: #e84a8a; }
+      h2::before { content: '_ '; color: rgb(var(--accent2-rgb)); }
 
       p {
         font-size: 13px;
-        color: rgba(255,255,255,.55);
+        color: rgba(var(--dim-rgb),.55);
         margin: 8px 0;
         line-height: 1.7;
       }
 
       .contact-link {
-        color: #1e90ff;
+        color: rgb(var(--accent-rgb));
       }
       .contact-link:hover {
-        text-shadow: 0 0 10px rgba(30,144,255,.6);
+        text-shadow: 0 0 10px rgba(var(--accent-rgb),.6);
       }
 
       @media (max-width: 700px) {
