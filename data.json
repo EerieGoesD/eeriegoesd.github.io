@@ -868,7 +868,7 @@
       "name": "Loot Radar",
       "type": "mod",
       "link": "",
-      "tooltip": "Puts loot and unopened chests on your compass, with the distance to each one. Ammo you have no room for is left out.\n\nColours: green = weapons and items, yellow = money, blue = ammo and health, red = red chest, white = white chest\n\n- Toggle each type on or off: weapons, money, ammo, red chests, white chests\n- Display Only Better Weapons: hides weapons worse than what you already carry, and blocks picking them up\n- Hide Full Pickups: hides ammo you have no room for\n- Show Distance: distance above each mark\n- Units: metres or feet",
+      "tooltip": "Puts loot and unopened chests on your compass, with the distance to each one. Ammo you have no room for is left out.\n\nColours: green = weapons and items, yellow = money, blue = ammo and health, red = red chest, white = white chest\n\n- Toggle each type on or off: weapons, money, ammo, red chests, white chests\n- Display Only Better Weapons: hides gear worse than the weakest of that type you already carry, and blocks picking it up. Uses the same scores as Gear Score: DPS for weapons, Shield Power for shields\n- Hide Full Pickups: hides ammo you have no room for\n- Show Distance: distance above each mark\n- Units: metres or feet",
       "github": "https://github.com/EerieGoesD/borderlands-1-goty-mods/tree/main/LootRadar",
       "chrome": "",
       "microsoft": "",
