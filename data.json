@@ -1001,7 +1001,7 @@
       "name": "Objective Distance",
       "type": "mod",
       "link": "",
-      "tooltip": "Shows the distance to your current objective, plus a line on the ground pointing the way. The line follows the paths the game's own characters walk, and works even when the objective is in another area.\n\n- Show Distance: the reading on or off\n- Show Route Line: the line on or off\n- Units: metres or feet\n- Position: under the compass or top of screen\n- Route Colour: green, blue, red, yellow or orange",
+      "tooltip": "Shows the distance to your current objective, plus a line on the ground pointing the way. The line follows the paths the game's own characters walk.\n\n- Show Distance: the reading on or off\n- Show Route Line: the line on or off\n- Units: metres or feet\n- Position: under the compass or top of screen\n- Route Colour: green, blue, red, yellow or orange",
       "github": "https://github.com/EerieGoesD/borderlands-1-goty-mods/tree/main/ObjectiveDistance",
       "chrome": "",
       "microsoft": "",
