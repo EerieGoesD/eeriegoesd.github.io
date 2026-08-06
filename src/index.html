@@ -540,6 +540,10 @@
       gap: 8px
     }
 
+    .sub-categories .app-contact {
+      margin-top: 8px
+    }
+
     .sub-categories .pill {
       font-family: 'Share Tech Mono', monospace;
       font-size: 11px;
@@ -1191,11 +1195,13 @@
           }
           if (iu(rp)) dl.push({
             label: "Report Issue",
-            url: rp
+            url: rp,
+            contact: true
           });
           if (iu(sf)) dl.push({
             label: "Suggest Feature",
-            url: sf
+            url: sf,
+            contact: true
           });
           out[ck].push({
             category: ct || null,
@@ -1311,6 +1317,10 @@
               a2.textContent = "Open";
               lk.appendChild(a2)
             }
+            /* Ways to get the thing go on the first line, ways to get in touch
+               on a second line of their own. */
+            const ctc = document.createElement("div");
+            ctc.classList.add("app-links", "app-contact");
             if (hd) {
               item.downloads.forEach(dl => {
                 const a2 = document.createElement("a");
@@ -1319,10 +1329,11 @@
                 a2.target = "_blank";
                 a2.rel = "noopener noreferrer";
                 a2.textContent = dl.label;
-                lk.appendChild(a2)
+                (dl.contact ? ctc : lk).appendChild(a2)
               })
             }
-            pn.appendChild(lk);
+            if (lk.childElementCount) pn.appendChild(lk);
+            if (ctc.childElementCount) pn.appendChild(ctc);
             bt.addEventListener("click", () => {
               const io = rw.classList.contains("is-open");
               ca();
