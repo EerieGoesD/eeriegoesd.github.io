@@ -1143,6 +1143,7 @@
             mi = nu(e.modio),
             gd = nu(e["google-drive"]),
             rp = nu(e.report),
+            sf = nu(e.suggest),
             dl = [];
           if (iu(gh)) dl.push({
             label: "GitHub",
@@ -1180,10 +1181,14 @@
             label: "Spreadsheet",
             url: gd
           });
-          /* Report Issue goes last, after the download links. */
+          /* Getting in touch goes last, after the download links. */
           if (iu(rp)) dl.push({
             label: "Report Issue",
             url: rp
+          });
+          if (iu(sf)) dl.push({
+            label: "Suggest Feature",
+            url: sf
           });
           if (ck === "videogame-guides" || ck === "apps") {
             if (!lk && !dl.length) continue
