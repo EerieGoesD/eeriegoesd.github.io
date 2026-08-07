@@ -991,6 +991,19 @@
           "Suggest Feature": "M12 2a7 7 0 00-4 12.7V17a1 1 0 001 1h6a1 1 0 001-1v-2.3A7 7 0 0012 2zM9 20h6v1a1 1 0 01-1 1h-4a1 1 0 01-1-1v-1z"
     };
 
+    /* Name the button after wherever the link actually goes, so a guide hosted
+       on Steam says Steam rather than Website. */
+    function labelForUrl(url) {
+      const u = (url || "").toLowerCase();
+      if (u.includes("steamcommunity.com") || u.includes("store.steampowered.com")) return "Steam";
+      if (u.includes("gamefaqs")) return "GameFAQs";
+      if (u.includes("docs.google.com/spreadsheets")) return "Spreadsheet";
+      if (u.includes("github.com")) return "GitHub";
+      if (u.includes("nexusmods.com")) return "Nexus Mods";
+      if (u.includes("mod.io")) return "mod.io";
+      return "Website";
+    }
+
     function makePill(label, url) {
       const a = document.createElement("a");
       a.classList.add("pill");
@@ -1344,7 +1357,11 @@
             const lk = document.createElement("div");
             lk.classList.add("app-links");
             if (ck === "videogame-guides" && item.link) {
-              lk.appendChild(makePill("Website", item.link))
+              /* Skip it when one of the link fields already covers the same
+                 place, or the row would show the same button twice. */
+              const primary = labelForUrl(item.link);
+              const already = (item.downloads || []).some(x => x.label === primary);
+              if (!already) lk.appendChild(makePill(primary, item.link))
             }
             const hd = Array.isArray(item.downloads) && item.downloads.length > 0;
             if (ck === "apps" && item.link) {
