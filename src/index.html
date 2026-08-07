@@ -495,9 +495,7 @@
       transition: max-height .35s ease, opacity .25s ease;
       margin-top: 0;
       border-left: 1px solid rgba(var(--accent-rgb),.2);
-      padding-left: 0;
-      /* longest label in characters, plus the icon, gap, padding and border */
-      --pill-w: calc(var(--pill-chars, 15) * (1ch + .5px) + 40px)
+      padding-left: 0
     }
 
     .sub-categories .app-row.is-open .app-panel {
@@ -541,7 +539,11 @@
     .sub-categories .app-links {
       margin-top: 10px;
       display: grid;
-      grid-template-columns: repeat(auto-fill, var(--pill-w, 152px));
+      /* Same font size as the buttons, so 1ch really is one character of the
+         text inside them. Width = longest label + icon, gap, padding, border. */
+      font-size: 11px;
+      --pill-w: calc(var(--pill-chars, 15) * (1ch + .5px) + 40px);
+      grid-template-columns: repeat(auto-fill, var(--pill-w));
       justify-content: start;
       gap: 8px;
       max-width: 480px
@@ -703,7 +705,8 @@
       }
 
       .sub-categories .app-links {
-        grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+        font-size: 10px;
+        --pill-w: calc(var(--pill-chars, 15) * (1ch + .5px) + 44px);
         max-width: none
       }
 
@@ -1389,7 +1392,7 @@
                 widest = Math.max(widest, a.textContent.length)
               })
             });
-            if (widest) pn.style.setProperty("--pill-chars", widest);
+            if (widest) pn.style.setProperty("--pill-chars", String(widest));
             if (lk.childElementCount) pn.appendChild(lk);
             if (ctc.childElementCount) pn.appendChild(ctc);
             bt.addEventListener("click", () => {
