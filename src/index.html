@@ -652,6 +652,13 @@
         font-size: 15px
       }
 
+      /* Collapsed to one line, tapping the category closes it, so show a back
+         arrow instead of the blinking cursor. */
+      .nav-panel.collapsed .terminal-menu li.is-active a::before {
+        content: '< ';
+        animation: none
+      }
+
       .divider {
         width: auto;
         height: 1px;
