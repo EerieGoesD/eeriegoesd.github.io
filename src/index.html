@@ -988,7 +988,8 @@
           "Website": "M12 2a10 10 0 100 20 10 10 0 000-20zm0 2c1.7 0 3.2 2.5 3.7 6H8.3C8.8 6.5 10.3 4 12 4zM4.3 10h2.1a22 22 0 000 4H4.3a8 8 0 010-4zm4.1 0h7.2a20 20 0 010 4H8.4a20 20 0 010-4zM12 20c-1.7 0-3.2-2.5-3.7-6h7.4c-.5 3.5-2 6-3.7 6zm5.6-6h2.1a8 8 0 01-2.1 4 22 22 0 000-4zm0-4a22 22 0 000-4 8 8 0 012.1 4h-2.1z",
           "Open": "M14 3h7v7h-2V6.4l-8.3 8.3-1.4-1.4L17.6 5H14V3zM5 5h5v2H6v11h11v-4h2v6H5V5z",
           "Report Issue": "M14.1 5.4a3 3 0 10-4.2 0A5 5 0 007.3 8H5V6H3v2a2 2 0 002 2h2v2H4v2h3a5 5 0 00.4 2H5a2 2 0 00-2 2v2h2v-2h2.8A5 5 0 0011 21v-8h2v8a5 5 0 003.2-3H19v2h2v-2a2 2 0 00-2-2h-2.4a5 5 0 00.4-2h3v-2h-3v-2h2a2 2 0 002-2V6h-2v2h-2.3a5 5 0 00-2.6-2.6z",
-          "Feedback": "M12 2a7 7 0 00-4 12.7V17a1 1 0 001 1h6a1 1 0 001-1v-2.3A7 7 0 0012 2zM9 20h6v1a1 1 0 01-1 1h-4a1 1 0 01-1-1v-1z"
+          "Feedback": "M12 2a7 7 0 00-4 12.7V17a1 1 0 001 1h6a1 1 0 001-1v-2.3A7 7 0 0012 2zM9 20h6v1a1 1 0 01-1 1h-4a1 1 0 01-1-1v-1z",
+          "Suggest Feature": "M12 2a7 7 0 00-4 12.7V17a1 1 0 001 1h6a1 1 0 001-1v-2.3A7 7 0 0012 2zM9 20h6v1a1 1 0 01-1 1h-4a1 1 0 01-1-1v-1z"
     };
 
     /* Name the button after wherever the link actually goes, so a guide hosted
@@ -1256,8 +1257,9 @@
             url: rp,
             contact: true
           });
+          /* Software calls it Suggest Feature, gaming calls it Feedback. */
           if (iu(sf)) dl.push({
-            label: "Feedback",
+            label: ck === "apps" ? "Suggest Feature" : "Feedback",
             url: sf,
             contact: true
           });
