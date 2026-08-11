@@ -1356,6 +1356,44 @@
       "report": "https://tally.so/r/PdW0bV?app=Vehicle%20Loot",
       "suggest": "https://tally.so/r/WOk0BJ?app=Vehicle%20Loot",
       "googleplay": ""
+    },
+    {
+      "categoryKey": "videogame-guides",
+      "category": "Borderlands 1 GOTY + Enhanced",
+      "name": "Vehicle Jump",
+      "link": "",
+      "tooltip": "Lets you jump while driving. Space throws the vehicle upwards, and the key can be changed.\n\n- Jump Height: how far off the ground the vehicle goes\n- Optional: debug setting to see jump height values",
+      "github": "https://github.com/EerieGoesD/borderlands-1-goty-mods/tree/main/VehicleJump",
+      "chrome": "",
+      "microsoft": "",
+      "macos": "",
+      "store": "",
+      "steam": "",
+      "gamefaqs": "",
+      "google-drive": "",
+      "report": "https://tally.so/r/PdW0bV?app=Vehicle%20Jump",
+      "suggest": "https://tally.so/r/WOk0BJ?app=Vehicle%20Jump",
+      "googleplay": "",
+      "type": "mod"
+    },
+    {
+      "categoryKey": "videogame-guides",
+      "category": "Borderlands 1 GOTY + Enhanced",
+      "name": "Infinite Money",
+      "link": "",
+      "tooltip": "Sets how much money you carry. Turning the mod off gives back the money you had before.\n\n- Money: how much you carry",
+      "github": "https://github.com/EerieGoesD/borderlands-1-goty-mods/tree/main/InfiniteMoney",
+      "chrome": "",
+      "microsoft": "",
+      "macos": "",
+      "store": "",
+      "steam": "",
+      "gamefaqs": "",
+      "google-drive": "",
+      "report": "https://tally.so/r/PdW0bV?app=Infinite%20Money",
+      "suggest": "https://tally.so/r/WOk0BJ?app=Infinite%20Money",
+      "googleplay": "",
+      "type": "mod"
     }
   ]
 }
