@@ -16,7 +16,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=YouTube%20Guitar%20Practice%20Assistant",
       "suggest": "https://tally.so/r/WOk0BJ?app=YouTube%20Guitar%20Practice%20Assistant",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -34,7 +35,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=Image%202%20Text%20(OCR%20Tesseract)",
       "suggest": "https://tally.so/r/WOk0BJ?app=Image%202%20Text%20(OCR%20Tesseract)",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -52,7 +54,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=Youtube%20Watch%20Tracker",
       "suggest": "https://tally.so/r/WOk0BJ?app=Youtube%20Watch%20Tracker",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -70,7 +73,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=Riot%2FLeague%20Client%20Force%20Close%20(Windows)",
       "suggest": "https://tally.so/r/WOk0BJ?app=Riot%2FLeague%20Client%20Force%20Close%20(Windows)",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -88,7 +92,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=Format%20Reaper",
       "suggest": "https://tally.so/r/WOk0BJ?app=Format%20Reaper",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -106,7 +111,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=CryptKeep",
       "suggest": "https://tally.so/r/WOk0BJ?app=CryptKeep",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -124,7 +130,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=Image2Text%20OCR",
       "suggest": "https://tally.so/r/WOk0BJ?app=Image2Text%20OCR",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -143,7 +150,8 @@
       "type": "steamdeck",
       "report": "",
       "suggest": "https://tally.so/r/WOk0BJ?app=Steam%20Deck%20Optimal%20Emulator%20Settings",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -161,7 +169,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=Steam%20Deck%20Scripts",
       "suggest": "https://tally.so/r/WOk0BJ?app=Steam%20Deck%20Scripts",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -179,7 +188,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=Steam%20Deck%20File%20Transfer%20(Deck%20Transfer)",
       "suggest": "https://tally.so/r/WOk0BJ?app=Steam%20Deck%20File%20Transfer%20(Deck%20Transfer)",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -197,7 +207,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=Headset%20Battery%20Widget",
       "suggest": "https://tally.so/r/WOk0BJ?app=Headset%20Battery%20Widget",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -215,7 +226,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=Disk%20Reaper",
       "suggest": "https://tally.so/r/WOk0BJ?app=Disk%20Reaper",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -233,7 +245,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=ClipCove",
       "suggest": "https://tally.so/r/WOk0BJ?app=ClipCove",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -251,7 +264,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=More%20Time%20at%20Home%20(Browser)",
       "suggest": "https://tally.so/r/WOk0BJ?app=More%20Time%20at%20Home%20(Browser)",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -269,7 +283,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=More%20Time%20at%20Home%20(Standalone%20App)",
       "suggest": "https://tally.so/r/WOk0BJ?app=More%20Time%20at%20Home%20(Standalone%20App)",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -287,7 +302,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=Net%20Reaper%20(Browser%20Extension)",
       "suggest": "https://tally.so/r/WOk0BJ?app=Net%20Reaper%20(Browser%20Extension)",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -305,7 +321,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=Net%20Reaper%20(Standalone%20App)",
       "suggest": "https://tally.so/r/WOk0BJ?app=Net%20Reaper%20(Standalone%20App)",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -323,7 +340,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=Scratch%20Ticket%20EV%20Calculator",
       "suggest": "https://tally.so/r/WOk0BJ?app=Scratch%20Ticket%20EV%20Calculator",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -341,7 +359,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=Reader%20Vault",
       "suggest": "https://tally.so/r/WOk0BJ?app=Reader%20Vault",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -359,7 +378,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=Size%20Scanner",
       "suggest": "https://tally.so/r/WOk0BJ?app=Size%20Scanner",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -377,7 +397,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=DevDeck",
       "suggest": "https://tally.so/r/WOk0BJ?app=DevDeck",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "contacts",
@@ -395,7 +416,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "contacts",
@@ -413,7 +435,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "contacts",
@@ -431,7 +454,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "contacts",
@@ -449,7 +473,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "contacts",
@@ -467,7 +492,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "contacts",
@@ -485,7 +511,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "music",
@@ -503,7 +530,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -521,7 +549,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=Dragon%20Quest%20VIII%20Tracker%20(Alchemy%2C%20Inventory%2C%20Craftable%2C%20Optimizer)",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -539,7 +568,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -557,7 +587,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -575,7 +606,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -593,7 +625,8 @@
       "google-drive": "https://docs.google.com/spreadsheets/d/1vj0u2LbOX1ZG02rFCoScCor2FeMffxnu5RfjlIxp97A/edit?usp=sharing",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -611,7 +644,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -629,7 +663,8 @@
       "google-drive": "https://docs.google.com/spreadsheets/d/18hxM_55n_nvSjdMnRVcfh1SF0UcYOYSzUhxPEHysXes/edit?usp=sharing",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -647,7 +682,8 @@
       "google-drive": "https://docs.google.com/spreadsheets/d/18A6uL5vDr_kMD4KazmtrGFFAHcMt2QmA4xKw6NDBY6I/edit?usp=sharing",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -665,7 +701,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -683,7 +720,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -701,7 +739,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -719,7 +758,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -737,7 +777,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -755,7 +796,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -773,7 +815,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -791,7 +834,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -809,7 +853,8 @@
       "google-drive": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "apps",
@@ -827,7 +872,8 @@
       "google-drive": "",
       "report": "https://tally.so/r/PdW0bV?app=Lock%20Finder",
       "suggest": "https://tally.so/r/WOk0BJ?app=Lock%20Finder",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -849,7 +895,8 @@
       "type": "mod",
       "report": "https://tally.so/r/PdW0bV?app=Synergy%20Guard",
       "suggest": "https://tally.so/r/WOk0BJ?app=Synergy%20Guard",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -871,7 +918,8 @@
       "modio": "",
       "report": "",
       "suggest": "",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": ""
     },
     {
       "categoryKey": "videogame-guides",
@@ -893,7 +941,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Continuous%20Fire",
       "suggest": "https://tally.so/r/WOk0BJ?app=Continuous%20Fire",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/continuousfire/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -915,7 +964,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Crash%20Debug",
       "suggest": "https://tally.so/r/WOk0BJ?app=Crash%20Debug",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/crashdebug/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -937,7 +987,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Gear%20Score",
       "suggest": "https://tally.so/r/WOk0BJ?app=Gear%20Score",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/gearscore/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -959,7 +1010,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Hide%20Full%20Pickups",
       "suggest": "https://tally.so/r/WOk0BJ?app=Hide%20Full%20Pickups",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/hidefullpickups/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -981,7 +1033,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Infinite%20Ammo",
       "suggest": "https://tally.so/r/WOk0BJ?app=Infinite%20Ammo",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/infiniteammo/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1003,7 +1056,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Infinite%20Health",
       "suggest": "https://tally.so/r/WOk0BJ?app=Infinite%20Health",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/infinitehealth/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1025,7 +1079,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Jump%20Higher",
       "suggest": "https://tally.so/r/WOk0BJ?app=Jump%20Higher",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/jumphigher/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1047,7 +1102,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Loot%20Radar",
       "suggest": "https://tally.so/r/WOk0BJ?app=Loot%20Radar",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/lootradar/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1069,7 +1125,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Mission%20Progress",
       "suggest": "https://tally.so/r/WOk0BJ?app=Mission%20Progress",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/missionprogress/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1091,7 +1148,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Movement%20Speed%20Changer",
       "suggest": "https://tally.so/r/WOk0BJ?app=Movement%20Speed%20Changer",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/movementspeedchanger/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1113,7 +1171,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=No%20Backpack%20Limit",
       "suggest": "https://tally.so/r/WOk0BJ?app=No%20Backpack%20Limit",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/nobackpacklimit/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1135,7 +1194,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=No%20Recoil",
       "suggest": "https://tally.so/r/WOk0BJ?app=No%20Recoil",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/norecoil/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1157,7 +1217,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=No%20Reload",
       "suggest": "https://tally.so/r/WOk0BJ?app=No%20Reload",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/noreload/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1179,7 +1240,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=No%20Skill%20Cooldown",
       "suggest": "https://tally.so/r/WOk0BJ?app=No%20Skill%20Cooldown",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/noskillcooldown/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1201,7 +1263,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Objective%20Distance",
       "suggest": "https://tally.so/r/WOk0BJ?app=Objective%20Distance",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/objectivedistance/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1223,7 +1286,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Repeat%20Mission",
       "suggest": "https://tally.so/r/WOk0BJ?app=Repeat%20Mission",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/repeatmission/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1245,7 +1309,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Reset%20Chests",
       "suggest": "https://tally.so/r/WOk0BJ?app=Reset%20Chests",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/resetchests/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1267,7 +1332,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Run%20And%20Walk",
       "suggest": "https://tally.so/r/WOk0BJ?app=Run%20And%20Walk",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/runandwalk/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1289,7 +1355,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Sell%20Value",
       "suggest": "https://tally.so/r/WOk0BJ?app=Sell%20Value",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/sellvalue/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1311,7 +1378,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Teleport",
       "suggest": "https://tally.so/r/WOk0BJ?app=Teleport",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/teleport/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1333,7 +1401,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Use%20No%20Reload",
       "suggest": "https://tally.so/r/WOk0BJ?app=Use%20No%20Reload",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/usenoreload/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1355,7 +1424,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Vehicle%20Loot",
       "suggest": "https://tally.so/r/WOk0BJ?app=Vehicle%20Loot",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/vehicleloot/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1375,7 +1445,8 @@
       "suggest": "https://tally.so/r/WOk0BJ?app=Vehicle%20Jump",
       "googleplay": "",
       "type": "mod",
-      "nexus": "https://www.nexusmods.com/borderlandsgotyenhanced/mods/86"
+      "nexus": "https://www.nexusmods.com/borderlandsgotyenhanced/mods/86",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/vehiclejump/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1395,7 +1466,8 @@
       "suggest": "https://tally.so/r/WOk0BJ?app=Infinite%20Money",
       "googleplay": "",
       "type": "mod",
-      "nexus": "https://www.nexusmods.com/borderlandsgotyenhanced/mods/87"
+      "nexus": "https://www.nexusmods.com/borderlandsgotyenhanced/mods/87",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/infinitemoney/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1415,7 +1487,8 @@
       "suggest": "https://tally.so/r/WOk0BJ?app=Random%20Vehicle%20Colour",
       "googleplay": "",
       "type": "mod",
-      "nexus": "https://www.nexusmods.com/borderlandsgotyenhanced/mods/89"
+      "nexus": "https://www.nexusmods.com/borderlandsgotyenhanced/mods/89",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/randomvehiclecolour/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1437,7 +1510,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Continuous%20Fire",
       "suggest": "https://tally.so/r/WOk0BJ?app=Continuous%20Fire",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/continuousfire/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1459,7 +1533,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Crash%20Debug",
       "suggest": "https://tally.so/r/WOk0BJ?app=Crash%20Debug",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/crashdebug/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1481,7 +1556,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Gear%20Score",
       "suggest": "https://tally.so/r/WOk0BJ?app=Gear%20Score",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/gearscore/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1503,7 +1579,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Hide%20Full%20Pickups",
       "suggest": "https://tally.so/r/WOk0BJ?app=Hide%20Full%20Pickups",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/hidefullpickups/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1525,7 +1602,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Infinite%20Ammo",
       "suggest": "https://tally.so/r/WOk0BJ?app=Infinite%20Ammo",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/infiniteammo/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1547,7 +1625,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Infinite%20Health",
       "suggest": "https://tally.so/r/WOk0BJ?app=Infinite%20Health",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/infinitehealth/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1569,7 +1648,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Jump%20Higher",
       "suggest": "https://tally.so/r/WOk0BJ?app=Jump%20Higher",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/jumphigher/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1591,7 +1671,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Loot%20Radar",
       "suggest": "https://tally.so/r/WOk0BJ?app=Loot%20Radar",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/lootradar/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1613,7 +1694,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Mission%20Progress",
       "suggest": "https://tally.so/r/WOk0BJ?app=Mission%20Progress",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/missionprogress/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1635,7 +1717,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Movement%20Speed%20Changer",
       "suggest": "https://tally.so/r/WOk0BJ?app=Movement%20Speed%20Changer",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/movementspeedchanger/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1657,7 +1740,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=No%20Backpack%20Limit",
       "suggest": "https://tally.so/r/WOk0BJ?app=No%20Backpack%20Limit",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/nobackpacklimit/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1679,7 +1763,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=No%20Recoil",
       "suggest": "https://tally.so/r/WOk0BJ?app=No%20Recoil",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/norecoil/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1701,7 +1786,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=No%20Reload",
       "suggest": "https://tally.so/r/WOk0BJ?app=No%20Reload",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/noreload/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1723,7 +1809,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=No%20Skill%20Cooldown",
       "suggest": "https://tally.so/r/WOk0BJ?app=No%20Skill%20Cooldown",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/noskillcooldown/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1745,7 +1832,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Objective%20Distance",
       "suggest": "https://tally.so/r/WOk0BJ?app=Objective%20Distance",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/objectivedistance/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1767,7 +1855,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Repeat%20Mission",
       "suggest": "https://tally.so/r/WOk0BJ?app=Repeat%20Mission",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/repeatmission/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1789,7 +1878,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Reset%20Chests",
       "suggest": "https://tally.so/r/WOk0BJ?app=Reset%20Chests",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/resetchests/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1811,7 +1901,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Run%20And%20Walk",
       "suggest": "https://tally.so/r/WOk0BJ?app=Run%20And%20Walk",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/runandwalk/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1833,7 +1924,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Sell%20Value",
       "suggest": "https://tally.so/r/WOk0BJ?app=Sell%20Value",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/sellvalue/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1855,7 +1947,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Teleport",
       "suggest": "https://tally.so/r/WOk0BJ?app=Teleport",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/teleport/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1877,7 +1970,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Use%20No%20Reload",
       "suggest": "https://tally.so/r/WOk0BJ?app=Use%20No%20Reload",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/usenoreload/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1899,7 +1993,8 @@
       "modio": "",
       "report": "https://tally.so/r/PdW0bV?app=Vehicle%20Loot",
       "suggest": "https://tally.so/r/WOk0BJ?app=Vehicle%20Loot",
-      "googleplay": ""
+      "googleplay": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/vehicleloot/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1920,7 +2015,8 @@
       "googleplay": "",
       "type": "mod",
       "nexus": "https://www.nexusmods.com/borderlands/mods/114",
-      "modio": ""
+      "modio": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/vehiclejump/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1941,7 +2037,8 @@
       "googleplay": "",
       "type": "mod",
       "nexus": "https://www.nexusmods.com/borderlands/mods/113",
-      "modio": ""
+      "modio": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/infinitemoney/"
     },
     {
       "categoryKey": "videogame-guides",
@@ -1962,7 +2059,8 @@
       "googleplay": "",
       "type": "mod",
       "nexus": "https://www.nexusmods.com/borderlands/mods/137",
-      "modio": ""
+      "modio": "",
+      "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/randomvehiclecolour/"
     }
   ]
 }
