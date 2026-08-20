@@ -399,6 +399,36 @@
       margin-top: 0
     }
 
+    /* A game heading in the Mods list: click to fold its mods open or shut. */
+    .sub-categories li.letter.game-head {
+      pointer-events: auto;
+      cursor: pointer;
+      transition: color .2s
+    }
+
+    .sub-categories li.letter.game-head::before {
+      content: '+ ';
+      color: rgba(var(--accent-rgb),.55)
+    }
+
+    .sub-categories li.letter.game-head.is-open::before {
+      content: '- '
+    }
+
+    .sub-categories li.letter.game-head:hover {
+      color: rgb(var(--accent2-rgb))
+    }
+
+    .sub-categories li.game-box {
+      display: none;
+      margin: 0
+    }
+
+    .sub-categories li.game-box.is-open {
+      display: block;
+      margin: 6px 0 0
+    }
+
     .sub-categories .gaming-toggle {
       display: flex;
       gap: 6px;
@@ -1335,7 +1365,11 @@
           d.appendChild(tg);
           list = list.filter(it => (it.type || "guide") === gsub)
         }
-        let lg = null;
+        /* In the Mods list the game headings fold, so the games are the first
+           thing you see rather than a hundred mods. Everything else stays flat. */
+        const foldable = ck === "videogame-guides" && gsub === "mod";
+        let lg = null,
+          bucket = null;
         list.forEach(item => {
           let gr = null;
           if (ck === "apps" || ck === "videogame-guides") gr = item.category || null;
@@ -1344,8 +1378,23 @@
             const hl = document.createElement("li");
             hl.textContent = gr;
             hl.classList.add("letter");
-            d.appendChild(hl)
+            if (foldable) {
+              hl.classList.add("game-head");
+              const box = document.createElement("li");
+              box.classList.add("game-box");
+              hl.addEventListener("click", () => {
+                const open = hl.classList.toggle("is-open");
+                box.classList.toggle("is-open", open)
+              });
+              d.appendChild(hl);
+              d.appendChild(box);
+              bucket = box
+            } else {
+              d.appendChild(hl);
+              bucket = null
+            }
           }
+          const into = bucket || d;
           if (ck === "apps" || ck === "videogame-guides") {
             const li = document.createElement("li");
             li.classList.add("app-item");
@@ -1403,7 +1452,7 @@
             rw.appendChild(bt);
             rw.appendChild(pn);
             li.appendChild(rw);
-            d.appendChild(li);
+            into.appendChild(li);
             return
           }
           const li = document.createElement("li");
@@ -1419,7 +1468,7 @@
             a2.appendChild(tp)
           }
           li.appendChild(a2);
-          d.appendChild(li)
+          into.appendChild(li)
         });
         if (!list.length) {
           const li = document.createElement("li");
