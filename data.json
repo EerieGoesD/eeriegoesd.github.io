@@ -1394,6 +1394,26 @@
       "suggest": "https://tally.so/r/WOk0BJ?app=Infinite%20Money",
       "googleplay": "",
       "type": "mod"
+    },
+    {
+      "categoryKey": "videogame-guides",
+      "category": "Borderlands 1 GOTY + Enhanced",
+      "name": "Random Vehicle Colour",
+      "link": "",
+      "tooltip": "Gives every vehicle you spawn a random paint job.\n\n- Optional: debug setting to see which paint was picked",
+      "github": "https://github.com/EerieGoesD/borderlands-1-goty-mods/tree/main/RandomVehicleColour",
+      "chrome": "",
+      "microsoft": "",
+      "macos": "",
+      "store": "",
+      "steam": "",
+      "gamefaqs": "",
+      "google-drive": "",
+      "report": "https://tally.so/r/PdW0bV?app=Random%20Vehicle%20Colour",
+      "suggest": "https://tally.so/r/WOk0BJ?app=Random%20Vehicle%20Colour",
+      "googleplay": "",
+      "type": "mod",
+      "nexus": "https://www.nexusmods.com/borderlandsgotyenhanced/mods/89"
     }
   ]
 }
