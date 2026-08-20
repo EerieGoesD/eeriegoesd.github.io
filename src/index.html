@@ -576,7 +576,9 @@
       grid-template-columns: repeat(auto-fill, var(--pill-w));
       justify-content: start;
       gap: 8px;
-      max-width: 480px
+      /* Room for three buttons whatever they are called, so a long label does
+         not push the third one onto a line of its own. */
+      max-width: calc(var(--pill-w) * 3 + 16px)
     }
 
     .sub-categories .app-contact {
