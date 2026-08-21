@@ -2061,6 +2061,27 @@
       "nexus": "https://www.nexusmods.com/borderlands/mods/137",
       "modio": "",
       "moddb": "https://bl-sdk.github.io/willow1-mod-db/mods/randomvehiclecolour/"
+    },
+    {
+      "categoryKey": "videogame-guides",
+      "category": "Melvor Idle",
+      "name": "Skill Limit",
+      "link": "",
+      "tooltip": "Set a target number of actions or items on a skill and it stops there. A bar appears where you start the skill, with an amount, a mode switch and a live counter.\n\n- Actions: counts how many times the action is performed\n- Items: counts what lands in your bank\n- Amount and mode are remembered per skill and per character\n- In Woodcutting each tree has its own target, so the others keep going\n- Combat, Astrology, Agility and Alt Magic are not affected",
+      "github": "https://github.com/eeriegoesd/melvor-idle-mods",
+      "chrome": "",
+      "microsoft": "",
+      "macos": "",
+      "store": "",
+      "steam": "",
+      "gamefaqs": "",
+      "google-drive": "",
+      "report": "https://tally.so/r/PdW0bV?app=Skill%20Limit",
+      "suggest": "https://tally.so/r/WOk0BJ?app=Skill%20Limit",
+      "googleplay": "",
+      "moddb": "",
+      "type": "mod",
+      "modio": "https://mod.io/g/melvoridle/m/skill-limit#description"
     }
   ]
 }
