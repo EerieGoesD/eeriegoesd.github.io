@@ -648,14 +648,24 @@
       opacity: 1
     }
 
+    .counts span {
+      display: block
+    }
+
     .counts b {
       font-weight: normal;
       color: rgba(var(--accent-rgb),.75)
     }
 
+    /* On a phone it sits on one line so it does not cover the list. */
     @media(max-width:700px) {
       .counts {
-        display: none
+        line-height: 1.4
+      }
+
+      .counts span {
+        display: inline-block;
+        margin-right: 10px
       }
     }
 
@@ -1609,7 +1619,7 @@
           ["guides", gaming.filter(x => x.type !== "mod").length],
           ["music", (ib.music || []).length]
         ].filter(r => r[1] > 0);
-        box.innerHTML = rows.map(r => r[0] + ": <b>" + r[1] + "</b>").join("<br>");
+        box.innerHTML = rows.map(r => "<span>" + r[0] + ": <b>" + r[1] + "</b></span>").join("");
         requestAnimationFrame(() => box.classList.add("on"))
       }).catch(() => {});
 
