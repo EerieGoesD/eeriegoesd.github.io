@@ -627,6 +627,38 @@
       letter-spacing: .5px
     }
 
+    /* A running count of what is on the site, drawn like terminal output. */
+    .counts {
+      position: fixed;
+      bottom: 14px;
+      right: 18px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: rgba(var(--dim-rgb),.4);
+      letter-spacing: .5px;
+      text-align: right;
+      z-index: 10;
+      pointer-events: none;
+      line-height: 1.7;
+      opacity: 0;
+      transition: opacity .5s ease
+    }
+
+    .counts.on {
+      opacity: 1
+    }
+
+    .counts b {
+      font-weight: normal;
+      color: rgba(var(--accent-rgb),.75)
+    }
+
+    @media(max-width:700px) {
+      .counts {
+        display: none
+      }
+    }
+
     .privacy-link:hover {
       color: rgb(var(--accent-rgb));
       text-shadow: 0 0 6px rgba(var(--accent-rgb),.4)
@@ -952,7 +984,7 @@
     <main class="content-panel" id="content-panel">
       <ul class="sub-categories" id="sub-categories"></ul>
     </main>
-  </div><a href="/privacy/" class="privacy-link" id="privacyLink">Privacy Policy</a>
+  </div><a href="/privacy/" class="privacy-link" id="privacyLink">Privacy Policy</a><div class="counts" id="counts" aria-hidden="true"></div>
   <div class="privacy-overlay" id="privacyOverlay">
     <div class="privacy-modal" role="dialog" aria-modal="true" aria-label="Privacy Policy"><button class="pp-close" id="ppClose" aria-label="Close">&times;</button>
       <div class="pp-title">privacy_policy</div>
@@ -1565,6 +1597,22 @@
         g = null;
         throw er
       });
+
+      /* Count only what actually renders, so the numbers match the lists. */
+      g.then(ib => {
+        const box = document.getElementById("counts");
+        if (!box) return;
+        const gaming = ib["videogame-guides"] || [];
+        const rows = [
+          ["apps", (ib.apps || []).length],
+          ["mods", gaming.filter(x => x.type === "mod").length],
+          ["guides", gaming.filter(x => x.type !== "mod").length],
+          ["music", (ib.music || []).length]
+        ].filter(r => r[1] > 0);
+        box.innerHTML = rows.map(r => r[0] + ": <b>" + r[1] + "</b>").join("<br>");
+        requestAnimationFrame(() => box.classList.add("on"))
+      }).catch(() => {});
+
       a.classList.add("animate");
       e.forEach(ln => {
         ln.addEventListener("click", ev => {
