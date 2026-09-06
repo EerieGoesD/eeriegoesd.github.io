@@ -5,7 +5,7 @@
       "category": "Productivity",
       "name": "Bear in Mind",
       "link": "https://eeriegoesd.com/bear-in-mind/",
-      "tooltip": "To-do list where each entry can carry a longer description, hidden behind an arrow until you open it. Entries are edited in place, ticked off into a Done section, and exported to or imported from a JSON file. Stored locally.",
+      "tooltip": "To-do list for the things you need to remember, with an optional longer note on each entry, a progress bar showing how much of the list is done, and export/import to move the list between devices. Everything is stored on your device.",
       "github": "",
       "chrome": "",
       "microsoft": "https://apps.microsoft.com/detail/9N27CH9CM76V",
