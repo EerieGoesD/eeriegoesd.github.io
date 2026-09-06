@@ -1615,7 +1615,7 @@
         if (!box) return;
         const gaming = ib["videogame-guides"] || [];
         const rows = [
-          ["apps", (ib.apps || []).length],
+          ["software", (ib.apps || []).length],
           ["mods", gaming.filter(x => x.type === "mod").length],
           ["guides", gaming.filter(x => x.type !== "mod").length],
           ["music", (ib.music || []).length]
