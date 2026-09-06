@@ -2,6 +2,25 @@
   "entries": [
     {
       "categoryKey": "apps",
+      "category": "Productivity",
+      "name": "Bear in Mind",
+      "link": "https://eeriegoesd.com/bear-in-mind/",
+      "tooltip": "A list for the things you are afraid of forgetting. Type one in, press Enter, tick it off. Runs in the browser, as a Windows app, or as an extension, and the list never leaves your machine.",
+      "github": "",
+      "chrome": "",
+      "microsoft": "https://apps.microsoft.com/detail/9N27CH9CM76V",
+      "macos": "",
+      "store": "",
+      "steam": "",
+      "gamefaqs": "",
+      "google-drive": "",
+      "report": "https://tally.so/r/PdW0bV?app=Bear%20in%20Mind",
+      "suggest": "https://tally.so/r/WOk0BJ?app=Bear%20in%20Mind",
+      "googleplay": "",
+      "moddb": ""
+    },
+    {
+      "categoryKey": "apps",
       "category": "Chrome Extension",
       "name": "YouTube Guitar Practice Assistant",
       "link": "",

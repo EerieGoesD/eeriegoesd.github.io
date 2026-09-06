@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /src/
 
-Sitemap: https://eeriegoesd.github.io/sitemap.xml
+Sitemap: https://eeriegoesd.com/sitemap.xml
