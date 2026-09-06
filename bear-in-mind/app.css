@@ -821,9 +821,8 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
-   Web page. Unlike the extension popup this has a whole browser window to fill,
-   so the app takes the full height and is capped in width and centred, rather
-   than a list running the width of a monitor.
+   Web page. Unlike the extension popup this has a whole browser window, and it
+   fills it: this is the app, not a page with the app sitting on it.
 --------------------------------------------------------------------------- */
 html,
 body {
@@ -832,28 +831,24 @@ body {
 }
 
 #app {
-  max-width: 820px;
-  margin: 0 auto;
   position: relative;
-  border-left: 1px solid var(--border);
-  border-right: 1px solid var(--border);
 }
 
-/* The settings panel hangs off the centred column, not off the far edge of the
-   window, so on a wide screen it still lands under its own button. */
+/* The settings panel hangs off the app, so it lands under its own button. */
 .menu-panel {
   position: absolute;
   top: 58px;
   right: 16px;
 }
 
-@media (max-width: 820px) {
-  #app {
-    border-left: none;
-    border-right: none;
-  }
+/* An empty strip must take up no room, whatever the browser does with the
+   hidden attribute. */
+.problem[hidden] {
+  display: none !important;
+}
 
-  /* The five footer links do not fit on a narrow phone, so they wrap there and
+@media (max-width: 700px) {
+  /* The five footer links do not fit on a phone, so they wrap there and
      nowhere else. */
   .footer,
   .footer-links {
