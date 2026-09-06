@@ -5,7 +5,7 @@
       "category": "Productivity",
       "name": "Bear in Mind",
       "link": "https://eeriegoesd.com/bear-in-mind/",
-      "tooltip": "A list for the things you are afraid of forgetting. Type one in, press Enter, tick it off. Runs in the browser, as a Windows app, or as an extension, and the list never leaves your machine.",
+      "tooltip": "To-do list where each entry can carry a longer description, hidden behind an arrow until you open it. Entries are edited in place, ticked off into a Done section, and exported to or imported from a JSON file. Stored locally.",
       "github": "",
       "chrome": "",
       "microsoft": "https://apps.microsoft.com/detail/9N27CH9CM76V",
