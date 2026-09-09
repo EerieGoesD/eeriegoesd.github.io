@@ -227,6 +227,16 @@ function newId() {
   return String(Date.now()) + "-" + Math.random().toString(36).slice(2, 8);
 }
 
+// Counts THAT something happened, never what it says. No entry text, no
+// description, no counts of what is on the list: only the name of the action.
+// Nothing is sent at all unless the visitor accepted the cookie banner, since
+// without that the analytics library is never loaded and this goes nowhere.
+function track(action) {
+  try {
+    if (typeof gtag === "function") gtag("event", action);
+  } catch {}
+}
+
 function cleanDate(value) {
   if (typeof value !== "string") return null;
   const t = Date.parse(value);
@@ -278,6 +288,7 @@ function exportList() {
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 2000);
+    track("list_exported");
     showNote("Saved a copy of your list to your downloads.");
   } catch (e) {
     showProblem("That could not be saved. " + String(e));
@@ -329,6 +340,7 @@ async function handleImportFile(file) {
 
   // Added to what is already there, never over the top of it.
   items = clean.concat(items);
+  track("list_imported");
   render();
   await save();
   showNote("Brought in " + clean.length + (clean.length === 1 ? " thing." : " things."));
@@ -602,6 +614,7 @@ function addItem() {
   notes.value = "";
   input.focus();
   syncCaptureOpen();
+  track("entry_added");
   render();
   save();
 }
@@ -621,6 +634,7 @@ function toggleItem(id) {
   if (!item) return;
   item.done = !item.done;
   item.doneAt = item.done ? new Date().toISOString() : null;
+  track(item.done ? "entry_done" : "entry_reopened");
   render();
   save();
 }
