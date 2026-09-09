@@ -573,9 +573,16 @@ function render() {
   if (!open.length && !done.length) {
     const empty = document.createElement("div");
     empty.className = "empty";
+    // The one place a first-time visitor is looking, so it is also the one place
+    // that says the list survives closing the tab, and that the same thing runs
+    // as a Windows app and as an extension.
     empty.innerHTML =
       "<strong>Nothing on your mind yet</strong>" +
-      "Type it in the box above and press Enter.<br>It stays here until you tick it off.";
+      "Type it in the box above and press Enter.<br>" +
+      "It stays here until you tick it off, and it is still here when you come back." +
+      '<span class="empty-also">Also as a ' +
+      '<a href="https://apps.microsoft.com/detail/9N27CH9CM76V" target="_blank" rel="noopener">Windows app</a>' +
+      "</span>";
     list.appendChild(empty);
     return;
   }
