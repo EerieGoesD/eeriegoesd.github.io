@@ -2249,6 +2249,25 @@
       "suggest": "https://tally.so/r/WOk0BJ?app=Repo%20Declutter",
       "googleplay": "",
       "moddb": ""
+    },
+    {
+      "categoryKey": "apps",
+      "category": "Media",
+      "name": "Audio EQ Overlay",
+      "link": "",
+      "tooltip": "A parametric equaliser to shape the sound of every app on your computer at once.",
+      "github": "",
+      "chrome": "",
+      "microsoft": "https://apps.microsoft.com/store/detail/9PJZPJ1K8GJ3?cid=DevShareMCLPCS",
+      "macos": "",
+      "store": "",
+      "steam": "",
+      "gamefaqs": "",
+      "google-drive": "",
+      "report": "https://tally.so/r/PdW0bV?app=Audio%20EQ%20Overlay",
+      "suggest": "https://tally.so/r/WOk0BJ?app=Audio%20EQ%20Overlay",
+      "googleplay": "",
+      "moddb": ""
     }
   ]
 }
