@@ -135,7 +135,7 @@
     },
     {
       "categoryKey": "apps",
-      "category": "Utility/Productivity",
+      "category": "Productivity",
       "name": "Image2Text OCR",
       "link": "https://github.com/EerieGoesD/image2text",
       "tooltip": "Windows desktop app that extracts text from screen captures, images, and PDFs using Tesseract OCR - all processed locally with no internet connection.",
@@ -288,7 +288,7 @@
     },
     {
       "categoryKey": "apps",
-      "category": "Utility",
+      "category": "Productivity",
       "name": "More Time at Home (Standalone App)",
       "link": "",
       "tooltip": "Leave planner that automatically places your paid days off around national holidays and weekends to maximize consecutive time away from work. Supports 26 countries.",
@@ -364,7 +364,7 @@
     },
     {
       "categoryKey": "apps",
-      "category": "Utility",
+      "category": "Productivity",
       "name": "Reader Vault",
       "link": "",
       "tooltip": "Reader Vault is a cross-platform app for saving, organizing, reading, and exporting long-form text or guides offline.",
