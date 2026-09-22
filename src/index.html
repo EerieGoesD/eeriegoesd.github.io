@@ -749,10 +749,17 @@
       color: rgba(var(--dim-rgb),.6)
     }
 
+    /* Each band is a fixed-height box that centres its one line, so the text
+       sits in the middle whatever room the font leaves above and below its
+       letters. */
     .sub-categories .track-art .track-name,
     .sub-categories .track-art .track-meta {
       flex: none;
-      padding: 5px;
+      display: flex;
+      align-items: center;
+      height: 26px;
+      padding: 0 5px;
+      line-height: 1;
       background: var(--bg);
       white-space: nowrap;
       overflow: hidden;
@@ -761,13 +768,11 @@
 
     .sub-categories .track-art .track-name {
       font-size: 12px;
-      line-height: 15px;
       border-bottom: 1px solid rgba(var(--accent-rgb),.15)
     }
 
     .sub-categories .track-art .track-meta {
       font-size: 12px;
-      line-height: 15px;
       border-top: 1px solid rgba(var(--accent-rgb),.15)
     }
 
