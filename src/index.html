@@ -1905,8 +1905,8 @@
         d.innerHTML = "";
         d.scrollTop = 0;
         let list = (items || []).slice();
-        if (ck === "apps" || ck === "videogame-guides") list.sort((a2, b2) => (a2.category || "").localeCompare(b2.category || "") || a2.name.localeCompare(b2.name));
-        else list.sort((a2, b2) => a2.name.localeCompare(b2.name));
+        if (ck === "contacts") list.sort((a2, b2) => a2.name.localeCompare(b2.name));
+        else list.sort((a2, b2) => (a2.category || "").localeCompare(b2.category || "") || a2.name.localeCompare(b2.name));
         if (ck === "videogame-guides") {
           lgi = items;
           const tg = document.createElement("li");
@@ -1932,13 +1932,28 @@
           d.appendChild(tg);
           list = list.filter(it => (it.type || "guide") === gsub)
         }
-        /* Music is a grid of cards rather than a list of links. */
+        /* Music is a grid of cards rather than a list of links, with a grid
+           of its own under each style. Anything with no style comes first. */
         if (ck === "music") {
           if (list.length) {
-            const gd = document.createElement("li");
-            gd.classList.add("music-grid");
-            list.forEach(item => gd.appendChild(makeTrack(item)));
-            d.appendChild(gd)
+            let style = undefined,
+              gd = null;
+            list.forEach(item => {
+              const gr = item.category || null;
+              if (gr !== style) {
+                style = gr;
+                if (gr) {
+                  const hl = document.createElement("li");
+                  hl.textContent = gr;
+                  hl.classList.add("letter");
+                  d.appendChild(hl)
+                }
+                gd = document.createElement("li");
+                gd.classList.add("music-grid");
+                d.appendChild(gd)
+              }
+              gd.appendChild(makeTrack(item))
+            })
           } else {
             const li = document.createElement("li");
             li.textContent = "No items yet.";
