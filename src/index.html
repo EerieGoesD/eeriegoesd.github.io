@@ -772,6 +772,16 @@
       flex: none
     }
 
+    /* Held back: made for someone, listen only until that is settled. */
+    .sub-categories .track-held {
+      grid-column: 2;
+      grid-row: 3;
+      margin-top: 6px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: rgba(var(--dim-rgb),.45)
+    }
+
     .privacy-link {
       position: fixed;
       bottom: 14px;
@@ -1564,7 +1574,13 @@
         card.appendChild(nm);
         if (mt) card.appendChild(mt)
       }
-      if (Array.isArray(item.downloads) && item.downloads.length) {
+      if (item.type === "reserved") {
+        const held = document.createElement("div");
+        held.classList.add("track-held");
+        held.textContent = "[ reserved ]";
+        held.title = "Made for someone in particular. Listen only for now.";
+        card.appendChild(held)
+      } else if (Array.isArray(item.downloads) && item.downloads.length) {
         const lk = document.createElement("div");
         lk.classList.add("track-links");
         item.downloads.forEach(dl => lk.appendChild(makePill(dl.label, dl.url)));
