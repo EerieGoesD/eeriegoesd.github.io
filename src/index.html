@@ -664,29 +664,31 @@
       overflow: hidden
     }
 
-    .sub-categories .track-wave {
+    /* A hairline ring round the button. It fills as the track plays, and
+       that is the only thing in the square that moves. */
+    .sub-categories .track-ring {
       position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      color: rgba(var(--accent-rgb),.45);
-      pointer-events: none;
-      transition: color .25s
+      z-index: 1;
+      left: 50%;
+      top: 50%;
+      width: 58px;
+      height: 58px;
+      transform: translate(-50%, -50%) rotate(-90deg);
+      pointer-events: none
     }
 
-    .sub-categories .track:hover .track-wave {
-      color: rgba(var(--accent-rgb),.7)
+    .sub-categories .track-ring circle {
+      fill: none;
+      stroke-width: 1.5
     }
 
-    /* The part already played, drawn over the top of the rest and revealed
-       as far as the track has got. */
-    .sub-categories .track-wave.track-done {
-      color: rgb(var(--accent2-rgb));
-      clip-path: inset(0 100% 0 0)
+    .sub-categories .track-ring .ring-base {
+      stroke: rgba(var(--accent-rgb),.22)
     }
 
-    .sub-categories .track-wave rect {
-      fill: currentColor
+    .sub-categories .track-ring .ring-arc {
+      stroke: rgb(var(--accent2-rgb));
+      stroke-linecap: round
     }
 
     .sub-categories .track-frame {
@@ -731,26 +733,9 @@
       border-color: rgb(var(--accent2-rgb))
     }
 
-    .sub-categories .track-bar {
-      position: absolute;
-      z-index: 2;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 2px;
-      background: rgba(var(--accent-rgb),.15)
-    }
-
     /* Only worth grabbing while something is playing. */
     .sub-categories .track.is-playing .track-mid {
       cursor: ew-resize
-    }
-
-    .sub-categories .track-bar i {
-      display: block;
-      width: 0;
-      height: 100%;
-      background: rgb(var(--accent2-rgb))
     }
 
     .sub-categories .track-name {
@@ -1382,13 +1367,13 @@
       if (p) p.setAttribute("d", d)
     }
 
+    const RING = 2 * Math.PI * 27;
+
     function trackBar(card, frac) {
       if (!card) return;
-      const at = Math.max(0, Math.min(1, frac || 0)) * 100,
-        f = card.querySelector(".track-bar i"),
-        done = card.querySelector(".track-done");
-      if (f) f.style.width = at + "%";
-      if (done) done.style.clipPath = "inset(0 " + (100 - at) + "% 0 0)"
+      const at = Math.max(0, Math.min(1, frac || 0)),
+        arc = card.querySelector(".ring-arc");
+      if (arc) arc.style.strokeDashoffset = (RING * (1 - at)).toFixed(2)
     }
 
     function markPlaying(card) {
@@ -1547,43 +1532,6 @@
       a2.play().catch(() => {})
     }
 
-    /* The cover: the shape of the sound itself, drawn from the handful of
-       heights saved with the entry rather than from the audio. */
-    function makeWave(hex) {
-      const n = Math.floor(hex.length / 2);
-      if (n < 2) return null;
-      /* Sixty-four readings are too many for a square this size: they run
-         together into a wall. Every two are averaged into one bar, and each
-         bar gets a little more gap than width, so they read as bars. */
-      const vals = [];
-      for (let i = 0; i + 1 < n; i += 2) {
-        const a = parseInt(hex.substr(i * 2, 2), 16),
-          b = parseInt(hex.substr(i * 2 + 2, 2), 16);
-        if (a >= 0 && b >= 0) vals.push((a + b) / 2)
-      }
-      if (vals.length < 2) return null;
-      const NS = "http://www.w3.org/2000/svg",
-        W = 0.45,
-        svg = document.createElementNS(NS, "svg");
-      svg.classList.add("track-wave");
-      svg.setAttribute("viewBox", "0 0 " + vals.length + " 100");
-      svg.setAttribute("preserveAspectRatio", "none");
-      svg.setAttribute("aria-hidden", "true");
-      vals.forEach((v, i) => {
-        /* The tallest reaches sixty percent of the band, leaving air above
-           and below it. */
-        const h = Math.max(W, v / 255 * 60),
-          r = document.createElementNS(NS, "rect");
-        r.setAttribute("x", (i + (1 - W) / 2).toFixed(3));
-        r.setAttribute("y", (50 - h / 2).toFixed(2));
-        r.setAttribute("width", W.toFixed(2));
-        r.setAttribute("height", h.toFixed(2));
-        r.setAttribute("rx", (W / 2).toFixed(3));
-        svg.appendChild(r)
-      });
-      return svg
-    }
-
     /* One card: the cover with the play button in the middle, the name, and
        wherever the track can be got. */
     function makeTrack(item) {
@@ -1607,15 +1555,23 @@
         art.appendChild(nm);
         const mid = document.createElement("div");
         mid.classList.add("track-mid");
-        if (item.peaks) {
-          const wv = makeWave(item.peaks);
-          if (wv) mid.appendChild(wv);
-          const done = makeWave(item.peaks);
-          if (done) {
-            done.classList.add("track-done");
-            mid.appendChild(done)
+        const ring = document.createElementNS(NS, "svg");
+        ring.classList.add("track-ring");
+        ring.setAttribute("viewBox", "0 0 58 58");
+        ring.setAttribute("aria-hidden", "true");
+        ["ring-base", "ring-arc"].forEach(cls => {
+          const c = document.createElementNS(NS, "circle");
+          c.setAttribute("cx", "29");
+          c.setAttribute("cy", "29");
+          c.setAttribute("r", "27");
+          c.classList.add(cls);
+          if (cls === "ring-arc") {
+            c.setAttribute("stroke-dasharray", RING.toFixed(2));
+            c.style.strokeDashoffset = RING.toFixed(2)
           }
-        }
+          ring.appendChild(c)
+        });
+        mid.appendChild(ring);
         const bt = document.createElement("button");
         bt.type = "button";
         bt.classList.add("play-btn");
@@ -1629,12 +1585,6 @@
         bt.appendChild(svg);
         bt.addEventListener("click", () => toggleTrack(card, item.link));
         mid.appendChild(bt);
-        const bar = document.createElement("div");
-        bar.classList.add("track-bar");
-        bar.appendChild(document.createElement("i"));
-        art.appendChild(bar);
-        /* Rides across the cover as the track plays, so you can see where in
-           the loop you are. */
         seekable(card, mid);
         art.appendChild(mid);
         if (mt) art.appendChild(mt);
@@ -1844,8 +1794,7 @@
             nm = (e.name || "").trim(),
             lk = nu(e.link),
             tt = e.tooltip || "",
-            tp = (e.type || "").trim().toLowerCase(),
-            pk = (e.peaks || "").trim().toLowerCase();
+            tp = (e.type || "").trim().toLowerCase();
           if (!ck || !nm || !out[ck]) continue;
           const rp = nu(e.report),
             sf = nu(e.suggest),
@@ -1906,7 +1855,6 @@
             link: lk || null,
             tooltip: tt || null,
             type: tp || null,
-            peaks: /^[0-9a-f]+$/.test(pk) ? pk : null,
             downloads: dl
           })
         }
