@@ -668,11 +668,11 @@
        that is the only thing in the square that moves. */
     .sub-categories .track-ring {
       position: absolute;
-      z-index: 1;
+      z-index: 3;
       left: 50%;
       top: 50%;
-      width: 58px;
-      height: 58px;
+      width: var(--play, 42px);
+      height: var(--play, 42px);
       transform: translate(-50%, -50%) rotate(-90deg);
       pointer-events: none
     }
@@ -683,7 +683,7 @@
     }
 
     .sub-categories .track-ring .ring-base {
-      stroke: rgba(var(--accent-rgb),.22)
+      stroke: rgba(var(--accent-rgb),.5)
     }
 
     .sub-categories .track-ring .ring-arc {
@@ -704,11 +704,11 @@
     .sub-categories .play-btn {
       position: relative;
       z-index: 2;
-      width: 42px;
-      height: 42px;
+      width: var(--play, 42px);
+      height: var(--play, 42px);
       padding: 0;
       border-radius: 50%;
-      border: 1px solid rgba(var(--accent-rgb),.5);
+      border: 0;
       background: var(--bg);
       color: rgb(var(--accent-rgb));
       cursor: pointer;
@@ -729,8 +729,7 @@
     }
 
     .sub-categories .track.is-playing .play-btn {
-      color: rgb(var(--accent2-rgb));
-      border-color: rgb(var(--accent2-rgb))
+      color: rgb(var(--accent2-rgb))
     }
 
     /* Only worth grabbing while something is playing. */
@@ -1004,9 +1003,8 @@
         gap: 12px
       }
 
-      .sub-categories .play-btn {
-        width: 44px;
-        height: 44px
+      .sub-categories .track-mid {
+        --play: 44px
       }
 
       .sub-categories .track-art .track-name {
@@ -1367,7 +1365,7 @@
       if (p) p.setAttribute("d", d)
     }
 
-    const RING = 2 * Math.PI * 27;
+    const RING = 2 * Math.PI * 20.25;
 
     function trackBar(card, frac) {
       if (!card) return;
@@ -1557,13 +1555,13 @@
         mid.classList.add("track-mid");
         const ring = document.createElementNS(NS, "svg");
         ring.classList.add("track-ring");
-        ring.setAttribute("viewBox", "0 0 58 58");
+        ring.setAttribute("viewBox", "0 0 42 42");
         ring.setAttribute("aria-hidden", "true");
         ["ring-base", "ring-arc"].forEach(cls => {
           const c = document.createElementNS(NS, "circle");
-          c.setAttribute("cx", "29");
-          c.setAttribute("cy", "29");
-          c.setAttribute("r", "27");
+          c.setAttribute("cx", "21");
+          c.setAttribute("cy", "21");
+          c.setAttribute("r", "20.25");
           c.classList.add(cls);
           if (cls === "ring-arc") {
             c.setAttribute("stroke-dasharray", RING.toFixed(2));
