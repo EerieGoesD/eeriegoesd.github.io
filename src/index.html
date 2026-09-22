@@ -1558,19 +1558,27 @@
     function makeWave(hex) {
       const n = Math.floor(hex.length / 2);
       if (n < 2) return null;
+      /* Sixty-four readings are too many for a square this size: they run
+         together into a wall. Every two are averaged into one bar, and each
+         bar gets a little more gap than width, so they read as bars. */
+      const vals = [];
+      for (let i = 0; i + 1 < n; i += 2) {
+        const a = parseInt(hex.substr(i * 2, 2), 16),
+          b = parseInt(hex.substr(i * 2 + 2, 2), 16);
+        if (a >= 0 && b >= 0) vals.push((a + b) / 2)
+      }
+      if (vals.length < 2) return null;
       const NS = "http://www.w3.org/2000/svg",
-        W = 0.5,
+        W = 0.45,
         svg = document.createElementNS(NS, "svg");
       svg.classList.add("track-wave");
-      svg.setAttribute("viewBox", "0 0 " + n + " 100");
+      svg.setAttribute("viewBox", "0 0 " + vals.length + " 100");
       svg.setAttribute("preserveAspectRatio", "none");
       svg.setAttribute("aria-hidden", "true");
-      for (let i = 0; i < n; i++) {
-        const v = parseInt(hex.substr(i * 2, 2), 16);
-        if (!(v >= 0)) continue;
-        /* Half bar, half gap, so they read as bars. The tallest reaches two
-           thirds of the band, leaving air above and below. */
-        const h = Math.max(W, v / 255 * 66),
+      vals.forEach((v, i) => {
+        /* The tallest reaches sixty percent of the band, leaving air above
+           and below it. */
+        const h = Math.max(W, v / 255 * 60),
           r = document.createElementNS(NS, "rect");
         r.setAttribute("x", (i + (1 - W) / 2).toFixed(3));
         r.setAttribute("y", (50 - h / 2).toFixed(2));
@@ -1578,7 +1586,7 @@
         r.setAttribute("height", h.toFixed(2));
         r.setAttribute("rx", (W / 2).toFixed(3));
         svg.appendChild(r)
-      }
+      });
       return svg
     }
 
