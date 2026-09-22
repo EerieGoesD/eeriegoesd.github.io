@@ -914,7 +914,7 @@
       }
 
       .nav-panel.collapsed {
-        padding: 16px 20px 12px
+        padding: 6px 16px 4px
       }
 
       .nav-panel.collapsed .terminal-header {
@@ -930,35 +930,30 @@
         margin: 0
       }
 
-      /* Collapsed to one line, tapping the category closes it. On a phone
-         that has to look like something you can press, so it is a bar the
-         width of the screen with the way out spelled out on it. */
+      /* Collapsed to one line, tapping the category closes it. The row is
+         the standard phone back control: a chevron, then the title, the
+         whole width of the screen and tall enough for a thumb. */
       .nav-panel.collapsed .terminal-menu li.is-active a {
-        font-size: 15px;
+        font-size: 16px;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
         width: 100%;
-        min-height: 44px;
-        padding: 0 10px;
-        border: 1px solid rgba(var(--accent-rgb),.25);
-        border-radius: 3px;
-        background: rgba(var(--accent-rgb),.05)
+        min-height: 48px;
+        padding: 0 4px
       }
 
       .nav-panel.collapsed .terminal-menu li.is-active a::before {
-        content: '< back';
-        font-size: 12px;
-        letter-spacing: 1px;
-        color: rgb(var(--accent-rgb));
-        border: 1px solid rgba(var(--accent-rgb),.4);
-        border-radius: 2px;
-        padding: 4px 8px;
+        content: '\2039';
+        font-size: 30px;
+        line-height: 1;
+        margin-top: -4px;
+        color: var(--text);
         animation: none
       }
 
       .nav-panel.collapsed .terminal-menu li.is-active a:active {
-        background: rgba(var(--accent-rgb),.12)
+        opacity: .6
       }
 
       .divider {
@@ -987,9 +982,9 @@
       }
 
       /* The list passes behind that corner rather than through it. */
-      body::after {
+      .layout::after {
         content: '';
-        position: fixed;
+        position: absolute;
         left: 0;
         right: 0;
         bottom: 0;
