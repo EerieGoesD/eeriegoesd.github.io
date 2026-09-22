@@ -196,11 +196,11 @@
       list-style: none
     }
 
-    .terminal-menu li {
+    .terminal-menu>li {
       margin: 10px 0
     }
 
-    .terminal-menu li a {
+    .terminal-menu>li>a {
       text-decoration: none;
       color: var(--text);
       font-size: 24px;
@@ -210,34 +210,34 @@
       letter-spacing: 2px
     }
 
-    .terminal-menu li a::before {
+    .terminal-menu>li>a::before {
       content: '> ';
       color: rgba(var(--accent-rgb),.3);
       transition: color .3s, text-shadow .3s
     }
 
-    .terminal-menu li a:hover {
+    .terminal-menu>li>a:hover {
       color: rgb(var(--accent-rgb));
       text-shadow: 0 0 10px rgba(var(--accent-rgb),.6), 0 0 30px rgba(var(--accent-rgb),.15)
     }
 
-    .terminal-menu li a:hover::before {
+    .terminal-menu>li>a:hover::before {
       color: rgb(var(--accent-rgb));
       text-shadow: 0 0 10px rgba(var(--accent-rgb),.6)
     }
 
-    .terminal-menu li a.active {
+    .terminal-menu>li>a.active {
       color: rgb(var(--accent2-rgb));
       text-shadow: 0 0 8px rgba(var(--accent2-rgb),.4)
     }
 
-    .terminal-menu li a.active::before {
+    .terminal-menu>li>a.active::before {
       content: '_ ';
       color: rgb(var(--accent2-rgb));
       animation: blink 1s step-end infinite
     }
 
-    .nav-panel.animate .terminal-menu li {
+    .nav-panel.animate .terminal-menu>li {
       opacity: 0;
       animation: fadeIn .4s forwards
     }
@@ -252,23 +252,23 @@
       animation: fadeIn .3s forwards
     }
 
-    .nav-panel.animate .terminal-menu li:nth-child(1) {
+    .nav-panel.animate .terminal-menu>li:nth-child(1) {
       animation-delay: .1s
     }
 
-    .nav-panel.animate .terminal-menu li:nth-child(2) {
+    .nav-panel.animate .terminal-menu>li:nth-child(2) {
       animation-delay: .15s
     }
 
-    .nav-panel.animate .terminal-menu li:nth-child(3) {
+    .nav-panel.animate .terminal-menu>li:nth-child(3) {
       animation-delay: .2s
     }
 
-    .nav-panel.animate .terminal-menu li:nth-child(4) {
+    .nav-panel.animate .terminal-menu>li:nth-child(4) {
       animation-delay: .25s
     }
 
-    .nav-panel.animate .terminal-menu li:nth-child(5) {
+    .nav-panel.animate .terminal-menu>li:nth-child(5) {
       animation-delay: .3s
     }
 
@@ -910,11 +910,11 @@
         justify-content: flex-start
       }
 
-      .terminal-menu li {
+      .terminal-menu>li {
         margin: 0
       }
 
-      .terminal-menu li a {
+      .terminal-menu>li>a {
         font-size: 18px;
         display: block;
         padding: 12px 0
@@ -922,7 +922,7 @@
 
       /* A caret says the section opens here, on this page. It turns over
          when the section is open, which says it closes the same way. */
-      .terminal-menu li a::before {
+      .terminal-menu>li>a::before {
         content: '';
         display: inline-block;
         width: 9px;
@@ -935,11 +935,11 @@
         transition: transform .25s ease, border-color .25s ease
       }
 
-      .terminal-menu li a:hover::before {
+      .terminal-menu>li>a:hover::before {
         border-color: rgb(var(--accent-rgb))
       }
 
-      .terminal-menu li a.active::before {
+      .terminal-menu>li>a.active::before {
         content: '';
         border-color: rgb(var(--accent2-rgb));
         transform: rotate(-135deg);
@@ -949,7 +949,7 @@
 
       /* The open row stays put at the top while its content scrolls, so it
          can be closed from anywhere in it. */
-      .terminal-menu li.is-active>a {
+      .terminal-menu>li.is-active>a {
         position: sticky;
         top: 0;
         z-index: 5;
@@ -971,7 +971,7 @@
         clip-path: inset(0 0 0 0)
       }
 
-      .terminal-menu li>.content-panel {
+      .terminal-menu>li>.content-panel {
         margin: 4px 0 10px
       }
 
@@ -1700,7 +1700,7 @@
         b = document.getElementById("divider"),
         c = document.getElementById("content-panel"),
         d = document.getElementById("sub-categories"),
-        e = document.querySelectorAll(".terminal-menu li a"),
+        e = document.querySelectorAll(".terminal-menu>li>a"),
         f = document.querySelectorAll(".terminal-menu li");
       let g = null,
         h = null,
@@ -1733,7 +1733,7 @@
 
       function as(cat, now) {
         if (im()) return;
-        const ln = document.querySelector(`.terminal-menu li a[data-category="${cat}"]`);
+        const ln = document.querySelector(`.terminal-menu>li>a[data-category="${cat}"]`);
         if (!ln) return;
         const lr = k.getBoundingClientRect(),
           ar = ln.getBoundingClientRect(),
@@ -1934,7 +1934,7 @@
         e.forEach(l2 => l2.classList.remove("active"));
         f.forEach(li => li.classList.remove("is-active"));
         if (ck) {
-          const ln = document.querySelector(`.terminal-menu li a[data-category="${ck}"]`);
+          const ln = document.querySelector(`.terminal-menu>li>a[data-category="${ck}"]`);
           if (ln) {
             ln.classList.add("active");
             ln.closest("li").classList.add("is-active")
