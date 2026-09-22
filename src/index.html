@@ -614,54 +614,41 @@
       box-shadow: 0 0 8px rgba(var(--accent-rgb),.3), inset 0 0 8px rgba(var(--accent-rgb),.05)
     }
 
-    /* Music is a grid of cards. The play button sits in the middle of the
-       cover, and the line under it fills as the track plays. */
+    /* Music is a list of rows: the play button on the left, the name beside
+       it, key and tempo under the name, a hairline between rows. A loop is
+       chosen by ear and by reading, so there is nothing to draw a square of. */
     .sub-categories li.music-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, 138px);
-      gap: 12px;
+      display: block;
+      max-width: 560px;
       margin: 0
     }
 
     .sub-categories .track {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding: 8px;
-      border: 1px solid rgba(var(--accent-rgb),.2);
-      border-radius: 3px;
-      transition: border-color .2s, box-shadow .2s
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      column-gap: 14px;
+      row-gap: 3px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(var(--accent-rgb),.12)
     }
 
-    .sub-categories .track:hover {
-      border-color: rgba(var(--accent-rgb),.45)
-    }
-
-    .sub-categories .track.is-playing {
-      border-color: rgb(var(--accent2-rgb));
-      box-shadow: 0 0 12px rgba(var(--accent2-rgb),.18)
-    }
-
+    /* The cover's parts take their places in the row directly. */
     .sub-categories .track-art {
-      position: relative;
-      aspect-ratio: 1;
-      display: flex;
-      flex-direction: column;
-      background: rgba(var(--accent-rgb),.05);
-      border: 1px solid rgba(var(--accent-rgb),.15)
+      display: contents
     }
 
-    /* The wave and the line live in here, so neither ever runs under the
-       name or the tempo. */
     .sub-categories .track-mid {
+      --play: 44px;
       touch-action: none;
       position: relative;
-      flex: 1;
-      min-height: 0;
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      width: 44px;
+      height: 44px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      overflow: hidden
+      justify-content: center
     }
 
     /* A hairline ring round the button. It fills as the track plays, and
@@ -733,59 +720,52 @@
     }
 
     /* Only worth grabbing while something is playing. */
-    .sub-categories .track.is-playing .track-mid {
+    .sub-categories .track.is-playing {
       cursor: ew-resize
     }
 
     .sub-categories .track-name {
-      font-size: 13px;
-      color: var(--text);
-      overflow-wrap: anywhere
+      color: var(--text)
     }
 
     .sub-categories .track-meta {
       font-family: 'Share Tech Mono', monospace;
-      font-size: 11px;
       color: rgba(var(--dim-rgb),.6)
     }
 
-    /* Each band is a fixed-height box that centres its one line, so the text
-       sits in the middle whatever room the font leaves above and below its
-       letters. */
-    .sub-categories .track-art .track-name,
-    .sub-categories .track-art .track-meta {
-      flex: none;
-      display: flex;
-      align-items: center;
-      height: 26px;
-      padding: 0 5px;
-      line-height: 1;
-      background: var(--bg);
+    .sub-categories .track .track-name,
+    .sub-categories .track .track-meta {
+      grid-column: 2;
+      min-width: 0;
+      line-height: 1.2;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis
     }
 
-    .sub-categories .track-art .track-name {
-      font-size: 12px;
-      border-bottom: 1px solid rgba(var(--accent-rgb),.15)
+    .sub-categories .track .track-name {
+      grid-row: 1;
+      align-self: end;
+      font-size: 15px
     }
 
-    .sub-categories .track-art .track-meta {
-      font-size: 12px;
-      border-top: 1px solid rgba(var(--accent-rgb),.15)
+    .sub-categories .track .track-meta {
+      grid-row: 2;
+      align-self: start;
+      font-size: 12px
     }
 
-    /* Every button in a card is the same width, whatever its label says. */
     .sub-categories .track-links {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+      grid-column: 2;
+      grid-row: 3;
+      display: flex;
+      flex-wrap: wrap;
       gap: 6px;
-      margin-top: auto
+      margin-top: 8px
     }
 
     .sub-categories .track-links .pill {
-      justify-content: center
+      flex: none
     }
 
     .privacy-link {
@@ -1000,83 +980,6 @@
         padding: 6px 12px;
         white-space: normal;
         line-height: 1.2
-      }
-
-      /* A phone gets one row per loop, the width of the screen: the button
-         on the left, the name beside it, key and tempo under the name. No
-         square, nothing empty. */
-      .sub-categories li.music-grid {
-        display: block
-      }
-
-      .sub-categories .track {
-        display: grid;
-        grid-template-columns: 44px 1fr;
-        column-gap: 14px;
-        row-gap: 3px;
-        align-items: center;
-        padding: 10px 0;
-        border: 0;
-        border-bottom: 1px solid rgba(var(--accent-rgb),.12);
-        border-radius: 0;
-        box-shadow: none
-      }
-
-      .sub-categories .track:hover,
-      .sub-categories .track.is-playing {
-        border-color: rgba(var(--accent-rgb),.12);
-        box-shadow: none
-      }
-
-      /* The cover's parts take their places in the row directly. */
-      .sub-categories .track-art {
-        display: contents
-      }
-
-      .sub-categories .track-mid {
-        --play: 44px;
-        grid-column: 1;
-        grid-row: 1 / span 2;
-        width: 44px;
-        height: 44px;
-        flex: none;
-        overflow: visible
-      }
-
-      .sub-categories .track .track-name,
-      .sub-categories .track .track-meta {
-        grid-column: 2;
-        min-width: 0;
-        height: auto;
-        padding: 0;
-        border: 0;
-        background: none;
-        line-height: 1.2
-      }
-
-      .sub-categories .track .track-name {
-        grid-row: 1;
-        align-self: end;
-        font-size: 15px
-      }
-
-      .sub-categories .track .track-meta {
-        grid-row: 2;
-        align-self: start;
-        font-size: 12px
-      }
-
-      .sub-categories .track-links {
-        grid-column: 2;
-        grid-row: 3;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin-top: 8px
-      }
-
-      .sub-categories .track-links .pill {
-        flex: none
       }
 
       .sub-categories li a .tooltip {
@@ -1431,10 +1334,6 @@
 
     const RING = 2 * Math.PI * 20.25;
 
-    function im() {
-      return window.innerWidth <= 700
-    }
-
     function trackBar(card, frac) {
       if (!card) return;
       const at = Math.max(0, Math.min(1, frac || 0)),
@@ -1551,17 +1450,14 @@
     /* Dragging anywhere across the wave moves the playing track, leaving the
        button in the middle to do its own job. */
     function seekable(card, mid) {
-      /* On a phone the square is gone and the row is the surface to drag
-         along; on a desktop it is the square itself. */
-      const on_ = () => im() ? card : mid;
+      /* The row is the surface to drag along. */
       let on = false;
       const fracAt = x => {
-        const r = on_().getBoundingClientRect();
+        const r = card.getBoundingClientRect();
         return r.width ? (x - r.left) / r.width : 0
       };
       card.addEventListener("pointerdown", ev => {
         if (NOW !== card || ev.target.closest(".play-btn, .pill")) return;
-        if (!im() && !ev.target.closest(".track-mid")) return;
         on = true;
         if (card.setPointerCapture) {
           try { card.setPointerCapture(ev.pointerId) } catch (e) {}
