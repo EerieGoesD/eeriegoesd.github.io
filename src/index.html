@@ -646,10 +646,21 @@
       position: relative;
       aspect-ratio: 1;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
       background: rgba(var(--accent-rgb),.05);
       border: 1px solid rgba(var(--accent-rgb),.15)
+    }
+
+    /* The wave and the line live in here, so neither ever runs under the
+       name or the tempo. */
+    .sub-categories .track-mid {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden
     }
 
     .sub-categories .track-wave {
@@ -728,7 +739,7 @@
 
     .sub-categories .track-line {
       position: absolute;
-      z-index: 2;
+      z-index: 1;
       top: 0;
       bottom: 0;
       left: 0;
@@ -769,27 +780,24 @@
 
     .sub-categories .track-art .track-name,
     .sub-categories .track-art .track-meta {
-      position: absolute;
-      z-index: 1;
-      left: 0;
-      right: 0;
+      flex: none;
       padding: 5px 7px;
+      background: var(--bg);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis
     }
 
     .sub-categories .track-art .track-name {
-      top: 0;
       font-size: 12px;
-      background: linear-gradient(to bottom, var(--bg) 55%, transparent)
+      line-height: 15px;
+      border-bottom: 1px solid rgba(var(--accent-rgb),.15)
     }
 
     .sub-categories .track-art .track-meta {
-      bottom: 0;
-      padding-bottom: 6px;
       font-size: 10px;
-      background: linear-gradient(to top, var(--bg) 55%, transparent)
+      line-height: 13px;
+      border-top: 1px solid rgba(var(--accent-rgb),.15)
     }
 
     /* Every button in a card is the same width, whatever its label says. */
@@ -1428,7 +1436,7 @@
         f.setAttribute("title", "player");
         f.src = SC_PLAYER + "?url=" + encodeURIComponent(url) + "&auto_play=true&show_comments=false&show_user=false&show_teaser=false&hide_related=true&visual=false";
         card.frame = f;
-        card.querySelector(".track-art").appendChild(f)
+        card.querySelector(".track-mid").appendChild(f)
       }
       scApi().then(() => {
         if (card.widget || !card.frame) return;
@@ -1514,9 +1522,12 @@
       if (item.link) {
         const art = document.createElement("div");
         art.classList.add("track-art");
+        art.appendChild(nm);
+        const mid = document.createElement("div");
+        mid.classList.add("track-mid");
         if (item.peaks) {
           const wv = makeWave(item.peaks);
-          if (wv) art.appendChild(wv)
+          if (wv) mid.appendChild(wv)
         }
         const bt = document.createElement("button");
         bt.type = "button";
@@ -1530,7 +1541,7 @@
         svg.appendChild(p);
         bt.appendChild(svg);
         bt.addEventListener("click", () => toggleTrack(card, item.link));
-        art.appendChild(bt);
+        mid.appendChild(bt);
         const bar = document.createElement("div");
         bar.classList.add("track-bar");
         bar.appendChild(document.createElement("i"));
@@ -1539,10 +1550,8 @@
            the loop you are. */
         const ln = document.createElement("div");
         ln.classList.add("track-line");
-        art.appendChild(ln);
-        /* The name rides along the top of the cover, the tempo and key along
-           the bottom, leaving the space under it for the buttons. */
-        art.appendChild(nm);
+        mid.appendChild(ln);
+        art.appendChild(mid);
         if (mt) art.appendChild(mt);
         card.appendChild(art)
       } else {
