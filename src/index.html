@@ -614,6 +614,133 @@
       box-shadow: 0 0 8px rgba(var(--accent-rgb),.3), inset 0 0 8px rgba(var(--accent-rgb),.05)
     }
 
+    /* Music is a grid of cards. The play button sits in the middle of the
+       cover, and the line under it fills as the track plays. */
+    .sub-categories li.music-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 0
+    }
+
+    .sub-categories .track {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid rgba(var(--accent-rgb),.2);
+      border-radius: 3px;
+      transition: border-color .2s, box-shadow .2s
+    }
+
+    .sub-categories .track:hover {
+      border-color: rgba(var(--accent-rgb),.45)
+    }
+
+    .sub-categories .track.is-playing {
+      border-color: rgb(var(--accent2-rgb));
+      box-shadow: 0 0 12px rgba(var(--accent2-rgb),.18)
+    }
+
+    .sub-categories .track-art {
+      position: relative;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(var(--accent-rgb),.05);
+      border: 1px solid rgba(var(--accent-rgb),.15)
+    }
+
+    .sub-categories .track-frame {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      opacity: 0;
+      pointer-events: none
+    }
+
+    .sub-categories .play-btn {
+      position: relative;
+      z-index: 1;
+      width: 52px;
+      height: 52px;
+      padding: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(var(--accent-rgb),.5);
+      background: var(--bg);
+      color: rgb(var(--accent-rgb));
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: color .2s, border-color .2s, box-shadow .2s
+    }
+
+    .sub-categories .play-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor
+    }
+
+    .sub-categories .play-btn:hover {
+      box-shadow: 0 0 10px rgba(var(--accent-rgb),.35)
+    }
+
+    .sub-categories .track.is-playing .play-btn {
+      color: rgb(var(--accent2-rgb));
+      border-color: rgb(var(--accent2-rgb))
+    }
+
+    .sub-categories .track-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2px;
+      background: rgba(var(--accent-rgb),.15)
+    }
+
+    .sub-categories .track-bar i {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: rgb(var(--accent2-rgb))
+    }
+
+    .sub-categories .track-name {
+      font-size: 14px;
+      color: var(--text);
+      overflow-wrap: anywhere
+    }
+
+    .sub-categories .track-name::before {
+      content: '>';
+      color: rgba(var(--accent-rgb),.45);
+      margin-right: 8px
+    }
+
+    .sub-categories .track-meta {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px;
+      color: rgba(var(--dim-rgb),.6);
+      margin-top: -4px
+    }
+
+    /* Every button in a card is the same width, whatever its label says. */
+    .sub-categories .track-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(84px, 1fr));
+      gap: 6px;
+      margin-top: auto
+    }
+
+    .sub-categories .track-links .pill {
+      justify-content: center
+    }
+
     .privacy-link {
       position: fixed;
       bottom: 14px;
@@ -789,6 +916,20 @@
         padding: 6px 12px;
         white-space: normal;
         line-height: 1.2
+      }
+
+      .sub-categories li.music-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px
+      }
+
+      .sub-categories .play-btn {
+        width: 44px;
+        height: 44px
+      }
+
+      .sub-categories .track-name {
+        font-size: 13px
       }
 
       .sub-categories li a .tooltip {
@@ -1121,6 +1262,193 @@
       return a;
     }
 
+    /* One player for the whole page, so starting a track stops the one that
+       was playing. A track is either a SoundCloud link, played through a
+       SoundCloud player sitting invisibly behind the cover so the play still
+       counts over there, or an audio file this site serves itself. */
+    const ICON_PLAY = "M8 5v14l11-7z",
+      ICON_PAUSE = "M6 5h4v14H6zm8 0h4v14h-4z",
+      SC_PLAYER = "https://w.soundcloud.com/player/";
+    let AUDIO = null,
+      NOW = null,
+      SC_API = null;
+
+    function isSoundcloud(u) {
+      return /^https?:\/\/(www\.)?soundcloud\.com\//i.test(u || "")
+    }
+
+    function trackIcon(card, d) {
+      const p = card.querySelector(".play-btn svg path");
+      if (p) p.setAttribute("d", d)
+    }
+
+    function trackBar(card, frac) {
+      const f = card && card.querySelector(".track-bar i");
+      if (f) f.style.width = Math.max(0, Math.min(1, frac || 0)) * 100 + "%"
+    }
+
+    function markPlaying(card) {
+      if (!card) return;
+      card.classList.add("is-playing");
+      trackIcon(card, ICON_PAUSE)
+    }
+
+    function markPaused(card) {
+      if (!card) return;
+      card.classList.remove("is-playing");
+      trackIcon(card, ICON_PLAY)
+    }
+
+    function resetTrack(card) {
+      if (!card) return;
+      markPaused(card);
+      trackBar(card, 0)
+    }
+
+    function stopTrack() {
+      const card = NOW;
+      NOW = null;
+      if (card && card.widget) card.widget.pause();
+      else if (card && card.frame) {
+        /* Clicked away before the player was ready: take it out entirely. */
+        card.frame.remove();
+        card.frame = null
+      } else if (AUDIO) {
+        AUDIO.pause();
+        AUDIO.removeAttribute("src");
+        AUDIO.load()
+      }
+      resetTrack(card)
+    }
+
+    function audio() {
+      if (AUDIO) return AUDIO;
+      AUDIO = new Audio();
+      AUDIO.preload = "none";
+      AUDIO.addEventListener("timeupdate", () => {
+        if (AUDIO.duration) trackBar(NOW, AUDIO.currentTime / AUDIO.duration)
+      });
+      AUDIO.addEventListener("play", () => markPlaying(NOW));
+      AUDIO.addEventListener("pause", () => markPaused(NOW));
+      AUDIO.addEventListener("ended", () => stopTrack());
+      return AUDIO
+    }
+
+    /* SoundCloud's own script, fetched the first time a track is played and
+       never again. */
+    function scApi() {
+      if (SC_API) return SC_API;
+      SC_API = new Promise((ok, no) => {
+        if (window.SC && window.SC.Widget) return ok();
+        const sc = document.createElement("script");
+        sc.src = SC_PLAYER + "api.js";
+        sc.onload = ok;
+        sc.onerror = no;
+        document.head.appendChild(sc)
+      });
+      return SC_API
+    }
+
+    function scPlay(card, url) {
+      if (card.widget) {
+        card.widget.play();
+        return
+      }
+      if (!card.frame) {
+        const f = document.createElement("iframe");
+        f.classList.add("track-frame");
+        f.setAttribute("allow", "autoplay");
+        f.setAttribute("title", "player");
+        f.src = SC_PLAYER + "?url=" + encodeURIComponent(url) + "&auto_play=true&show_comments=false&show_user=false&show_teaser=false&hide_related=true&visual=false";
+        card.frame = f;
+        card.querySelector(".track-art").appendChild(f)
+      }
+      scApi().then(() => {
+        if (card.widget || !card.frame) return;
+        const w = window.SC.Widget(card.frame),
+          E = window.SC.Widget.Events;
+        card.widget = w;
+        w.bind(E.PLAY, () => markPlaying(card));
+        w.bind(E.PAUSE, () => markPaused(card));
+        w.bind(E.FINISH, () => {
+          if (NOW === card) stopTrack()
+        });
+        w.bind(E.PLAY_PROGRESS, e => {
+          if (NOW === card) trackBar(card, e.relativePosition)
+        })
+      }).catch(() => {})
+    }
+
+    function toggleTrack(card, url) {
+      if (NOW && NOW !== card) stopTrack();
+      const sc = isSoundcloud(url);
+      if (NOW === card) {
+        if (sc) {
+          if (card.widget) card.widget.isPaused(p => p ? card.widget.play() : card.widget.pause());
+          return
+        }
+        const a2 = audio();
+        if (a2.paused) a2.play().catch(() => {});
+        else a2.pause();
+        return
+      }
+      NOW = card;
+      if (sc) {
+        scPlay(card, url);
+        return
+      }
+      const a2 = audio();
+      a2.src = url;
+      a2.play().catch(() => {})
+    }
+
+    /* One card: the cover with the play button in the middle, the name, and
+       wherever the track can be got. */
+    function makeTrack(item) {
+      const NS = "http://www.w3.org/2000/svg",
+        card = document.createElement("article");
+      card.classList.add("track");
+      if (item.link) {
+        const art = document.createElement("div");
+        art.classList.add("track-art");
+        const bt = document.createElement("button");
+        bt.type = "button";
+        bt.classList.add("play-btn");
+        bt.setAttribute("aria-label", "Play " + item.name);
+        const svg = document.createElementNS(NS, "svg");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("aria-hidden", "true");
+        const p = document.createElementNS(NS, "path");
+        p.setAttribute("d", ICON_PLAY);
+        svg.appendChild(p);
+        bt.appendChild(svg);
+        bt.addEventListener("click", () => toggleTrack(card, item.link));
+        art.appendChild(bt);
+        const bar = document.createElement("div");
+        bar.classList.add("track-bar");
+        bar.appendChild(document.createElement("i"));
+        art.appendChild(bar);
+        card.appendChild(art)
+      }
+      const nm = document.createElement("div");
+      nm.classList.add("track-name");
+      nm.textContent = item.name;
+      card.appendChild(nm);
+      if (item.tooltip) {
+        const mt = document.createElement("div");
+        mt.classList.add("track-meta");
+        mt.textContent = String(item.tooltip);
+        card.appendChild(mt)
+      }
+      if (Array.isArray(item.downloads) && item.downloads.length) {
+        const lk = document.createElement("div");
+        lk.classList.add("track-links");
+        item.downloads.forEach(dl => lk.appendChild(makePill(dl.label, dl.url)));
+        card.appendChild(lk)
+      }
+      return card
+    }
+
     const DATA_URL = "/data.json";
 
     /* Each of these paths is a real folder on the site holding a copy of this
@@ -1331,6 +1659,13 @@
             ["modio", "mod.io"],
             ["moddb", "BL1 SDK Mod Database"],
             ["gamefaqs", "GameFAQs"],
+            ["payhip", "Payhip"],
+            ["gumroad", "Gumroad"],
+            ["beatstars", "BeatStars"],
+            ["untitled", "[untitled]"],
+            ["soundcloud", "SoundCloud"],
+            ["spotify", "Spotify"],
+            ["youtube", "YouTube"],
             ["store", "Store"],
             ["google-drive", "Sheets"]
           ];
@@ -1344,10 +1679,10 @@
           /* Whether the entry is worth showing is decided on the real links
              alone. The two ways to get in touch are added after that test, so
              an entry with nothing but contact buttons stays hidden. */
-          if (ck === "videogame-guides" || ck === "apps") {
-            if (!lk && !dl.length) continue
-          } else {
+          if (ck === "contacts") {
             if (!lk) continue
+          } else {
+            if (!lk && !dl.length) continue
           }
           if (iu(rp)) dl.push({
             label: "Report Issue",
@@ -1397,6 +1732,7 @@
       }
 
       function ps(ck, items) {
+        stopTrack();
         d.innerHTML = "";
         d.scrollTop = 0;
         let list = (items || []).slice();
@@ -1426,6 +1762,21 @@
           });
           d.appendChild(tg);
           list = list.filter(it => (it.type || "guide") === gsub)
+        }
+        /* Music is a grid of cards rather than a list of links. */
+        if (ck === "music") {
+          if (list.length) {
+            const gd = document.createElement("li");
+            gd.classList.add("music-grid");
+            list.forEach(item => gd.appendChild(makeTrack(item)));
+            d.appendChild(gd)
+          } else {
+            const li = document.createElement("li");
+            li.textContent = "No items yet.";
+            li.style.color = "rgba(var(--dim-rgb),0.4)";
+            d.appendChild(li)
+          }
+          return
         }
         /* In the Mods list the game headings fold, so the games are the first
            thing you see rather than a hundred mods. Everything else stays flat. */
@@ -1547,6 +1898,7 @@
       }
 
       function hp() {
+        stopTrack();
         if (i) {
           clearTimeout(i);
           i = null
