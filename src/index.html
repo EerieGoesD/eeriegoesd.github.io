@@ -897,73 +897,87 @@
         flex-direction: column
       }
 
+      /* On a phone the menu is the page. A section opens in place under its
+         own row, the rows below it stay in view, and the whole thing scrolls
+         as one. Nothing at the top moves. */
       .nav-panel {
         width: 100%;
-        padding: 28px 20px;
-        justify-content: flex-start;
-        flex-shrink: 0
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 28px 20px calc(96px + env(safe-area-inset-bottom));
+        justify-content: flex-start
       }
 
       .terminal-menu li {
-        margin: 8px 0
+        margin: 0
       }
 
       .terminal-menu li a {
         font-size: 18px;
-        padding: 4px 0
-      }
-
-      .nav-panel.collapsed {
-        padding: 16px 20px 12px
-      }
-
-      .nav-panel.collapsed .terminal-header {
-        display: none
-      }
-
-      .nav-panel.collapsed .terminal-menu li {
-        display: none
-      }
-
-      .nav-panel.collapsed .terminal-menu li.is-active {
         display: block;
-        margin: 0
+        padding: 12px 0
       }
 
-      .nav-panel.collapsed .terminal-menu li.is-active a {
-        font-size: 15px
+      /* A caret says the section opens here, on this page. It turns over
+         when the section is open, which says it closes the same way. */
+      .terminal-menu li a::before {
+        content: '';
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        margin: 0 14px 0 2px;
+        vertical-align: 3px;
+        border-right: 2px solid rgba(var(--accent-rgb),.5);
+        border-bottom: 2px solid rgba(var(--accent-rgb),.5);
+        transform: rotate(45deg);
+        transition: transform .25s ease, border-color .25s ease
       }
 
-      /* Collapsed to one line, tapping the category closes it, so show a back
-         arrow instead of the blinking cursor. */
-      .nav-panel.collapsed .terminal-menu li.is-active a::before {
-        content: '< ';
+      .terminal-menu li a:hover::before {
+        border-color: rgb(var(--accent-rgb))
+      }
+
+      .terminal-menu li a.active::before {
+        content: '';
+        border-color: rgb(var(--accent2-rgb));
+        transform: rotate(-135deg);
+        vertical-align: -2px;
         animation: none
       }
 
-      .divider {
-        width: auto;
-        height: 1px;
-        flex-shrink: 0;
-        background: rgba(var(--accent-rgb),.15);
-        opacity: 0;
-        transition: opacity .2s ease
+      /* The open row stays put at the top while its content scrolls, so it
+         can be closed from anywhere in it. */
+      .terminal-menu li.is-active>a {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: var(--bg)
       }
 
-      .divider.visible {
-        opacity: 1
+      .divider {
+        display: none
       }
 
       .content-panel {
-        flex: 1;
+        flex: none;
         min-height: 0;
+        overflow: visible;
         clip-path: inset(0 0 100% 0)
       }
 
-      /* Room to scroll past the counters and the privacy line, plus whatever
-         the phone keeps for its home bar. */
+      .content-panel.visible {
+        clip-path: inset(0 0 0 0)
+      }
+
+      .terminal-menu li>.content-panel {
+        margin: 4px 0 10px
+      }
+
       .sub-categories {
-        padding: 16px 20px calc(96px + env(safe-area-inset-bottom))
+        padding: 6px 0 12px;
+        overflow: visible
       }
 
       /* The list passes behind that corner rather than through it. */
@@ -2109,6 +2123,19 @@
         a.classList.add("collapsed")
       }
 
+      /* On a phone the panel lives inside the open section's row, so the
+         content comes right under it. Otherwise it sits where it started,
+         beside the menu. */
+      function place() {
+        const li = document.querySelector(".terminal-menu li.is-active");
+        if (im() && h && li) {
+          if (c.parentNode !== li) li.appendChild(c)
+        } else if (c.previousElementSibling !== b) {
+          b.insertAdjacentElement("afterend", c)
+        }
+      }
+      window.addEventListener("resize", place);
+
       function hp() {
         stopTrack();
         if (i) {
@@ -2125,7 +2152,8 @@
           a.classList.remove("collapsed");
           setTimeout(() => {
             d.innerHTML = "";
-            d.style.opacity = "1"
+            d.style.opacity = "1";
+            place()
           }, 350);
           return
         }
@@ -2154,6 +2182,7 @@
         const sw = h !== null;
         h = ck;
         sal(ck);
+        place();
         if (sw) {
           await fd("0");
           as(ck, true);
