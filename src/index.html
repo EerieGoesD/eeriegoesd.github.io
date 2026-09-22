@@ -1002,22 +1002,81 @@
         line-height: 1.2
       }
 
-      /* A phone gets two cards across, each filling half the width. */
+      /* A phone gets one row per loop, the width of the screen: the button
+         on the left, the name beside it, key and tempo under the name. No
+         square, nothing empty. */
       .sub-categories li.music-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 12px
+        display: block
+      }
+
+      .sub-categories .track {
+        display: grid;
+        grid-template-columns: 44px 1fr;
+        column-gap: 14px;
+        row-gap: 3px;
+        align-items: center;
+        padding: 10px 0;
+        border: 0;
+        border-bottom: 1px solid rgba(var(--accent-rgb),.12);
+        border-radius: 0;
+        box-shadow: none
+      }
+
+      .sub-categories .track:hover,
+      .sub-categories .track.is-playing {
+        border-color: rgba(var(--accent-rgb),.12);
+        box-shadow: none
+      }
+
+      /* The cover's parts take their places in the row directly. */
+      .sub-categories .track-art {
+        display: contents
       }
 
       .sub-categories .track-mid {
-        --play: 44px
+        --play: 44px;
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        width: 44px;
+        height: 44px;
+        flex: none;
+        overflow: visible
       }
 
-      .sub-categories .track-art .track-name {
-        font-size: 13px
+      .sub-categories .track .track-name,
+      .sub-categories .track .track-meta {
+        grid-column: 2;
+        min-width: 0;
+        height: auto;
+        padding: 0;
+        border: 0;
+        background: none;
+        line-height: 1.2
       }
 
-      .sub-categories .track-name {
-        font-size: 13px
+      .sub-categories .track .track-name {
+        grid-row: 1;
+        align-self: end;
+        font-size: 15px
+      }
+
+      .sub-categories .track .track-meta {
+        grid-row: 2;
+        align-self: start;
+        font-size: 12px
+      }
+
+      .sub-categories .track-links {
+        grid-column: 2;
+        grid-row: 3;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 8px
+      }
+
+      .sub-categories .track-links .pill {
+        flex: none
       }
 
       .sub-categories li a .tooltip {
@@ -1372,6 +1431,10 @@
 
     const RING = 2 * Math.PI * 20.25;
 
+    function im() {
+      return window.innerWidth <= 700
+    }
+
     function trackBar(card, frac) {
       if (!card) return;
       const at = Math.max(0, Math.min(1, frac || 0)),
@@ -1488,26 +1551,30 @@
     /* Dragging anywhere across the wave moves the playing track, leaving the
        button in the middle to do its own job. */
     function seekable(card, mid) {
+      /* On a phone the square is gone and the row is the surface to drag
+         along; on a desktop it is the square itself. */
+      const on_ = () => im() ? card : mid;
       let on = false;
       const fracAt = x => {
-        const r = mid.getBoundingClientRect();
+        const r = on_().getBoundingClientRect();
         return r.width ? (x - r.left) / r.width : 0
       };
-      mid.addEventListener("pointerdown", ev => {
-        if (NOW !== card || ev.target.closest(".play-btn")) return;
+      card.addEventListener("pointerdown", ev => {
+        if (NOW !== card || ev.target.closest(".play-btn, .pill")) return;
+        if (!im() && !ev.target.closest(".track-mid")) return;
         on = true;
-        if (mid.setPointerCapture) {
-          try { mid.setPointerCapture(ev.pointerId) } catch (e) {}
+        if (card.setPointerCapture) {
+          try { card.setPointerCapture(ev.pointerId) } catch (e) {}
         }
         seekTrack(card, fracAt(ev.clientX))
       });
-      mid.addEventListener("pointermove", ev => {
+      card.addEventListener("pointermove", ev => {
         if (on) seekTrack(card, fracAt(ev.clientX))
       });
-      mid.addEventListener("pointerup", ev => {
+      card.addEventListener("pointerup", ev => {
         on = false;
-        if (mid.releasePointerCapture) {
-          try { mid.releasePointerCapture(ev.pointerId) } catch (e) {}
+        if (card.releasePointerCapture) {
+          try { card.releasePointerCapture(ev.pointerId) } catch (e) {}
         }
       });
     }
