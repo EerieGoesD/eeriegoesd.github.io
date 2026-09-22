@@ -629,8 +629,12 @@
       column-gap: 14px;
       row-gap: 3px;
       align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(var(--accent-rgb),.12)
+      padding: 10px 0
+    }
+
+    /* A hairline between two rows, and none after the last. */
+    .sub-categories .track+.track {
+      border-top: 1px solid rgba(var(--accent-rgb),.12)
     }
 
     /* The cover's parts take their places in the row directly. */
