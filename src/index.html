@@ -625,7 +625,7 @@
 
     .sub-categories .track {
       display: grid;
-      grid-template-columns: 44px 1fr;
+      grid-template-columns: 44px 1fr auto;
       column-gap: 14px;
       row-gap: 3px;
       align-items: center;
@@ -774,9 +774,10 @@
 
     /* Held back: made for someone, listen only until that is settled. */
     .sub-categories .track-held {
-      grid-column: 2;
-      grid-row: 3;
-      margin-top: 6px;
+      grid-column: 3;
+      grid-row: 1 / span 2;
+      align-self: center;
+      padding-right: 6px;
       font-size: 11px;
       letter-spacing: 1px;
       color: rgba(var(--dim-rgb),.45)
@@ -1577,7 +1578,7 @@
       if (item.type === "reserved") {
         const held = document.createElement("div");
         held.classList.add("track-held");
-        held.textContent = "private";
+        held.textContent = "reserved";
         card.appendChild(held)
       } else if (Array.isArray(item.downloads) && item.downloads.length) {
         const lk = document.createElement("div");
