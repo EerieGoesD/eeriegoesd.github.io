@@ -26,17 +26,9 @@
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"EERIE","url":"https://eeriegoesd.github.io/","sameAs":["https://eeriegoesd.com/"],"description":"Software developer, music producer, and gaming guide creator.","knowsAbout":["Software Development","Chrome Extensions","Music Production","Gaming Guides"]}</script>
   <style>
     @font-face {
-      font-family: 'IBM Plex Mono';
-      src: url('/fonts/IBMPlexMono.woff2') format('woff2');
+      font-family: 'Share Tech Mono';
+      src: url('/fonts/ShareTechMono.woff2') format('woff2');
       font-weight: 400;
-      font-style: normal;
-      font-display: swap
-    }
-
-    @font-face {
-      font-family: 'IBM Plex Mono';
-      src: url('/fonts/IBMPlexMono-SemiBold.woff2') format('woff2');
-      font-weight: 600;
       font-style: normal;
       font-display: swap
     }
@@ -147,7 +139,7 @@
       height: 100%;
       background: var(--bg);
       color: var(--text);
-      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      font-family: 'Share Tech Mono', 'Courier New', monospace;
       overflow: hidden;
       position: relative
     }
@@ -361,7 +353,7 @@
     }
 
     .sub-categories li a .tooltip {
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Share Tech Mono', monospace;
       visibility: hidden;
       background-color: var(--tooltip-bg);
       color: var(--tooltip-text);
@@ -392,7 +384,7 @@
 
     .sub-categories li.letter {
       font-size: 13px;
-      font-weight: 600;
+      font-weight: bold;
       color: rgb(var(--accent-rgb));
       text-shadow: 0 0 6px rgba(var(--accent-rgb),.4);
       margin: 20px 0 6px;
@@ -449,7 +441,7 @@
       padding: 6px 0;
       text-align: center;
       white-space: nowrap;
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Share Tech Mono', monospace;
       font-size: 13px;
       letter-spacing: 1px;
       background: transparent;
@@ -487,7 +479,7 @@
       cursor: pointer;
       color: var(--text);
       font-size: 15px;
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Share Tech Mono', monospace;
       position: relative;
       display: inline-block;
       transition: color .3s, text-shadow .3s
@@ -548,7 +540,7 @@
     }
 
     .sub-categories .app-desc {
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Share Tech Mono', monospace;
       font-size: 13px;
       line-height: 1.5;
       color: rgba(var(--dim-rgb),.85);
@@ -594,7 +586,7 @@
     }
 
     .sub-categories .pill {
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Share Tech Mono', monospace;
       font-size: 11px;
       letter-spacing: .5px;
       text-decoration: none;
@@ -662,6 +654,7 @@
     /* The wave and the line live in here, so neither ever runs under the
        name or the tempo. */
     .sub-categories .track-mid {
+      touch-action: none;
       position: relative;
       flex: 1;
       min-height: 0;
@@ -705,7 +698,7 @@
 
     .sub-categories .play-btn {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       width: 42px;
       height: 42px;
       padding: 0;
@@ -761,6 +754,11 @@
       opacity: .85
     }
 
+    /* Only worth grabbing while something is playing. */
+    .sub-categories .track.is-playing .track-mid {
+      cursor: ew-resize
+    }
+
     .sub-categories .track-bar i {
       display: block;
       width: 0;
@@ -781,7 +779,7 @@
     }
 
     .sub-categories .track-meta {
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Share Tech Mono', monospace;
       font-size: 11px;
       color: rgba(var(--dim-rgb),.6)
     }
@@ -824,7 +822,7 @@
       position: fixed;
       bottom: 14px;
       left: 16px;
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Share Tech Mono', monospace;
       font-size: 10px;
       color: rgba(var(--dim-rgb),.5);
       text-decoration: none;
@@ -838,7 +836,7 @@
       position: fixed;
       bottom: 34px;
       left: 16px;
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Share Tech Mono', monospace;
       font-size: 10px;
       color: rgba(var(--dim-rgb),.4);
       letter-spacing: .5px;
@@ -1051,13 +1049,13 @@
       max-width: 640px;
       width: 100%;
       padding: 28px 30px;
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Share Tech Mono', monospace;
       box-shadow: 0 0 30px rgba(var(--accent-rgb),.15)
     }
 
     .privacy-modal .pp-title {
       font-size: 18px;
-      font-weight: 600;
+      font-weight: bold;
       letter-spacing: 2px;
       color: var(--text);
       margin-bottom: 6px
@@ -1085,7 +1083,7 @@
 
     .privacy-modal .pp-h {
       font-size: 13px;
-      font-weight: 600;
+      font-weight: bold;
       color: rgb(var(--accent2-rgb));
       letter-spacing: 1px;
       margin-bottom: 8px
@@ -1130,7 +1128,7 @@
       font-size: 15px;
       line-height: 1;
       transition: border-color .2s, color .2s;
-      font-family: 'IBM Plex Mono', monospace
+      font-family: 'Share Tech Mono', monospace
     }
 
     .privacy-modal .pp-close:hover {
@@ -1273,7 +1271,7 @@
       })
     })();
   </script>
-  <div id="cookieBanner" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--bg);border-top:1px solid rgba(var(--accent-rgb),.15);padding:14px 24px;display:none;flex-direction:column;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:rgba(var(--dim-rgb),.35);"><span>> cookies for traffic analytics: <a href="/privacy/" style="color:rgba(var(--accent-rgb),.5);text-decoration:none;">learn_more</a></span><span><button onclick="acceptCookies()" style="font-family:'IBM Plex Mono',monospace;font-size:12px;padding:5px 14px;border-radius:0;cursor:pointer;border:1px solid rgb(var(--accent2-rgb));background:transparent;color:rgb(var(--accent2-rgb));transition:all .2s;">accept</button> <span style="color:rgba(var(--dim-rgb),.15);">|</span> <button onclick="rejectCookies()" style="font-family:'IBM Plex Mono',monospace;font-size:12px;padding:5px 14px;border-radius:0;cursor:pointer;border:1px solid rgba(var(--dim-rgb),.12);background:transparent;color:rgba(var(--dim-rgb),.25);transition:all .2s;">decline</button></span></div>
+  <div id="cookieBanner" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--bg);border-top:1px solid rgba(var(--accent-rgb),.15);padding:14px 24px;display:none;flex-direction:column;align-items:center;gap:10px;font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(var(--dim-rgb),.35);"><span>> cookies for traffic analytics: <a href="/privacy/" style="color:rgba(var(--accent-rgb),.5);text-decoration:none;">learn_more</a></span><span><button onclick="acceptCookies()" style="font-family:'Share Tech Mono',monospace;font-size:12px;padding:5px 14px;border-radius:0;cursor:pointer;border:1px solid rgb(var(--accent2-rgb));background:transparent;color:rgb(var(--accent2-rgb));transition:all .2s;">accept</button> <span style="color:rgba(var(--dim-rgb),.15);">|</span> <button onclick="rejectCookies()" style="font-family:'Share Tech Mono',monospace;font-size:12px;padding:5px 14px;border-radius:0;cursor:pointer;border:1px solid rgba(var(--dim-rgb),.12);background:transparent;color:rgba(var(--dim-rgb),.25);transition:all .2s;">decline</button></span></div>
   <script>
     try {
       var c = localStorage.getItem('cookie-consent');
@@ -1462,6 +1460,47 @@
       }).catch(() => {})
     }
 
+    /* Moves the track to a point in it, told as how far along. The line
+       follows at once rather than waiting for the next report. */
+    function seekTrack(card, frac) {
+      const at = Math.max(0, Math.min(1, frac));
+      if (card.widget) {
+        card.widget.getDuration(ms => {
+          if (ms > 0) card.widget.seekTo(at * ms)
+        })
+      } else if (AUDIO && AUDIO.duration) {
+        AUDIO.currentTime = at * AUDIO.duration
+      } else return;
+      trackBar(card, at)
+    }
+
+    /* Dragging anywhere across the wave moves the playing track, leaving the
+       button in the middle to do its own job. */
+    function seekable(card, mid) {
+      let on = false;
+      const fracAt = x => {
+        const r = mid.getBoundingClientRect();
+        return r.width ? (x - r.left) / r.width : 0
+      };
+      mid.addEventListener("pointerdown", ev => {
+        if (NOW !== card || ev.target.closest(".play-btn")) return;
+        on = true;
+        if (mid.setPointerCapture) {
+          try { mid.setPointerCapture(ev.pointerId) } catch (e) {}
+        }
+        seekTrack(card, fracAt(ev.clientX))
+      });
+      mid.addEventListener("pointermove", ev => {
+        if (on) seekTrack(card, fracAt(ev.clientX))
+      });
+      mid.addEventListener("pointerup", ev => {
+        on = false;
+        if (mid.releasePointerCapture) {
+          try { mid.releasePointerCapture(ev.pointerId) } catch (e) {}
+        }
+      });
+    }
+
     function toggleTrack(card, url) {
       if (NOW && NOW !== card) stopTrack();
       const sc = isSoundcloud(url);
@@ -1559,6 +1598,7 @@
         const ln = document.createElement("div");
         ln.classList.add("track-line");
         mid.appendChild(ln);
+        seekable(card, mid);
         art.appendChild(mid);
         if (mt) art.appendChild(mt);
         card.appendChild(art)
