@@ -1577,8 +1577,7 @@
       if (item.type === "reserved") {
         const held = document.createElement("div");
         held.classList.add("track-held");
-        held.textContent = "[ reserved ]";
-        held.title = "Made for someone in particular. Listen only for now.";
+        held.textContent = "private";
         card.appendChild(held)
       } else if (Array.isArray(item.downloads) && item.downloads.length) {
         const lk = document.createElement("div");
