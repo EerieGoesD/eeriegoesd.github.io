@@ -1559,7 +1559,7 @@
       const n = Math.floor(hex.length / 2);
       if (n < 2) return null;
       const NS = "http://www.w3.org/2000/svg",
-        W = 0.62,
+        W = 0.5,
         svg = document.createElementNS(NS, "svg");
       svg.classList.add("track-wave");
       svg.setAttribute("viewBox", "0 0 " + n + " 100");
@@ -1568,8 +1568,9 @@
       for (let i = 0; i < n; i++) {
         const v = parseInt(hex.substr(i * 2, 2), 16);
         if (!(v >= 0)) continue;
-        /* Wide enough to read as a bar, with the ends rounded off. */
-        const h = Math.max(W, v / 255 * 76),
+        /* Half bar, half gap, so they read as bars. The tallest reaches two
+           thirds of the band, leaving air above and below. */
+        const h = Math.max(W, v / 255 * 66),
           r = document.createElementNS(NS, "rect");
         r.setAttribute("x", (i + (1 - W) / 2).toFixed(3));
         r.setAttribute("y", (50 - h / 2).toFixed(2));
