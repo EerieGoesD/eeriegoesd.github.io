@@ -930,15 +930,35 @@
         margin: 0
       }
 
+      /* Collapsed to one line, tapping the category closes it. On a phone
+         that has to look like something you can press, so it is a bar the
+         width of the screen with the way out spelled out on it. */
       .nav-panel.collapsed .terminal-menu li.is-active a {
-        font-size: 15px
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        min-height: 44px;
+        padding: 0 10px;
+        border: 1px solid rgba(var(--accent-rgb),.25);
+        border-radius: 3px;
+        background: rgba(var(--accent-rgb),.05)
       }
 
-      /* Collapsed to one line, tapping the category closes it, so show a back
-         arrow instead of the blinking cursor. */
       .nav-panel.collapsed .terminal-menu li.is-active a::before {
-        content: '< ';
+        content: '< back';
+        font-size: 12px;
+        letter-spacing: 1px;
+        color: rgb(var(--accent-rgb));
+        border: 1px solid rgba(var(--accent-rgb),.4);
+        border-radius: 2px;
+        padding: 4px 8px;
         animation: none
+      }
+
+      .nav-panel.collapsed .terminal-menu li.is-active a:active {
+        background: rgba(var(--accent-rgb),.12)
       }
 
       .divider {
