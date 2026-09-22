@@ -15,9 +15,17 @@
 
     <style>
       @font-face {
-        font-family: 'Share Tech Mono';
-        src: url('../fonts/ShareTechMono.woff2') format('woff2');
+        font-family: 'IBM Plex Mono';
+        src: url('../fonts/IBMPlexMono.woff2') format('woff2');
         font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: 'IBM Plex Mono';
+        src: url('../fonts/IBMPlexMono-SemiBold.woff2') format('woff2');
+        font-weight: 600;
         font-style: normal;
         font-display: swap;
       }
@@ -49,7 +57,7 @@
         height: 100%;
         background: var(--bg);
         color: var(--text);
-        font-family: 'Share Tech Mono', 'Courier New', monospace;
+        font-family: 'IBM Plex Mono', 'Courier New', monospace;
         line-height: 1.6;
         overflow-x: hidden;
       }
@@ -103,7 +111,7 @@
 
       h1 {
         font-size: 22px;
-        font-weight: bold;
+        font-weight: 600;
         letter-spacing: 2px;
         color: var(--text);
         margin-bottom: 6px;
@@ -124,7 +132,7 @@
 
       h2 {
         font-size: 14px;
-        font-weight: bold;
+        font-weight: 600;
         color: rgb(var(--accent2-rgb));
         letter-spacing: 1px;
         margin-bottom: 10px;
