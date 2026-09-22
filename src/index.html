@@ -678,8 +678,11 @@
       color: rgba(var(--accent-rgb),.7)
     }
 
-    .sub-categories .track.is-playing .track-wave {
-      color: rgba(var(--accent2-rgb),.8)
+    /* The part already played, drawn over the top of the rest and revealed
+       as far as the track has got. */
+    .sub-categories .track-wave.track-done {
+      color: rgb(var(--accent2-rgb));
+      clip-path: inset(0 100% 0 0)
     }
 
     .sub-categories .track-wave rect {
@@ -736,22 +739,6 @@
       bottom: 0;
       height: 2px;
       background: rgba(var(--accent-rgb),.15)
-    }
-
-    .sub-categories .track-line {
-      position: absolute;
-      z-index: 1;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      width: 1px;
-      background: rgb(var(--accent2-rgb));
-      opacity: 0;
-      pointer-events: none
-    }
-
-    .sub-categories .track.is-playing .track-line {
-      opacity: .85
     }
 
     /* Only worth grabbing while something is playing. */
@@ -1403,11 +1390,11 @@
 
     function trackBar(card, frac) {
       if (!card) return;
-      const at = Math.max(0, Math.min(1, frac || 0)) * 100 + "%",
+      const at = Math.max(0, Math.min(1, frac || 0)) * 100,
         f = card.querySelector(".track-bar i"),
-        ln = card.querySelector(".track-line");
-      if (f) f.style.width = at;
-      if (ln) ln.style.left = at
+        done = card.querySelector(".track-done");
+      if (f) f.style.width = at + "%";
+      if (done) done.style.clipPath = "inset(0 " + (100 - at) + "% 0 0)"
     }
 
     function markPlaying(card) {
@@ -1572,6 +1559,7 @@
       const n = Math.floor(hex.length / 2);
       if (n < 2) return null;
       const NS = "http://www.w3.org/2000/svg",
+        W = 0.62,
         svg = document.createElementNS(NS, "svg");
       svg.classList.add("track-wave");
       svg.setAttribute("viewBox", "0 0 " + n + " 100");
@@ -1580,12 +1568,14 @@
       for (let i = 0; i < n; i++) {
         const v = parseInt(hex.substr(i * 2, 2), 16);
         if (!(v >= 0)) continue;
-        const h = Math.max(1.5, v / 255 * 76),
+        /* Wide enough to read as a bar, with the ends rounded off. */
+        const h = Math.max(W, v / 255 * 76),
           r = document.createElementNS(NS, "rect");
-        r.setAttribute("x", (i + 0.25).toFixed(2));
+        r.setAttribute("x", (i + (1 - W) / 2).toFixed(3));
         r.setAttribute("y", (50 - h / 2).toFixed(2));
-        r.setAttribute("width", "0.5");
+        r.setAttribute("width", W.toFixed(2));
         r.setAttribute("height", h.toFixed(2));
+        r.setAttribute("rx", (W / 2).toFixed(3));
         svg.appendChild(r)
       }
       return svg
@@ -1616,7 +1606,12 @@
         mid.classList.add("track-mid");
         if (item.peaks) {
           const wv = makeWave(item.peaks);
-          if (wv) mid.appendChild(wv)
+          if (wv) mid.appendChild(wv);
+          const done = makeWave(item.peaks);
+          if (done) {
+            done.classList.add("track-done");
+            mid.appendChild(done)
+          }
         }
         const bt = document.createElement("button");
         bt.type = "button";
@@ -1637,9 +1632,6 @@
         art.appendChild(bar);
         /* Rides across the cover as the track plays, so you can see where in
            the loop you are. */
-        const ln = document.createElement("div");
-        ln.classList.add("track-line");
-        mid.appendChild(ln);
         seekable(card, mid);
         art.appendChild(mid);
         if (mt) art.appendChild(mt);
