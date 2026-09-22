@@ -980,8 +980,31 @@
         clip-path: inset(0 0 100% 0)
       }
 
+      /* Room to scroll past the counters and the privacy line, plus whatever
+         the phone keeps for its home bar. */
       .sub-categories {
-        padding: 16px 20px 76px
+        padding: 16px 20px calc(96px + env(safe-area-inset-bottom))
+      }
+
+      /* The list passes behind that corner rather than through it. */
+      body::after {
+        content: '';
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: calc(72px + env(safe-area-inset-bottom));
+        background: linear-gradient(to top, var(--bg) 62%, transparent);
+        pointer-events: none;
+        z-index: 9
+      }
+
+      .counts {
+        bottom: calc(34px + env(safe-area-inset-bottom))
+      }
+
+      .privacy-link {
+        bottom: calc(14px + env(safe-area-inset-bottom))
       }
 
       .sub-categories>li>a,
