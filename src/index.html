@@ -625,7 +625,7 @@
 
     .sub-categories .track {
       display: grid;
-      grid-template-columns: 44px 1fr auto;
+      grid-template-columns: 44px auto 1fr;
       column-gap: 14px;
       row-gap: 3px;
       align-items: center;
@@ -777,7 +777,8 @@
       grid-column: 3;
       grid-row: 1 / span 2;
       align-self: center;
-      padding-right: 6px;
+      justify-self: start;
+      padding-left: 10px;
       font-size: 11px;
       letter-spacing: 1px;
       color: rgba(var(--dim-rgb),.45)
