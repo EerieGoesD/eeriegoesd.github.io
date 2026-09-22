@@ -652,6 +652,28 @@
       border: 1px solid rgba(var(--accent-rgb),.15)
     }
 
+    .sub-categories .track-wave {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      color: rgba(var(--accent-rgb),.45);
+      pointer-events: none;
+      transition: color .25s
+    }
+
+    .sub-categories .track:hover .track-wave {
+      color: rgba(var(--accent-rgb),.7)
+    }
+
+    .sub-categories .track.is-playing .track-wave {
+      color: rgba(var(--accent2-rgb),.8)
+    }
+
+    .sub-categories .track-wave rect {
+      fill: currentColor
+    }
+
     .sub-categories .track-frame {
       position: absolute;
       inset: 0;
@@ -1402,6 +1424,31 @@
       a2.play().catch(() => {})
     }
 
+    /* The cover: the shape of the sound itself, drawn from the handful of
+       heights saved with the entry rather than from the audio. */
+    function makeWave(hex) {
+      const n = Math.floor(hex.length / 2);
+      if (n < 2) return null;
+      const NS = "http://www.w3.org/2000/svg",
+        svg = document.createElementNS(NS, "svg");
+      svg.classList.add("track-wave");
+      svg.setAttribute("viewBox", "0 0 " + n + " 100");
+      svg.setAttribute("preserveAspectRatio", "none");
+      svg.setAttribute("aria-hidden", "true");
+      for (let i = 0; i < n; i++) {
+        const v = parseInt(hex.substr(i * 2, 2), 16);
+        if (!(v >= 0)) continue;
+        const h = Math.max(1.5, v / 255 * 76),
+          r = document.createElementNS(NS, "rect");
+        r.setAttribute("x", (i + 0.25).toFixed(2));
+        r.setAttribute("y", (50 - h / 2).toFixed(2));
+        r.setAttribute("width", "0.5");
+        r.setAttribute("height", h.toFixed(2));
+        svg.appendChild(r)
+      }
+      return svg
+    }
+
     /* One card: the cover with the play button in the middle, the name, and
        wherever the track can be got. */
     function makeTrack(item) {
@@ -1411,6 +1458,10 @@
       if (item.link) {
         const art = document.createElement("div");
         art.classList.add("track-art");
+        if (item.peaks) {
+          const wv = makeWave(item.peaks);
+          if (wv) art.appendChild(wv)
+        }
         const bt = document.createElement("button");
         bt.type = "button";
         bt.classList.add("play-btn");
@@ -1640,7 +1691,8 @@
             nm = (e.name || "").trim(),
             lk = nu(e.link),
             tt = e.tooltip || "",
-            tp = (e.type || "").trim().toLowerCase();
+            tp = (e.type || "").trim().toLowerCase(),
+            pk = (e.peaks || "").trim().toLowerCase();
           if (!ck || !nm || !out[ck]) continue;
           const rp = nu(e.report),
             sf = nu(e.suggest),
@@ -1701,6 +1753,7 @@
             link: lk || null,
             tooltip: tt || null,
             type: tp || null,
+            peaks: /^[0-9a-f]+$/.test(pk) ? pk : null,
             downloads: dl
           })
         }
