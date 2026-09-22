@@ -626,8 +626,8 @@
     .sub-categories .track {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      padding: 12px;
+      gap: 8px;
+      padding: 8px;
       border: 1px solid rgba(var(--accent-rgb),.2);
       border-radius: 3px;
       transition: border-color .2s, box-shadow .2s
@@ -718,11 +718,28 @@
 
     .sub-categories .track-bar {
       position: absolute;
+      z-index: 2;
       left: 0;
       right: 0;
       bottom: 0;
       height: 2px;
       background: rgba(var(--accent-rgb),.15)
+    }
+
+    .sub-categories .track-line {
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 1px;
+      background: rgb(var(--accent2-rgb));
+      opacity: 0;
+      pointer-events: none
+    }
+
+    .sub-categories .track.is-playing .track-line {
+      opacity: .85
     }
 
     .sub-categories .track-bar i {
@@ -733,7 +750,7 @@
     }
 
     .sub-categories .track-name {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text);
       overflow-wrap: anywhere
     }
@@ -741,14 +758,38 @@
     .sub-categories .track-name::before {
       content: '>';
       color: rgba(var(--accent-rgb),.45);
-      margin-right: 8px
+      margin-right: 6px
     }
 
     .sub-categories .track-meta {
       font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      color: rgba(var(--dim-rgb),.6)
+    }
+
+    .sub-categories .track-art .track-name,
+    .sub-categories .track-art .track-meta {
+      position: absolute;
+      z-index: 1;
+      left: 0;
+      right: 0;
+      padding: 5px 7px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .sub-categories .track-art .track-name {
+      top: 0;
       font-size: 12px;
-      color: rgba(var(--dim-rgb),.6);
-      margin-top: -4px
+      background: linear-gradient(to bottom, var(--bg) 55%, transparent)
+    }
+
+    .sub-categories .track-art .track-meta {
+      bottom: 0;
+      padding-bottom: 6px;
+      font-size: 10px;
+      background: linear-gradient(to top, var(--bg) 55%, transparent)
     }
 
     /* Every button in a card is the same width, whatever its label says. */
@@ -1305,8 +1346,12 @@
     }
 
     function trackBar(card, frac) {
-      const f = card && card.querySelector(".track-bar i");
-      if (f) f.style.width = Math.max(0, Math.min(1, frac || 0)) * 100 + "%"
+      if (!card) return;
+      const at = Math.max(0, Math.min(1, frac || 0)) * 100 + "%",
+        f = card.querySelector(".track-bar i"),
+        ln = card.querySelector(".track-line");
+      if (f) f.style.width = at;
+      if (ln) ln.style.left = at
     }
 
     function markPlaying(card) {
@@ -1455,6 +1500,17 @@
       const NS = "http://www.w3.org/2000/svg",
         card = document.createElement("article");
       card.classList.add("track");
+      const nm = document.createElement("div");
+      nm.classList.add("track-name");
+      nm.textContent = item.name;
+      nm.title = item.name;
+      let mt = null;
+      if (item.tooltip) {
+        mt = document.createElement("div");
+        mt.classList.add("track-meta");
+        mt.textContent = String(item.tooltip);
+        mt.title = String(item.tooltip)
+      }
       if (item.link) {
         const art = document.createElement("div");
         art.classList.add("track-art");
@@ -1479,17 +1535,20 @@
         bar.classList.add("track-bar");
         bar.appendChild(document.createElement("i"));
         art.appendChild(bar);
+        /* Rides across the cover as the track plays, so you can see where in
+           the loop you are. */
+        const ln = document.createElement("div");
+        ln.classList.add("track-line");
+        art.appendChild(ln);
+        /* The name rides along the top of the cover, the tempo and key along
+           the bottom, leaving the space under it for the buttons. */
+        art.appendChild(nm);
+        if (mt) art.appendChild(mt);
         card.appendChild(art)
-      }
-      const nm = document.createElement("div");
-      nm.classList.add("track-name");
-      nm.textContent = item.name;
-      card.appendChild(nm);
-      if (item.tooltip) {
-        const mt = document.createElement("div");
-        mt.classList.add("track-meta");
-        mt.textContent = String(item.tooltip);
-        card.appendChild(mt)
+      } else {
+        /* Nothing to play, so there is no cover to write them on. */
+        card.appendChild(nm);
+        if (mt) card.appendChild(mt)
       }
       if (Array.isArray(item.downloads) && item.downloads.length) {
         const lk = document.createElement("div");
