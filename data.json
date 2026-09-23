@@ -3378,6 +3378,37 @@
       "google-drive": "",
       "report": "",
       "suggest": ""
+    },
+    {
+      "categoryKey": "music",
+      "category": "nostalgic",
+      "name": "life is strange",
+      "type": "",
+      "link": "/music/audio/life-is-strange.mp3",
+      "tooltip": "Gmaj, 120 BPM",
+      "googleplay": "",
+      "macos": "",
+      "microsoft": "",
+      "github": "",
+      "chrome": "",
+      "steam": "",
+      "steamworkshop": "",
+      "nexus": "",
+      "modio": "",
+      "moddb": "",
+      "peaks": "a7f6dbe0d3f5f4eaf3fbf1f5e0ebeafdefe7d9c8bcc9f0f9f7eff7eff7e5fbf8dae1e2d6fafbe8eadce7d4ecfffbe8dbd6d1c3d6f4f4f7f2fcf2f5eeefc18737",
+      "gamefaqs": "",
+      "payhip": "",
+      "gumroad": "",
+      "beatstars": "",
+      "untitled": "",
+      "soundcloud": "",
+      "spotify": "",
+      "youtube": "",
+      "store": "",
+      "google-drive": "",
+      "report": "",
+      "suggest": ""
     }
   ]
 }
