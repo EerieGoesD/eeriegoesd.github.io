@@ -3440,6 +3440,37 @@
       "google-drive": "",
       "report": "",
       "suggest": ""
+    },
+    {
+      "categoryKey": "music",
+      "category": "fingerstyle",
+      "name": "amalfi",
+      "type": "",
+      "link": "/music/audio/amalfi.mp3",
+      "tooltip": "Am, 90 BPM",
+      "googleplay": "",
+      "macos": "",
+      "microsoft": "",
+      "github": "",
+      "chrome": "",
+      "steam": "",
+      "steamworkshop": "",
+      "nexus": "",
+      "modio": "",
+      "moddb": "",
+      "peaks": "eae6d1e1d8c9fff8dbd4d9c8cdd2afc1e8e2d2e1d4cbb4e1e7eae5e9ddc5b3d0d5d3dbd2d2d2dbdddfd9cfd6b5cbcea8c0e7d6f6d9e8e2c7d4d9e3e0d0dcd1ab",
+      "gamefaqs": "",
+      "payhip": "",
+      "gumroad": "",
+      "beatstars": "",
+      "untitled": "",
+      "soundcloud": "",
+      "spotify": "",
+      "youtube": "",
+      "store": "",
+      "google-drive": "",
+      "report": "",
+      "suggest": ""
     }
   ]
 }
