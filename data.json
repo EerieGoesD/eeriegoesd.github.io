@@ -623,7 +623,7 @@
     {
       "categoryKey": "apps",
       "category": "Productivity",
-      "name": "DevDeck",
+      "name": "Taskyard",
       "type": "",
       "link": "",
       "tooltip": "A task tracker to keep progress on your apps and projects.",
@@ -648,8 +648,8 @@
       "youtube": "",
       "store": "",
       "google-drive": "",
-      "report": "https://tally.so/r/PdW0bV?app=DevDeck",
-      "suggest": "https://tally.so/r/WOk0BJ?app=DevDeck"
+      "report": "https://tally.so/r/PdW0bV?app=Taskyard",
+      "suggest": "https://tally.so/r/WOk0BJ?app=Taskyard"
     },
     {
       "categoryKey": "contacts",
