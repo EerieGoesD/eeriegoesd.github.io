@@ -2390,14 +2390,14 @@
     {
       "categoryKey": "videogame-guides",
       "category": "Borderlands GOTY Enhanced",
-      "name": "Enemy Weakness",
+      "name": "Enemy Weakness Indicator",
       "type": "mod",
       "link": "",
       "tooltip": "Shows the best weapon type and element for the enemy under your crosshair, green when the gun in your hand matches and red when it does not.",
       "googleplay": "",
       "macos": "",
       "microsoft": "",
-      "github": "https://github.com/EerieGoesD/borderlands-1-goty-mods/tree/main/EnemyWeakness",
+      "github": "https://github.com/EerieGoesD/borderlands-1-goty-mods/tree/main/EnemyWeaknessIndicator",
       "chrome": "",
       "steam": "",
       "steamworkshop": "",
@@ -2415,8 +2415,8 @@
       "youtube": "",
       "store": "",
       "google-drive": "",
-      "report": "https://tally.so/r/PdW0bV?app=Enemy%20Weakness",
-      "suggest": "https://tally.so/r/WOk0BJ?app=Enemy%20Weakness"
+      "report": "https://tally.so/r/PdW0bV?app=Enemy%20Weakness%20Indicator",
+      "suggest": "https://tally.so/r/WOk0BJ?app=Enemy%20Weakness%20Indicator"
     },
     {
       "categoryKey": "videogame-guides",
@@ -3413,14 +3413,14 @@
     {
       "categoryKey": "videogame-guides",
       "category": "Borderlands GOTY",
-      "name": "Enemy Weakness",
+      "name": "Enemy Weakness Indicator",
       "type": "mod",
       "link": "",
       "tooltip": "Shows the best weapon type and element for the enemy under your crosshair, green when the gun in your hand matches and red when it does not.",
       "googleplay": "",
       "macos": "",
       "microsoft": "",
-      "github": "https://github.com/EerieGoesD/borderlands-1-goty-mods/tree/main/EnemyWeakness",
+      "github": "https://github.com/EerieGoesD/borderlands-1-goty-mods/tree/main/EnemyWeaknessIndicator",
       "chrome": "",
       "steam": "",
       "steamworkshop": "",
@@ -3438,8 +3438,8 @@
       "youtube": "",
       "store": "",
       "google-drive": "",
-      "report": "https://tally.so/r/PdW0bV?app=Enemy%20Weakness",
-      "suggest": "https://tally.so/r/WOk0BJ?app=Enemy%20Weakness"
+      "report": "https://tally.so/r/PdW0bV?app=Enemy%20Weakness%20Indicator",
+      "suggest": "https://tally.so/r/WOk0BJ?app=Enemy%20Weakness%20Indicator"
     },
     {
       "categoryKey": "videogame-guides",
