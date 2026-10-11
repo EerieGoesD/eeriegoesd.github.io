@@ -1,0 +1,523 @@
+/* ── Reset ── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  --bg: #0a0a0c;
+  --surface: #111114;
+  --surface2: #18181c;
+  --border: #222228;
+  --tick-border: #6b6b78;
+  --accent: #c0562f;
+  --accent-h: #d97350;
+  --text: #d4d4d8;
+  --muted: #9b9ba6;
+  --danger: #ef4444;
+  --radius: 10px;
+  --font: 'DM Sans', system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font);
+  font-variant-numeric: tabular-nums;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+
+/* ── Navbar ── */
+.navbar {
+  padding: 40px 0 28px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 28px;
+}
+
+.navbar h1 {
+  font-size: clamp(24px, 4vw, 32px);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--text);
+  margin: 0;
+}
+
+/* ── Alerts ── */
+.alert {
+  padding: 0 0 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.alert strong {
+  font-weight: 700;
+}
+
+.alert-warning strong {
+  color: var(--danger);
+}
+
+.alert a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.alert a:hover {
+  color: var(--accent-h);
+}
+
+.alert ul {
+  margin: 8px 0 8px 18px;
+}
+
+/* ── Overall Progress ── */
+.overall-progress {
+  margin-bottom: 20px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ── Buttons ── */
+.btn {
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: 13px;
+  padding: 9px 20px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-right: 8px;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.btn-export {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-export:hover {
+  background: var(--accent-h);
+  border-color: var(--accent-h);
+}
+
+.btn-import {
+  background: var(--surface2);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.btn-import:hover {
+  border-color: var(--tick-border);
+}
+
+.import-label {
+  cursor: pointer;
+  color: inherit;
+}
+
+.progress-buttons {
+  margin-bottom: 20px;
+}
+
+.progress-buttons .btn {
+  min-width: 175px;
+}
+
+/* ── Quick Navigation ── */
+.quick-navigation {
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.quick-navigation h4 {
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.quick-navigation ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quick-navigation li {
+  display: inline;
+}
+
+.quick-navigation a {
+  color: var(--text);
+  text-decoration: none;
+  padding: 5px 12px;
+  border-radius: var(--radius);
+  transition: border-color 0.15s, color 0.15s;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+}
+
+.quick-navigation a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Layout ── */
+.layout {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+}
+
+.inventory-panel {
+  flex: 1;
+  min-width: 260px;
+  max-width: 320px;
+  border-right: 1px solid var(--border);
+  padding-right: 28px;
+}
+
+.recipes-panel {
+  flex: 3;
+  min-width: 0;
+}
+
+/* ── Headings ── */
+h2 {
+  margin-bottom: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+h3 {
+  margin-top: 28px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* ── Small Text ── */
+.small-text {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+/* ── Tick boxes ── */
+input[type="checkbox"] {
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border: 2px solid var(--tick-border);
+  border-radius: 4px;
+  background: var(--surface2);
+  cursor: pointer;
+  position: relative;
+  vertical-align: middle;
+  margin-right: 6px;
+  flex: none;
+}
+
+input[type="checkbox"]:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 3px;
+  width: 4px;
+  height: 8px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── Inventory ── */
+.inventory-bulk-buttons {
+  margin-bottom: 12px;
+}
+
+.inventory-bulk-buttons .btn {
+  min-width: 110px;
+}
+
+.inventory-item {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 12px;
+  color: var(--text);
+}
+
+/* ── Tables ── */
+.table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.table th {
+  text-align: left;
+  color: var(--muted);
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border-bottom: 1px solid var(--border);
+}
+
+.table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  vertical-align: top;
+  color: var(--text);
+}
+
+.table-striped tbody tr:nth-child(odd) td,
+.table-striped tbody tr:nth-child(odd) th {
+  background: var(--surface2);
+}
+
+.table-hover tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+/* ── Craftable / Created rows ── */
+.table tbody tr.craftable-row td {
+  background: rgba(192, 86, 47, 0.1);
+}
+
+.table tbody tr.craftable-row td:first-child {
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+.table-hover tbody tr.craftable-row:hover td {
+  background: rgba(192, 86, 47, 0.17);
+}
+
+.table tbody tr.created-row td {
+  background: var(--surface);
+  color: var(--muted);
+  box-shadow: none;
+}
+
+.table-hover tbody tr.created-row:hover td {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.craftable-yes {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.craftable-no {
+  color: var(--muted);
+}
+
+/* ── Created List ── */
+.created-list {
+  list-style: none;
+  padding-left: 0;
+  font-size: 12px;
+}
+
+.created-list li {
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+/* ── Recipe Filters ── */
+.recipe-filters {
+  margin: 10px 0 16px 0;
+  font-size: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
+  color: var(--muted);
+}
+
+.recipe-filters label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+/* ── Selects ── */
+select {
+  margin-left: 6px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 12px;
+  padding: 5px 8px;
+  border-radius: var(--radius);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+select:focus {
+  border-color: var(--accent);
+}
+
+select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* ── Optimizer ── */
+.optimizer-panel {
+  margin-top: 32px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+}
+
+.optimizer-output {
+  margin-top: 12px;
+}
+
+.optimizer-output .table {
+  margin-top: 12px;
+}
+
+.optimizer-options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
+/* ── Optimizer Weapon Filters ── */
+.optimizer-weapon-filters {
+  margin: 10px 0 12px 0;
+}
+
+.optimizer-weapon-filters .weapon-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.optimizer-weapon-filters .weapon-filter-name {
+  font-weight: 500;
+  min-width: 70px;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.optimizer-weapon-filters label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ── FAQ ── */
+.faq {
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+
+.faq h2 {
+  margin-bottom: 8px;
+}
+
+.faq details {
+  border-bottom: 1px solid var(--border);
+}
+
+.faq summary {
+  padding: 14px 0;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.faq p {
+  padding: 0 0 14px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* ── Links ── */
+a {
+  color: var(--accent);
+}
+
+a:hover {
+  color: var(--accent-h);
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .inventory-panel {
+    max-width: none;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding-right: 0;
+    padding-bottom: 24px;
+  }
+}

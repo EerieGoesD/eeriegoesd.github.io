@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /src/
+Disallow: /dragon-quest-viii-recipe-helper/src/
+Disallow: /dark_souls_equipment_planner/src/
 
 Sitemap: https://eeriegoesd.com/sitemap.xml
