@@ -141,6 +141,11 @@
   .calc-grid select, .calc-grid input { width: 100%; }
   .bests { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
   .card-pic { float: right; margin: 10px 0 0 12px; visibility: hidden; }
+  .bests.single { grid-template-columns: 1fr; }
+  .mine-only { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 14px; cursor: pointer; width: fit-content; }
+  .worst { border: 1px solid var(--line); background: var(--panel); border-radius: 10px; padding: 12px 16px; margin-bottom: 14px; }
+  .worst .k { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .worst .gear { margin-top: 8px; }
   .footer { display: flex; flex-wrap: wrap; justify-content: flex-end; max-width: 1200px; margin: 8px auto 0; padding: 12px 16px 24px; border-top: 1px solid var(--line); }
   .footer-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
   .flink { font-size: 12px; text-decoration: none; white-space: nowrap; color: var(--footer-link); }
@@ -230,9 +235,10 @@
       <ol>
         <li>In the game, take off all your equipment and note your HP, MP and SPD. For HP and MP, use the second number (the maximum). Enter them below.</li>
         <li>In the Inventory tab, tick the weapons and gear you own.</li>
-        <li>Choose an enemy. "Best gear you have" picks from your inventory, and "Best gear vs" picks from every item in the game.</li>
+        <li>Choose an enemy. "Best gear you have" picks from your inventory, and "Best gear vs" picks from every item in the game. Tick "Calculate based on current inventory only" to work out only your own items, which is faster.</li>
       </ol>
     </div>
+    <label class="mine-only"><input type="checkbox" id="mineOnly"> Calculate based on current inventory only</label>
     <div class="calc-grid">
       <label>Enemy<select id="calcEnemy"></select></label>
       <label>HP with nothing equipped<input type="number" id="calcHp" value="0" min="0" step="1"></label>
@@ -240,6 +246,7 @@
       <label>SPD with nothing equipped<input type="number" id="calcSpd" value="0" min="0" step="1"></label>
     </div>
     <div class="bests"><div class="best" id="best"></div><div class="best" id="bestMine"></div></div>
+    <div class="worst" id="worst" style="display:none"></div>
     <p class="note table-title" id="calcProgress"></p>
     <div class="scroll"><table id="calcTable"></table></div>
     <p class="note">Hold attack until the power gauge is full, then release. Bows: fire when the gauge is full. Gear always stays within your weight limit. Times use the game's 20 updates per second.</p>
@@ -815,7 +822,11 @@ function label(it) {
   const parts = differs.slice(0, 2).map(i => `${ATTR[i]} ${it.attrs[i]}`);
   return `${title(it.name)} (${parts.length ? parts.join(", ") : wgt(it.weight) + " " + unit})`;
 }
-const GEAR_SHOWN = [["shield", "Shield"], ["head", "Head"], ["body", "Body"], ["arms", "Arms"], ["legs", "Legs"], ["amulet", "Amulet"], ["rings", "Rings"], ["bracelets", "Bracelets"]];
+// Same slots and order as the game's equipment screen. "rings:0" is the first ring of the pair.
+// The calculator never fills the reserve hands or the magic slots, so those show a dash.
+const GEAR_SHOWN = [["head", "HELMET"], ["body", "ARMOR"], ["arms", "GLOVES"], ["legs", "BOOTS"], ["weapon", "R HAND"], ["", "R RESR"],
+  ["shield", "L HAND"], ["", "L RESR"], ["bracelets:0", "R BRAC"], ["bracelets:1", "L BRAC"], ["amulet", "AMULET"],
+  ["rings:0", "R RING"], ["", "R MAG"], ["rings:1", "L RING"], ["", "L MAG"]];
 // The game shows Creature Book pictures in a 640x240 menu, where a pixel is half as wide as it is tall.
 function fitPic(img) {
   const ratio = img.naturalWidth / 2 / img.naturalHeight;
@@ -828,9 +839,18 @@ function fitPic(img) {
 function card(heading, r, empty, pic) {
   const img = pic ? `<img class="card-pic" src="${pic.src}" alt="${esc(pic.alt)}" onload="fitPic(this)" onerror="this.remove()">` : "";
   if (!r) return `${img}<div class="k">${heading}</div><div class="n">None</div><div class="d">${empty}</div>`;
-  const byKey = {};
+  const byKey = { weapon: [r.w] };
   GEAR.forEach((s, i) => (byKey[s.key] = r.gear[i]));
-  const rows = GEAR_SHOWN.map(([k, name]) => `<span>${name}</span><span>${byKey[k].length ? byKey[k].map(it => esc(label(it))).join(", ") : "—"}</span>`).join("");
+  const pick = k => {
+    if (!k) return [];
+    const [key, n] = k.split(":");
+    const list = byKey[key] || [];
+    return n === undefined ? list : list[+n] ? [list[+n]] : [];
+  };
+  const rows = GEAR_SHOWN.map(([k, name]) => {
+    const its = pick(k);
+    return `<span>${name}</span><span>${its.length ? its.map(it => esc(label(it))).join(", ") : "—"}</span>`;
+  }).join("");
   return `<div class="k">${heading}</div><div class="n">${esc(label(r.w))}</div>` +
     `<div class="d">${r.dps.toFixed(1)} damage per second · ${r.dmg} per hit · ${isFinite(r.hits) ? r.hits : "—"} hit${r.hits === 1 ? "" : "s"} to kill</div>` +
     `${img}<div class="gear">${rows}</div>`;
@@ -838,17 +858,49 @@ function card(heading, r, empty, pic) {
 // Results are kept per enemy and stats (plus inventory for "you have"), so a repeated setup shows instantly.
 const resultsAll = new Map();
 const resultsMine = new Map();
-const calcWeapons = DATA.items.filter(isWeapon);
+const resultsTables = new Map();
 let calcRun = 0, calcAuto = true;
 const readBase = () => ({
   hp: Math.max(0, +document.getElementById("calcHp").value || 0),
   mp: Math.max(0, +document.getElementById("calcMp").value || 0),
   spd: Math.max(0, +document.getElementById("calcSpd").value || 0),
 });
+const mineOnlyBox = document.getElementById("mineOnly");
+try { mineOnlyBox.checked = localStorage.getItem("st-mine-only") === "1"; } catch (err) {}
+mineOnlyBox.addEventListener("change", () => {
+  try { localStorage.setItem("st-mine-only", mineOnlyBox.checked ? "1" : "0"); } catch (err) {}
+  drawCalc();
+});
+
+// Worst item you own in each slot: lowest total of the 14 stats, minus its weight in kg.
+const WORST_SLOTS = [["HELMET", [0]], ["ARMOR", [1]], ["GLOVES", [2]], ["BOOTS", [3]], ["R HAND", [6, 9]], ["L HAND", [7]],
+  ["BRAC", [8]], ["AMULET", [5]], ["RING", [4]]];
+function drawWorst() {
+  const box = document.getElementById("worst");
+  const mine = DATA.items.filter(it => owned.has(it.id));
+  const score = it => it.attrs.reduce((a, b) => a + b, 0) - it.weight / 10;
+  const rows = WORST_SLOTS.map(([name, types]) => {
+    const pool = mine.filter(it => types.includes(it.slot));
+    if (!pool.length) return "";
+    const w = pool.reduce((a, b) => (score(b) < score(a) || (score(b) === score(a) && b.weight > a.weight) ? b : a));
+    const total = w.attrs.reduce((a, b) => a + b, 0);
+    return `<span>${name}</span><span>${esc(label(w))} · stats ${total} · ${wgt(w.weight)} ${unit}</span>`;
+  }).join("");
+  box.style.display = rows ? "" : "none";
+  box.innerHTML = `<div class="k">Worst item you have in each slot</div><div class="gear">${rows}</div>`;
+}
+
+function workingCard(heading, pic) {
+  const img = pic ? `<img class="card-pic" src="${pic.src}" alt="${esc(pic.alt)}" onload="fitPic(this)" onerror="this.remove()">` : "";
+  return `<div class="k">${heading}</div><div class="n">Working…</div>${img}`;
+}
+
 function drawCalc() {
   const run = ++calcRun;
+  drawWorst();
   // nothing is worked out until an enemy is chosen
   const picked = sel.value !== "";
+  const mineOnly = mineOnlyBox.checked;
   document.querySelector(".bests").style.display = picked ? "" : "none";
   document.getElementById("calcTable").parentElement.style.display = picked ? "" : "none";
   if (!picked) {
@@ -859,44 +911,71 @@ function drawCalc() {
   const e = calcEnemies[+sel.value];
   const base = readBase();
   const keyAll = [sel.value, base.hp, base.mp, base.spd].join("|");
-  const keyMine = keyAll + "|" + [...owned].sort((a, b) => a - b).join(",");
-  let all = resultsAll.get(keyAll);
-  if (!all) {
-    all = { best: bestOverall(DATA.items, DATA.motions, e, base, null), rows: [], next: 0, cache: {} };
-    resultsAll.set(keyAll, all);
-    if (!calcAuto) track("calculation_run");
-  }
-  if (!resultsMine.has(keyMine)) resultsMine.set(keyMine, bestOverall(DATA.items, DATA.motions, e, base, owned));
-  document.getElementById("best").innerHTML = card("Best gear vs " + esc(title(e.name)), all.best, "",
-    { src: PIC_BASE + e.species + ".png", alt: title(e.name) });
-  document.getElementById("bestMine").innerHTML = card("Best gear you have", resultsMine.get(keyMine),
-    "Tick the weapons and gear you have in the Inventory tab.");
+  const ownedKey = [...owned].sort((a, b) => a - b).join(",");
+  const keyMine = keyAll + "|" + ownedKey;
+  const pic = { src: PIC_BASE + e.species + ".png", alt: title(e.name) };
+  const bestBox = document.getElementById("best");
+  const mineBox = document.getElementById("bestMine");
+  bestBox.style.display = mineOnly ? "none" : "";
+  document.querySelector(".bests").classList.toggle("single", mineOnly);
+  const needAll = !mineOnly && !resultsAll.has(keyAll);
+  const needMine = !resultsMine.has(keyMine);
 
-  // ranking table: each weapon with its own best gear, filled in a little at a time and kept
-  const table = document.getElementById("calcTable");
-  const progress = document.getElementById("calcProgress");
-  const render = () => {
-    all.rows.sort((a, b) => b.dps - a.dps || a.w.id - b.w.id);
-    table.innerHTML =
-      `<thead><tr><th>#</th><th class="l">Weapon</th><th>Damage per hit</th><th>Crit</th><th>Seconds per attack</th><th>Damage per second</th><th>Hits to kill</th></tr></thead><tbody>` +
-      all.rows.map((r, i) => `<tr${i === 0 ? ' class="top"' : ""}><td>${i + 1}</td><td class="l">${esc(label(r.w))}</td><td>${r.dmg}</td>` +
-        `<td>${r.crit ? Math.round(r.crit * 100) + "%" : ""}</td><td>${r.seconds.toFixed(2)}</td><td>${r.dps.toFixed(1)}</td><td>${isFinite(r.hits) ? r.hits : "—"}</td></tr>`).join("") +
-      "</tbody>";
-    progress.textContent = all.next < calcWeapons.length
-      ? `Every weapon with its own best gear (working ${all.next} of ${calcWeapons.length})`
-      : "Every weapon with its own best gear";
-  };
-  const step = () => {
+  const finish = () => {
     if (run !== calcRun) return;
-    const t0 = performance.now();
-    while (all.next < calcWeapons.length && performance.now() - t0 < 40) {
-      const r = weaponBuild(calcWeapons[all.next++], DATA.items, DATA.motions, e, base, all.cache);
-      if (r) all.rows.push(r);
+    if (needAll) resultsAll.set(keyAll, bestOverall(DATA.items, DATA.motions, e, base, null));
+    if (needMine) resultsMine.set(keyMine, bestOverall(DATA.items, DATA.motions, e, base, owned));
+    if ((needAll || needMine) && !calcAuto) track("calculation_run");
+    if (!mineOnly) bestBox.innerHTML = card("Best gear vs " + esc(title(e.name)), resultsAll.get(keyAll), "", pic);
+    mineBox.innerHTML = card("Best gear you have", resultsMine.get(keyMine),
+      "Tick the weapons and gear you have in the Inventory tab.", mineOnly ? pic : null);
+
+    // ranking table: each weapon with its own best gear, filled in a little at a time and kept
+    const tKey = mineOnly ? "mine|" + keyMine : "all|" + keyAll;
+    let t = resultsTables.get(tKey);
+    if (!t) {
+      const pool = mineOnly ? DATA.items.filter(it => owned.has(it.id)) : DATA.items;
+      t = { pool, weapons: pool.filter(isWeapon), rows: [], next: 0, cache: {} };
+      resultsTables.set(tKey, t);
     }
-    render();
-    if (all.next < calcWeapons.length) setTimeout(step, 0);
+    const table = document.getElementById("calcTable");
+    const progress = document.getElementById("calcProgress");
+    const label0 = mineOnly ? "Every weapon you have, with its best gear from your inventory" : "Every weapon with its own best gear";
+    const render = () => {
+      t.rows.sort((a, b) => b.dps - a.dps || a.w.id - b.w.id);
+      table.innerHTML =
+        `<thead><tr><th>#</th><th class="l">Weapon</th><th>Damage per hit</th><th>Crit</th><th>Seconds per attack</th><th>Damage per second</th><th>Hits to kill</th></tr></thead><tbody>` +
+        t.rows.map((r, i) => `<tr${i === 0 ? ' class="top"' : ""}><td>${i + 1}</td><td class="l">${esc(label(r.w))}</td><td>${r.dmg}</td>` +
+          `<td>${r.crit ? Math.round(r.crit * 100) + "%" : ""}</td><td>${r.seconds.toFixed(2)}</td><td>${r.dps.toFixed(1)}</td><td>${isFinite(r.hits) ? r.hits : "—"}</td></tr>`).join("") +
+        "</tbody>";
+      progress.textContent = !t.weapons.length ? "Tick the weapons you have in the Inventory tab."
+        : t.next < t.weapons.length ? `${label0} (working ${t.next} of ${t.weapons.length})` : label0;
+    };
+    const step = () => {
+      if (run !== calcRun) return;
+      const t0 = performance.now();
+      while (t.next < t.weapons.length && performance.now() - t0 < 40) {
+        const r = weaponBuild(t.weapons[t.next++], t.pool, DATA.motions, e, base, t.cache);
+        if (r) t.rows.push(r);
+      }
+      render();
+      if (t.next < t.weapons.length) setTimeout(step, 0);
+    };
+    step();
   };
-  step();
+
+  if (needAll || needMine) {
+    // show the enemy picture straight away; the search runs once the browser has drawn it
+    if (!mineOnly) bestBox.innerHTML = workingCard("Best gear vs " + esc(title(e.name)), pic);
+    mineBox.innerHTML = workingCard("Best gear you have", mineOnly ? pic : null);
+    // after the next paint; the timer also covers tabs in the background, where animation frames pause
+    let started = false;
+    const go = () => { if (!started) { started = true; finish(); } };
+    requestAnimationFrame(() => setTimeout(go, 0));
+    setTimeout(go, 50);
+  } else {
+    finish();
+  }
 }
 sel.addEventListener("change", drawCalc);
 // HP, MP and SPD are remembered in this browser; results update when you press Enter or leave the box
