@@ -810,8 +810,10 @@ showUnit();
 // Calculator
 const calcEnemies = DATA.enemies.filter(e => e.hp !== 65535).slice().sort((a, b) => a.name.localeCompare(b.name) || a.hp - b.hp);
 const sel = document.getElementById("calcEnemy");
+// Story names the game's enemy list leaves out (it only stores the title).
+const BOSS_NAMES = { "dread knight|2400": "Apollos" };
 sel.innerHTML = '<option value="" selected disabled>Choose an enemy</option>' +
-  calcEnemies.map((e, i) => `<option value="${i}">${esc(title(e.name))} · ${e.hp} HP</option>`).join("");
+  calcEnemies.map((e, i) => `<option value="${i}">${esc(title(e.name))}${BOSS_NAMES[e.name + "|" + e.hp] ? " (" + BOSS_NAMES[e.name + "|" + e.hp] + ")" : ""} · ${e.hp} HP</option>`).join("");
 // Items that share a name get their differing stats added so you can tell them apart.
 const sameName = {};
 DATA.items.forEach(it => (sameName[it.name] = sameName[it.name] || []).push(it));
