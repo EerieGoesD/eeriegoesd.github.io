@@ -149,6 +149,7 @@
   .worst { border: 1px solid var(--line); background: var(--panel); border-radius: 10px; padding: 12px 16px; margin-bottom: 14px; }
   .worst .k { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
   .worst .gear { margin-top: 8px; }
+  .worst .sum { margin-top: 6px; }
   .footer { display: flex; flex-wrap: wrap; justify-content: flex-end; max-width: 1200px; margin: 8px auto 0; padding: 12px 16px 24px; border-top: 1px solid var(--line); }
   .footer-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
   .flink { font-size: 12px; text-decoration: none; white-space: nowrap; color: var(--footer-link); }
@@ -276,7 +277,7 @@
       <p>Item and enemy data for Shadow Tower on PlayStation, read from the game's own files, with a calculator that finds the weapon and gear that deal the most damage per second to a chosen enemy.</p>
       <h2>How to use it</h2>
       <ol>
-        <li>In the game, take off all your equipment and note your HP, MP and SPD. For HP and MP, use the second number (the maximum). Enter them below.</li>
+        <li>In the game, take off all your equipment and note your HP, MP, SPD, PAR and HAM. For HP and MP, use the second number (the maximum). Enter them below.</li>
         <li>In the Inventory tab, tick the weapons and gear you own.</li>
         <li>Choose an enemy. "Best gear you have" picks from your inventory, and "Best gear vs" picks from every item in the game. Tick "Calculate based on current inventory only" to work out only your own items, which is faster.</li>
       </ol>
@@ -287,9 +288,12 @@
       <label>HP with nothing equipped<input type="number" id="calcHp" value="0" min="0" step="1"></label>
       <label>MP with nothing equipped<input type="number" id="calcMp" value="0" min="0" step="1"></label>
       <label>SPD with nothing equipped<input type="number" id="calcSpd" value="0" min="0" step="1"></label>
+      <label>PAR with nothing equipped<input type="number" id="calcPar" value="0" min="0" step="1"></label>
+      <label>HAM with nothing equipped<input type="number" id="calcHam" value="0" min="0" step="1"></label>
     </div>
     <div class="bests"><div class="best" id="best"></div><div class="best" id="bestMine"></div></div>
     <div class="worst" id="worst" style="display:none"></div>
+    <div class="worst" id="fireBest" style="display:none"></div>
     <p class="note table-title" id="calcProgress"></p>
     <div class="scroll"><table id="calcTable"></table></div>
     <p class="note">Hold attack until the power gauge is full, then release. Bows: fire when the gauge is full. Gear always stays within your weight limit. Times use the game's 20 updates per second.</p>
@@ -868,7 +872,7 @@ document.getElementById("cuneList").addEventListener("change", ev => {
 });
 drawCuneProgress();
 
-// Export / import / copy: calculator HP, MP, SPD, the ticked inventory and the ticked cunes
+// Export / import / copy: calculator HP, MP, SPD, PAR, HAM, the ticked inventory and the ticked cunes
 function inventoryJson() {
   const byId = new Map(DATA.items.map(it => [it.id, it]));
   const cuneInfo = new Map();
@@ -877,6 +881,8 @@ function inventoryJson() {
     hp: +document.getElementById("calcHp").value || 0,
     mp: +document.getElementById("calcMp").value || 0,
     spd: +document.getElementById("calcSpd").value || 0,
+    par: +document.getElementById("calcPar").value || 0,
+    ham: +document.getElementById("calcHam").value || 0,
     inventory: [...owned].sort((a, b) => a - b).map(id => ({ id, name: title(byId.get(id).name) })),
     cunes: [...cuneTicks].filter(id => cuneInfo.has(id)).map(id => ({ id, ...cuneInfo.get(id) })),
   }, null, 2);
@@ -886,7 +892,7 @@ function importJson(text) {
   const data = JSON.parse(text);
   if (!data || typeof data !== "object") throw new Error("not an object");
   const idOf = v => (v && typeof v === "object" ? v.id : v);
-  ["hp", "mp", "spd"].forEach(k => {
+  ["hp", "mp", "spd", "par", "ham"].forEach(k => {
     if (data[k] === undefined) return;
     const box = document.getElementById("calc" + k.charAt(0).toUpperCase() + k.slice(1));
     box.value = Math.max(0, Math.round(+data[k] || 0));
@@ -1028,6 +1034,8 @@ const readBase = () => ({
   hp: Math.max(0, +document.getElementById("calcHp").value || 0),
   mp: Math.max(0, +document.getElementById("calcMp").value || 0),
   spd: Math.max(0, +document.getElementById("calcSpd").value || 0),
+  par: Math.max(0, +document.getElementById("calcPar").value || 0),
+  ham: Math.max(0, +document.getElementById("calcHam").value || 0),
 });
 const mineOnlyBox = document.getElementById("mineOnly");
 try { mineOnlyBox.checked = localStorage.getItem("st-mine-only") === "1"; } catch (err) {}
@@ -1054,6 +1062,90 @@ function drawWorst() {
   box.innerHTML = `<div class="k">Worst item you have in each slot</div><div class="gear">${rows}</div>`;
 }
 
+// Fire protection, worked out the way the game does it. Fire damage you take is reduced by magic
+// defense plus fire resistance: magic defense = MP/80 + (HAM, not counting the shield's)/4, and
+// fire resistance = (PAR/4 + the fire value of the helmet, armor, gloves, boots and bracelets)/7.
+// A shield's extra defense while blocking is left out.
+const FIRE_TYPES = new Set([0, 1, 2, 3, 8]);
+// [HP, MP, weight, PAR, HAM outside the shield, fire value] that one item adds
+const fireVec = it => {
+  const a = it.attrs;
+  return [5 * a[0] + a[1] + a[2] + a[3] + a[4] + a[5] + a[6], 5 * a[7] + a[8] + a[9] + a[10] + a[11] + a[12] + a[13],
+    it.weight, a[11], it.slot === 7 ? 0 : a[9], FIRE_TYPES.has(it.slot) && it.elem && it.elem[0] === 0 ? it.elem[1] : 0];
+};
+function fireParts(base, v) {
+  const magic = Math.max(1, Math.floor((base.mp + v[1]) / 80)) + (Math.min(999, base.ham + v[4]) >> 2);
+  const res = Math.floor(((Math.min(999, base.par + v[3]) >> 2) + v[5]) / 7);
+  return { magic, res, total: magic + res };
+}
+// Gear from the pool with the most fire defense that stays within the weight limit (lightest on a tie).
+function bestFire(pool, base) {
+  const Z = [0, 0, 0, 0, 0, 0];
+  const add = (a, b) => a.map((x, i) => x + b[i]);
+  const score = v => v[1] / 80 + v[4] / 4 + (v[3] / 4 + v[5]) / 7;
+  const group = (types, pair) => {
+    const one = pool.filter(it => types.includes(it.slot)).map(it => ({ v: fireVec(it), items: [it], twoH: it.slot === 9 }));
+    const opts = [{ v: Z, items: [], twoH: false }, ...one];
+    if (pair) for (let i = 0; i < one.length; i++) for (let j = i + 1; j < one.length; j++)
+      opts.push({ v: add(one[i].v, one[j].v), items: one[i].items.concat(one[j].items), twoH: false });
+    // drop options that another one matches or beats on every count; a two-handed weapon never
+    // beats a one-handed one, because it leaves no hand for a shield
+    const beats = (y, x) => !(y.twoH && !x.twoH) && y.v[0] >= x.v[0] && y.v[1] >= x.v[1] && y.v[2] <= x.v[2] &&
+      y.v[3] >= x.v[3] && y.v[4] >= x.v[4] && y.v[5] >= x.v[5];
+    return opts.filter((x, i) => !opts.some((y, j) => j !== i && beats(y, x) && (!beats(x, y) || j < i)))
+      .sort((a, b) => score(b.v) - score(a.v));
+  };
+  const groups = [group([6, 9]), group([7]), group([0]), group([1]), group([2]), group([3]), group([5]), group([4], true), group([8], true)];
+  const n = groups.length;
+  const suffix = [];
+  suffix[n] = Z;
+  for (let i = n - 1; i >= 0; i--) suffix[i] = suffix[i + 1].map((s, d) => d === 2 ? 0 : s + Math.max(...groups[i].map(o => o.v[d])));
+  let best = null;
+  const choice = new Array(n).fill(null);
+  const rec = (i, sum, twoH) => {
+    if (sum[2] > Math.floor((base.hp + sum[0] + suffix[i][0]) / 12) + 120) return;
+    if (i === n) {
+      const p = fireParts(base, sum);
+      if (!best || p.total > best.total || (p.total === best.total && sum[2] < best.v[2])) best = { ...p, v: sum, items: choice.flat() };
+      return;
+    }
+    if (best) {
+      const ub = fireParts(base, add(sum, suffix[i])).total;
+      if (ub < best.total || (ub === best.total && sum[2] >= best.v[2])) return;
+    }
+    for (const o of groups[i]) {
+      if (i === 1 && twoH && o.items.length) continue;
+      choice[i] = o.items;
+      rec(i + 1, add(sum, o.v), twoH || o.twoH);
+    }
+    choice[i] = null;
+  };
+  rec(0, Z, false);
+  return best;
+}
+const fireResults = new Map();
+const FIRE_SHOWN = [["HELMET", [0]], ["ARMOR", [1]], ["GLOVES", [2]], ["BOOTS", [3]], ["R HAND", [6, 9]], ["L HAND", [7]],
+  ["R BRAC", [8], 0], ["L BRAC", [8], 1], ["AMULET", [5]], ["R RING", [4], 0], ["L RING", [4], 1]];
+function drawFire() {
+  const box = document.getElementById("fireBest");
+  const mine = DATA.items.filter(it => owned.has(it.id) && it.slot !== 20);
+  if (!mine.length) { box.style.display = "none"; return; }
+  const base = readBase();
+  const key = [base.hp, base.mp, base.par, base.ham, mine.map(it => it.id).join(",")].join("|");
+  if (!fireResults.has(key)) fireResults.set(key, bestFire(mine, base));
+  const r = fireResults.get(key);
+  const cap = Math.floor((base.hp + r.v[0]) / 12) + 120;
+  const rows = FIRE_SHOWN.map(([name, types, n]) => {
+    const its = r.items.filter(it => types.includes(it.slot));
+    const show = n === undefined ? its : its[n] ? [its[n]] : [];
+    return `<span>${name}</span><span>${show.length ? show.map(it => esc(label(it))).join(", ") : "None"}</span>`;
+  }).join("");
+  box.style.display = "";
+  box.innerHTML = `<div class="k">Best fire resistance gear you have</div>` +
+    `<div class="sum">Fire defense ${r.total}: magic defense ${r.magic} + fire resistance ${r.res} · weight ${wgt(r.v[2])} of ${wgt(cap)} ${unit} · not counting blocking</div>` +
+    `<div class="gear">${rows}</div>`;
+}
+
 function workingCard(heading, pic) {
   const img = pic ? `<img class="card-pic" src="${pic.src}" alt="${esc(pic.alt)}" onload="fitPic(this)" onerror="this.remove()">` : "";
   return `<div class="k">${heading}</div><div class="n">Working…</div>${img}`;
@@ -1062,6 +1154,7 @@ function workingCard(heading, pic) {
 function drawCalc() {
   const run = ++calcRun;
   drawWorst();
+  drawFire();
   // nothing is worked out until an enemy is chosen
   const picked = sel.value !== "";
   const mineOnly = mineOnlyBox.checked;
@@ -1143,7 +1236,7 @@ function drawCalc() {
 }
 sel.addEventListener("change", drawCalc);
 // HP, MP and SPD are remembered in this browser; results update when you press Enter or leave the box
-const STAT_IDS = ["calcHp", "calcMp", "calcSpd"];
+const STAT_IDS = ["calcHp", "calcMp", "calcSpd", "calcPar", "calcHam"];
 try {
   const saved = JSON.parse(localStorage.getItem("st-stats") || "{}");
   STAT_IDS.forEach(id => { if (saved[id] !== undefined) document.getElementById(id).value = saved[id]; });
