@@ -242,8 +242,9 @@
     <div class="controls">
       <input type="search" id="invSearch" placeholder="Search items">
       <div class="toggle"><button data-unit="lb">lb</button><button data-unit="kg">kg</button></div>
-      <button class="btn" id="exportJson">Export JSON</button>
-      <button class="btn" id="copyJson">Copy JSON</button>
+      <button class="btn" data-json="export">Export JSON</button>
+      <button class="btn" data-json="import">Import JSON</button>
+      <button class="btn" data-json="copy">Copy JSON</button>
       <span class="count" id="invCount"></span>
     </div>
     <p class="note table-title">Your inventory and the HP, MP and SPD values are saved in this browser.</p>
@@ -252,6 +253,11 @@
 
   <section id="cunes">
     <div class="cune-wrap">
+    <div class="controls">
+      <button class="btn" data-json="export">Export JSON</button>
+      <button class="btn" data-json="import">Import JSON</button>
+      <button class="btn" data-json="copy">Copy JSON</button>
+    </div>
     <div class="cune-progress">
       <div class="cune-progress-top"><span>Cunes collected</span><span id="cuneCount">0 / 99</span></div>
       <div class="cune-bar"><div class="cune-fill" id="cuneFill"></div></div>
@@ -845,34 +851,82 @@ document.getElementById("cuneList").addEventListener("change", ev => {
 });
 drawCuneProgress();
 
-// Export / copy: calculator HP, MP, SPD plus the ticked inventory
+// Export / import / copy: calculator HP, MP, SPD, the ticked inventory and the ticked cunes
 function inventoryJson() {
   const byId = new Map(DATA.items.map(it => [it.id, it]));
+  const cuneInfo = new Map();
+  cuneList.forEach(g => g.items.forEach(it => cuneInfo.set(it.id, { area: title(g.area.name), what: it.text + (it.num ? " " + it.num : "") })));
   return JSON.stringify({
     hp: +document.getElementById("calcHp").value || 0,
     mp: +document.getElementById("calcMp").value || 0,
     spd: +document.getElementById("calcSpd").value || 0,
     inventory: [...owned].sort((a, b) => a - b).map(id => ({ id, name: title(byId.get(id).name) })),
+    cunes: [...cuneTicks].filter(id => cuneInfo.has(id)).map(id => ({ id, ...cuneInfo.get(id) })),
   }, null, 2);
+}
+// Replaces what is saved in this browser with the file's contents. Unknown ids are skipped.
+function importJson(text) {
+  const data = JSON.parse(text);
+  if (!data || typeof data !== "object") throw new Error("not an object");
+  const idOf = v => (v && typeof v === "object" ? v.id : v);
+  ["hp", "mp", "spd"].forEach(k => {
+    if (data[k] === undefined) return;
+    const box = document.getElementById("calc" + k.charAt(0).toUpperCase() + k.slice(1));
+    box.value = Math.max(0, Math.round(+data[k] || 0));
+    box.dispatchEvent(new Event("change"));
+  });
+  if (Array.isArray(data.inventory)) {
+    const valid = new Set(DATA.items.map(it => it.id));
+    owned = new Set(data.inventory.map(v => +idOf(v)).filter(id => valid.has(id)));
+    saveOwned();
+    drawInventory();
+  }
+  if (Array.isArray(data.cunes)) {
+    const valid = new Set(cuneList.flatMap(g => g.items.map(it => it.id)));
+    cuneTicks = new Set(data.cunes.map(v => String(idOf(v))).filter(id => valid.has(id)));
+    try { localStorage.setItem("st-cunes", JSON.stringify([...cuneTicks])); } catch (err) {}
+    document.querySelectorAll("#cuneList .cune-item input").forEach(box => { box.checked = cuneTicks.has(box.dataset.cune); });
+    drawCuneProgress();
+  }
 }
 function flash(btn, text) {
   const old = btn.textContent;
   btn.textContent = text;
   setTimeout(() => (btn.textContent = old), 1500);
 }
-document.getElementById("exportJson").addEventListener("click", ev => {
+const importPicker = document.createElement("input");
+importPicker.type = "file";
+importPicker.accept = ".json,application/json";
+let importBtn = null;
+importPicker.addEventListener("change", async () => {
+  const file = importPicker.files[0];
+  importPicker.value = "";
+  if (!file) return;
+  try {
+    importJson(await file.text());
+    flash(importBtn, "Loaded");
+    track("data_imported");
+  } catch (err) {
+    flash(importBtn, "Not valid");
+  }
+});
+document.querySelectorAll('[data-json="import"]').forEach(btn => btn.addEventListener("click", () => {
+  importBtn = btn;
+  importPicker.click();
+}));
+document.querySelectorAll('[data-json="export"]').forEach(btn => btn.addEventListener("click", ev => {
   const url = URL.createObjectURL(new Blob([inventoryJson()], { type: "application/json" }));
   const a = document.createElement("a");
   a.href = url;
-  a.download = "shadow-tower-inventory.json";
+  a.download = "shadow-tower-data.json";
   document.body.appendChild(a);
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
   flash(ev.currentTarget, "Saved");
   track("inventory_exported");
-});
-document.getElementById("copyJson").addEventListener("click", async ev => {
+}));
+document.querySelectorAll('[data-json="copy"]').forEach(btn => btn.addEventListener("click", async ev => {
   const btn = ev.currentTarget;
   const text = inventoryJson();
   try {
@@ -887,7 +941,7 @@ document.getElementById("copyJson").addEventListener("click", async ev => {
   }
   flash(btn, "Copied");
   track("inventory_copied");
-});
+}));
 
 // lb / kg toggle (both tables share it)
 const showUnit = () => document.querySelectorAll(".toggle button").forEach(b => b.classList.toggle("on", b.dataset.unit === unit));
