@@ -294,6 +294,7 @@
     <div class="bests"><div class="best" id="best"></div><div class="best" id="bestMine"></div></div>
     <div class="worst" id="worst" style="display:none"></div>
     <div class="worst" id="fireBest" style="display:none"></div>
+    <div class="worst" id="hpBest" style="display:none"></div>
     <p class="note table-title" id="calcProgress"></p>
     <div class="scroll"><table id="calcTable"></table></div>
     <p class="note">Hold attack until the power gauge is full, then release. Bows: fire when the gauge is full. Gear always stays within your weight limit. Times use the game's 20 updates per second.</p>
@@ -1067,51 +1068,51 @@ function drawWorst() {
 // fire resistance = (PAR/4 + the fire value of the helmet, armor, gloves, boots and bracelets)/7.
 // A shield's extra defense while blocking is left out.
 const FIRE_TYPES = new Set([0, 1, 2, 3, 8]);
-// [HP, MP, weight, PAR, HAM outside the shield, fire value] that one item adds
+const hpOf = a => 5 * a[0] + a[1] + a[2] + a[3] + a[4] + a[5] + a[6];
+// [HP, weight, MP, PAR, HAM outside the shield, fire value] that one item adds
 const fireVec = it => {
   const a = it.attrs;
-  return [5 * a[0] + a[1] + a[2] + a[3] + a[4] + a[5] + a[6], 5 * a[7] + a[8] + a[9] + a[10] + a[11] + a[12] + a[13],
-    it.weight, a[11], it.slot === 7 ? 0 : a[9], FIRE_TYPES.has(it.slot) && it.elem && it.elem[0] === 0 ? it.elem[1] : 0];
+  return [hpOf(a), it.weight, 5 * a[7] + a[8] + a[9] + a[10] + a[11] + a[12] + a[13],
+    a[11], it.slot === 7 ? 0 : a[9], FIRE_TYPES.has(it.slot) && it.elem && it.elem[0] === 0 ? it.elem[1] : 0];
 };
 function fireParts(base, v) {
-  const magic = Math.max(1, Math.floor((base.mp + v[1]) / 80)) + (Math.min(999, base.ham + v[4]) >> 2);
+  const magic = Math.max(1, Math.floor((base.mp + v[2]) / 80)) + (Math.min(999, base.ham + v[4]) >> 2);
   const res = Math.floor(((Math.min(999, base.par + v[3]) >> 2) + v[5]) / 7);
   return { magic, res, total: magic + res };
 }
-// Gear from the pool with the most fire defense that stays within the weight limit (lightest on a tie).
-function bestFire(pool, base) {
-  const Z = [0, 0, 0, 0, 0, 0];
+// Gear from the pool with the highest score that stays within the weight limit (lightest on a tie).
+// vec(it) gives [HP, weight, ...]; score(sum) must never drop when a count other than weight rises.
+function bestSet(pool, base, vec, score) {
   const add = (a, b) => a.map((x, i) => x + b[i]);
-  const score = v => v[1] / 80 + v[4] / 4 + (v[3] / 4 + v[5]) / 7;
+  const Z = vec(pool[0]).map(() => 0);
   const group = (types, pair) => {
-    const one = pool.filter(it => types.includes(it.slot)).map(it => ({ v: fireVec(it), items: [it], twoH: it.slot === 9 }));
+    const one = pool.filter(it => types.includes(it.slot)).map(it => ({ v: vec(it), items: [it], twoH: it.slot === 9 }));
     const opts = [{ v: Z, items: [], twoH: false }, ...one];
     if (pair) for (let i = 0; i < one.length; i++) for (let j = i + 1; j < one.length; j++)
       opts.push({ v: add(one[i].v, one[j].v), items: one[i].items.concat(one[j].items), twoH: false });
     // drop options that another one matches or beats on every count; a two-handed weapon never
     // beats a one-handed one, because it leaves no hand for a shield
-    const beats = (y, x) => !(y.twoH && !x.twoH) && y.v[0] >= x.v[0] && y.v[1] >= x.v[1] && y.v[2] <= x.v[2] &&
-      y.v[3] >= x.v[3] && y.v[4] >= x.v[4] && y.v[5] >= x.v[5];
+    const beats = (y, x) => !(y.twoH && !x.twoH) && y.v.every((d, k) => k === 1 ? d <= x.v[1] : d >= x.v[k]);
     return opts.filter((x, i) => !opts.some((y, j) => j !== i && beats(y, x) && (!beats(x, y) || j < i)))
-      .sort((a, b) => score(b.v) - score(a.v));
+      .sort((a, b) => score(b.v) - score(a.v) || a.v[1] - b.v[1]);
   };
   const groups = [group([6, 9]), group([7]), group([0]), group([1]), group([2]), group([3]), group([5]), group([4], true), group([8], true)];
   const n = groups.length;
   const suffix = [];
   suffix[n] = Z;
-  for (let i = n - 1; i >= 0; i--) suffix[i] = suffix[i + 1].map((s, d) => d === 2 ? 0 : s + Math.max(...groups[i].map(o => o.v[d])));
+  for (let i = n - 1; i >= 0; i--) suffix[i] = suffix[i + 1].map((s, d) => d === 1 ? 0 : s + Math.max(...groups[i].map(o => o.v[d])));
   let best = null;
   const choice = new Array(n).fill(null);
   const rec = (i, sum, twoH) => {
-    if (sum[2] > Math.floor((base.hp + sum[0] + suffix[i][0]) / 12) + 120) return;
+    if (sum[1] > Math.floor((base.hp + sum[0] + suffix[i][0]) / 12) + 120) return;
     if (i === n) {
-      const p = fireParts(base, sum);
-      if (!best || p.total > best.total || (p.total === best.total && sum[2] < best.v[2])) best = { ...p, v: sum, items: choice.flat() };
+      const s = score(sum);
+      if (!best || s > best.score || (s === best.score && sum[1] < best.v[1])) best = { score: s, v: sum, items: choice.flat() };
       return;
     }
     if (best) {
-      const ub = fireParts(base, add(sum, suffix[i])).total;
-      if (ub < best.total || (ub === best.total && sum[2] >= best.v[2])) return;
+      const ub = score(add(sum, suffix[i]));
+      if (ub < best.score || (ub === best.score && sum[1] >= best.v[1])) return;
     }
     for (const o of groups[i]) {
       if (i === 1 && twoH && o.items.length) continue;
@@ -1123,27 +1124,39 @@ function bestFire(pool, base) {
   rec(0, Z, false);
   return best;
 }
-const fireResults = new Map();
-const FIRE_SHOWN = [["HELMET", [0]], ["ARMOR", [1]], ["GLOVES", [2]], ["BOOTS", [3]], ["R HAND", [6, 9]], ["L HAND", [7]],
+const setResults = new Map();
+const SET_SHOWN = [["HELMET", [0]], ["ARMOR", [1]], ["GLOVES", [2]], ["BOOTS", [3]], ["R HAND", [6, 9]], ["L HAND", [7]],
   ["R BRAC", [8], 0], ["L BRAC", [8], 1], ["AMULET", [5]], ["R RING", [4], 0], ["L RING", [4], 1]];
-function drawFire() {
-  const box = document.getElementById("fireBest");
+// One "best set you have" box: kind is "fire" or "hp".
+function drawSet(id, kind) {
+  const box = document.getElementById(id);
   const mine = DATA.items.filter(it => owned.has(it.id) && it.slot !== 20);
   if (!mine.length) { box.style.display = "none"; return; }
   const base = readBase();
-  const key = [base.hp, base.mp, base.par, base.ham, mine.map(it => it.id).join(",")].join("|");
-  if (!fireResults.has(key)) fireResults.set(key, bestFire(mine, base));
-  const r = fireResults.get(key);
+  const key = [kind, base.hp, base.mp, base.par, base.ham, mine.map(it => it.id).join(",")].join("|");
+  if (!setResults.has(key)) {
+    setResults.set(key, kind === "fire" ? bestSet(mine, base, fireVec, v => fireParts(base, v).total)
+      : bestSet(mine, base, it => [hpOf(it.attrs), it.weight], v => base.hp + v[0]));
+  }
+  const r = setResults.get(key);
   const cap = Math.floor((base.hp + r.v[0]) / 12) + 120;
-  const rows = FIRE_SHOWN.map(([name, types, n]) => {
+  const weight = `weight ${wgt(r.v[1])} of ${wgt(cap)} ${unit}`;
+  const rows = SET_SHOWN.map(([name, types, n]) => {
     const its = r.items.filter(it => types.includes(it.slot));
     const show = n === undefined ? its : its[n] ? [its[n]] : [];
     return `<span>${name}</span><span>${show.length ? show.map(it => esc(label(it))).join(", ") : "None"}</span>`;
   }).join("");
+  let head, sum;
+  if (kind === "fire") {
+    const p = fireParts(base, r.v);
+    head = "Best fire resistance gear you have";
+    sum = `Fire defense ${p.total}: magic defense ${p.magic} + fire resistance ${p.res} · ${weight} · not counting blocking`;
+  } else {
+    head = "Best HP gear you have";
+    sum = `Max HP ${base.hp + r.v[0]}: ${base.hp} with nothing equipped + ${r.v[0]} from gear · ${weight}`;
+  }
   box.style.display = "";
-  box.innerHTML = `<div class="k">Best fire resistance gear you have</div>` +
-    `<div class="sum">Fire defense ${r.total}: magic defense ${r.magic} + fire resistance ${r.res} · weight ${wgt(r.v[2])} of ${wgt(cap)} ${unit} · not counting blocking</div>` +
-    `<div class="gear">${rows}</div>`;
+  box.innerHTML = `<div class="k">${head}</div><div class="sum">${sum}</div><div class="gear">${rows}</div>`;
 }
 
 function workingCard(heading, pic) {
@@ -1154,7 +1167,8 @@ function workingCard(heading, pic) {
 function drawCalc() {
   const run = ++calcRun;
   drawWorst();
-  drawFire();
+  drawSet("fireBest", "fire");
+  drawSet("hpBest", "hp");
   // nothing is worked out until an enemy is chosen
   const picked = sel.value !== "";
   const mineOnly = mineOnlyBox.checked;
