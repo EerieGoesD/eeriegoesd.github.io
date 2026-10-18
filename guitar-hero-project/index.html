@@ -142,8 +142,6 @@
   .cl-progress-top { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 8px; }
   .cl-bar { height: 12px; border-radius: 6px; background: var(--line); overflow: hidden; }
   .cl-fill { height: 100%; width: 0; background: var(--accent); transition: width 0.25s; }
-  .bm-row { display: flex; align-items: center; gap: 12px; margin-top: 12px; color: var(--muted); font-size: 13px; }
-  .bm { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 140px; text-decoration: none; }
   .footer { display: flex; flex-wrap: wrap; justify-content: flex-end; margin: 8px 0 0; padding: 12px 24px 24px; border-top: 1px solid var(--line); }
   .footer-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
   .flink { font-size: 12px; text-decoration: none; white-space: nowrap; color: var(--footer-link); }
@@ -167,7 +165,7 @@
 </head>
 <body>
 <h1 class="sr-only">Guitar Hero Project - total notes for every Guitar Hero song</h1>
-<p class="sr-only">Guitar Hero Project lists the total number of notes in every song of Guitar Hero on PlayStation 2, on Easy, Medium, Hard and Expert. The table is sorted from the song with the fewest notes to the song with the most, and can be narrowed down by platform, difficulty and instrument. It covers the 30 career songs, the bonus tracks, the secret songs and the four songs from the Guitar Hero II demo disc, 53 songs in all. Songs played at 100% can be ticked off, by hand or from a ScoreHero account, and a bar shows how many are done. The note counts come from the song stats on ScoreHero.</p>
+<p class="sr-only">Guitar Hero Project lists the total number of notes in every song of Guitar Hero on PlayStation 2, on Easy, Medium, Hard and Expert. The table is sorted from the song with the fewest notes to the song with the most, and can be narrowed down by platform, difficulty and instrument. It covers the 30 career songs, the bonus tracks, the secret songs and the four songs from the Guitar Hero II demo disc, 53 songs in all. Songs played at 100% can be ticked off, and a bar shows how many are done. The note counts come from the song stats on ScoreHero.</p>
 <header>
   <div class="title"><span>Guitar Hero</span> Project</div>
 </header>
@@ -175,7 +173,6 @@
   <div class="cl-progress">
     <div class="cl-progress-top"><span>Songs at 100%</span><span id="hundredCount"></span></div>
     <div class="cl-bar"><div class="cl-fill" id="hundredFill"></div></div>
-    <div class="bm-row"><a class="btn bm" href="javascript:%28async%20%28%29%20%3D%3E%20%7B%20const%20user%20%3D%20new%20URLSearchParams%28location.search%29.get%28%22user%22%29%3B%20if%20%28%21%2Fscorehero%5C.com%24%2F.test%28location.hostname%29%20%7C%7C%20%21user%20%7C%7C%20user%20%3D%3D%3D%20%220%22%29%20%7B%20alert%28%22Open%20your%20own%20scores%20on%20scorehero.com%20%28the%20address%20has%20user%3D%20in%20it%29%2C%20then%20click%20this%20bookmark%20again.%22%29%3B%20return%3B%20%7D%20const%20ids%20%3D%20new%20Set%28%29%3B%20for%20%28const%20diff%20of%20%5B1%2C%202%2C%203%2C%204%5D%29%20%7B%20const%20res%20%3D%20await%20fetch%28%22%2Fscores.php%3Fuser%3D%22%20%2B%20user%20%2B%20%22%26group%3D1%26game%3D1%26diff%3D%22%20%2B%20diff%29%3B%20const%20doc%20%3D%20new%20DOMParser%28%29.parseFromString%28await%20res.text%28%29%2C%20%22text%2Fhtml%22%29%3B%20doc.querySelectorAll%28%27a%5Bhref%2A%3D%22rankings.php%22%5D%5Bhref%2A%3D%22song%3D%22%5D%27%29.forEach%28a%20%3D%3E%20%7B%20const%20tr%20%3D%20a.closest%28%22tr%22%29%2C%20m%20%3D%20a.getAttribute%28%22href%22%29.match%28%2Fsong%3D%28%5Cd%2B%29%2F%29%3B%20if%20%28tr%20%26%26%20m%20%26%26%20%5B...tr.children%5D.some%28td%20%3D%3E%20td.textContent.trim%28%29%20%3D%3D%3D%20%22100%25%22%29%29%20ids.add%28%22sh-%22%20%2B%20m%5B1%5D%29%3B%20%7D%29%3B%20%7D%20if%20%28%21ids.size%29%20%7B%20alert%28%22No%20100%25%20scores%20found%20for%20this%20ScoreHero%20account%20in%20Guitar%20Hero.%22%29%3B%20return%3B%20%7D%20location.href%20%3D%20%22https%3A%2F%2Feeriegoesd.com%2Fguitar-hero-project%2F%23hundred%3D%22%20%2B%20%5B...ids%5D.join%28%22%2C%22%29%3B%20%7D%29%28%29%3B">ScoreHero 100%</a><span>Drag this button to your bookmarks bar. Then open your own scores on ScoreHero and click the bookmark to tick your 100% songs.</span></div>
   </div>
   <div class="intro">
     <p>Total note counts for every song in Guitar Hero on PlayStation 2, on every difficulty, sorted from fewest to most notes. Note counts from <a href="https://www.scorehero.com/songstats.php" target="_blank" rel="noopener">ScoreHero</a>.</p>
@@ -184,7 +181,7 @@
       <li>Tick the platforms, difficulties and instruments to show in the table.</li>
       <li>Tick a group's heading to show or hide the whole group.</li>
       <li>Read the table from the top: fewest notes first, most notes last.</li>
-      <li>Tick the 100% box on every song you have played at 100%, or fill them in from ScoreHero with the ScoreHero 100% button at the top.</li>
+      <li>Tick the 100% box on every song you have played at 100%.</li>
     </ol>
   </div>
   <p class="note">Your ticks are saved in this browser.</p>
@@ -427,16 +424,10 @@
   const filters = document.getElementById("filters");
   const rows = [...document.querySelectorAll("#notesTable tbody tr[data-f]")];
 
-  // 100% ticks, keyed by ScoreHero song id. The ScoreHero 100% bookmark sends them in #hundred=.
+  // 100% ticks, keyed by ScoreHero song id.
   const DONE_KEY = "guitar-hero-project-100";
   let done = new Set();
   try { done = new Set(JSON.parse(localStorage.getItem(DONE_KEY) || "[]")); } catch (err) {}
-  const imported = location.hash.match(/^#hundred=([\w,-]*)$/);
-  if (imported) {
-    imported[1].split(",").filter(Boolean).forEach(id => done.add(id));
-    try { localStorage.setItem(DONE_KEY, JSON.stringify([...done])); } catch (err) {}
-    history.replaceState(null, "", location.pathname + location.search);
-  }
   document.querySelectorAll("#notesTable [data-done]").forEach(box => { box.checked = done.has(box.dataset.done); });
 
   function drawProgress() {
