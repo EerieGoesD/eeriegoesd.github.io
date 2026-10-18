@@ -102,11 +102,11 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--bg); color: var(--text); }
   body { font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-  header { padding: 20px 16px 0; max-width: 852px; margin: 0 auto; }
+  header { padding: 20px 24px 0; }
   .title { font-size: 22px; font-weight: 700; margin: 0; letter-spacing: 0.02em; }
   .title span { color: var(--accent); }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-  main { max-width: 852px; margin: 0 auto; padding: 16px; }
+  main { padding: 16px 24px; }
   a { color: var(--accent); }
   .intro { border: 1px solid var(--line); background: var(--panel); border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; }
   .intro p { margin: 0 0 8px; }
@@ -114,15 +114,15 @@
   .intro ol { margin: 0; padding-left: 20px; }
   .intro li + li { margin-top: 4px; }
   .note { color: var(--muted); font-size: 12px; margin: 0 2px 14px; }
-  .cl-group { margin-bottom: 22px; }
+  #filters { display: flex; flex-wrap: wrap; gap: 12px 40px; margin-bottom: 16px; }
   .cl-head { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); margin-bottom: 4px; cursor: pointer; }
   .cl-head input { flex: none; }
   .cl-name { flex: 1; font-size: 15px; font-weight: 700; }
   .cl-got { color: var(--muted); font-variant-numeric: tabular-nums; }
   .cl-got.full { color: var(--good); }
-  .cl-item { display: flex; align-items: center; gap: 10px; padding: 7px 8px 7px 26px; border-radius: 6px; cursor: pointer; }
+  .cl-items { display: flex; flex-wrap: wrap; }
+  .cl-item { display: flex; align-items: center; gap: 8px; width: 100px; padding: 6px 0; cursor: pointer; }
   .cl-item input { flex: none; }
-  .cl-item:hover { background: rgba(255, 255, 255, 0.03); }
   input[type=checkbox] { width: 16px; height: 16px; margin: 0; accent-color: var(--accent); cursor: pointer; }
   .scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
   table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
@@ -135,7 +135,7 @@
   td.empty { color: var(--muted); text-align: center; white-space: normal; }
   .btn { width: 120px; height: 36px; padding: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--text); font: inherit; font-weight: 600; cursor: pointer; }
   .btn:hover { border-color: var(--accent); }
-  .footer { display: flex; flex-wrap: wrap; justify-content: flex-end; max-width: 852px; margin: 8px auto 0; padding: 12px 16px 24px; border-top: 1px solid var(--line); }
+  .footer { display: flex; flex-wrap: wrap; justify-content: flex-end; margin: 8px 0 0; padding: 12px 24px 24px; border-top: 1px solid var(--line); }
   .footer-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
   .flink { font-size: 12px; text-decoration: none; white-space: nowrap; color: var(--footer-link); }
   .flink:hover { text-decoration: underline; color: var(--footer-link-hover); }
@@ -145,6 +145,10 @@
   .flink.flink-coffee:hover { color: var(--coffee); }
   .flink:not(:last-child)::after { content: "|"; display: inline-block; margin-left: 6px; color: var(--footer-sep); font-weight: 400; }
   @media (max-width: 480px) {
+    header { padding: 20px 16px 0; }
+    main { padding: 16px; }
+    .footer { padding: 12px 16px 24px; }
+    .cl-item { width: 84px; }
     th, td { white-space: normal; }
     th { letter-spacing: 0; }
     th, td { padding: 7px 4px; }
@@ -169,7 +173,7 @@
     </ol>
   </div>
   <p class="note">Your ticks are saved in this browser.</p>
-  <div id="filters"><div class="cl-group"><label class="cl-head"><input type="checkbox" data-group="platform" checked><span class="cl-name">Platform</span><span class="cl-got full">1 / 1</span></label><label class="cl-item"><input type="checkbox" data-id="platform:ps2" checked><span class="cl-text">PS2</span></label></div><div class="cl-group"><label class="cl-head"><input type="checkbox" data-group="difficulty" checked><span class="cl-name">Difficulty</span><span class="cl-got full">4 / 4</span></label><label class="cl-item"><input type="checkbox" data-id="difficulty:easy" checked><span class="cl-text">Easy</span></label><label class="cl-item"><input type="checkbox" data-id="difficulty:medium" checked><span class="cl-text">Medium</span></label><label class="cl-item"><input type="checkbox" data-id="difficulty:hard" checked><span class="cl-text">Hard</span></label><label class="cl-item"><input type="checkbox" data-id="difficulty:expert" checked><span class="cl-text">Expert</span></label></div><div class="cl-group"><label class="cl-head"><input type="checkbox" data-group="instrument" checked><span class="cl-name">Instrument</span><span class="cl-got full">1 / 1</span></label><label class="cl-item"><input type="checkbox" data-id="instrument:guitar" checked><span class="cl-text">Guitar</span></label></div></div>
+  <div id="filters"><div class="cl-group"><label class="cl-head"><input type="checkbox" data-group="platform" checked><span class="cl-name">Platform</span><span class="cl-got full">1 / 1</span></label><div class="cl-items"><label class="cl-item"><input type="checkbox" data-id="platform:ps2" checked><span class="cl-text">PS2</span></label></div></div><div class="cl-group"><label class="cl-head"><input type="checkbox" data-group="difficulty" checked><span class="cl-name">Difficulty</span><span class="cl-got full">4 / 4</span></label><div class="cl-items"><label class="cl-item"><input type="checkbox" data-id="difficulty:easy" checked><span class="cl-text">Easy</span></label><label class="cl-item"><input type="checkbox" data-id="difficulty:medium" checked><span class="cl-text">Medium</span></label><label class="cl-item"><input type="checkbox" data-id="difficulty:hard" checked><span class="cl-text">Hard</span></label><label class="cl-item"><input type="checkbox" data-id="difficulty:expert" checked><span class="cl-text">Expert</span></label></div></div><div class="cl-group"><label class="cl-head"><input type="checkbox" data-group="instrument" checked><span class="cl-name">Instrument</span><span class="cl-got full">1 / 1</span></label><div class="cl-items"><label class="cl-item"><input type="checkbox" data-id="instrument:guitar" checked><span class="cl-text">Guitar</span></label></div></div></div>
   <div class="scroll">
     <table id="notesTable">
       <thead><tr><th>Game</th><th>Instrument</th><th>Difficulty</th><th>Song</th><th class="n">Total Notes</th></tr></thead>
