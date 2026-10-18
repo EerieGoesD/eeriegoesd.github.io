@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guitar Hero Project - Total Notes for Every Song</title>
+<meta name="description" content="Total note counts for every song in Guitar Hero on PlayStation 2, on every difficulty, sorted from fewest to most notes.">
+<link rel="canonical" href="https://eeriegoesd.com/guitar-hero-project/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Guitar Hero Project">
+<meta property="og:description" content="Total note counts for every song in Guitar Hero on PlayStation 2, on every difficulty, sorted from fewest to most notes.">
+<meta property="og:url" content="https://eeriegoesd.com/guitar-hero-project/">
+<meta property="og:image" content="https://eeriegoesd.com/guitar-hero-project/share.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Guitar Hero Project">
+<meta name="twitter:description" content="Total note counts for every song in Guitar Hero on PlayStation 2, on every difficulty, sorted from fewest to most notes.">
+<meta name="twitter:image" content="https://eeriegoesd.com/guitar-hero-project/share.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Guitar Hero Project",
+  "url": "https://eeriegoesd.com/guitar-hero-project/",
+  "applicationCategory": "BrowserApplication",
+  "operatingSystem": "Any browser",
+  "description": "Total note counts for every song in Guitar Hero on PlayStation 2, on every difficulty, sorted from fewest to most notes.",
+  "image": "https://eeriegoesd.com/guitar-hero-project/share.png",
+  "author": {
+    "@type": "Organization",
+    "name": "EERIE",
+    "url": "https://eeriegoesd.com"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "EUR"
+  },
+  "privacyPolicy": "https://eeriegoesd.com/privacy/"
+}
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    dataLayer.push(arguments)
+  }
+  window.gtag = gtag;
+  gtag('consent', 'default', {
+    analytics_storage: 'denied',
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    wait_for_update: 500
+  });
+
+  function initGtag() {
+    if (document.getElementById('gtag-script')) return;
+    var s = document.createElement('script');
+    s.id = 'gtag-script';
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=G-K00TNSHNQ2';
+    document.head.appendChild(s);
+    gtag('consent', 'update', {
+      analytics_storage: 'granted'
+    });
+    gtag('js', new Date());
+    gtag('config', 'G-K00TNSHNQ2')
+  }
+
+  function hideBanner() {
+    document.getElementById('cookieBanner').style.display = 'none'
+  }
+
+  function acceptCookies() {
+    localStorage.setItem('cookie-consent', 'accepted');
+    hideBanner();
+    initGtag()
+  }
+
+  function rejectCookies() {
+    localStorage.setItem('cookie-consent', 'rejected');
+    hideBanner()
+  }
+</script>
+<style>
+  :root {
+    --bg: #121214;
+    --panel: #1b1b1f;
+    --line: #2d2d33;
+    --text: #e6e3dc;
+    --muted: #9a968c;
+    --accent: #c9a24a;
+    --good: #8fbf7a;
+    --footer-link: #8b8b98;
+    --footer-link-hover: #d4d4d8;
+    --footer-sep: #4a4a57;
+    --coffee: #facc15;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); }
+  body { font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  header { padding: 20px 16px 0; max-width: 852px; margin: 0 auto; }
+  .title { font-size: 22px; font-weight: 700; margin: 0; letter-spacing: 0.02em; }
+  .title span { color: var(--accent); }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+  main { max-width: 852px; margin: 0 auto; padding: 16px; }
+  a { color: var(--accent); }
+  .intro { border: 1px solid var(--line); background: var(--panel); border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; }
+  .intro p { margin: 0 0 8px; }
+  .intro h2 { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin: 12px 0 6px; }
+  .intro ol { margin: 0; padding-left: 20px; }
+  .intro li + li { margin-top: 4px; }
+  .note { color: var(--muted); font-size: 12px; margin: 0 2px 14px; }
+  .cl-group { margin-bottom: 22px; }
+  .cl-head { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); margin-bottom: 4px; cursor: pointer; }
+  .cl-head input { flex: none; }
+  .cl-name { flex: 1; font-size: 15px; font-weight: 700; }
+  .cl-got { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .cl-got.full { color: var(--good); }
+  .cl-item { display: flex; align-items: center; gap: 10px; padding: 7px 8px 7px 26px; border-radius: 6px; cursor: pointer; }
+  .cl-item input { flex: none; }
+  .cl-item:hover { background: rgba(255, 255, 255, 0.03); }
+  input[type=checkbox] { width: 16px; height: 16px; margin: 0; accent-color: var(--accent); cursor: pointer; }
+  .scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+  table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+  th, td { padding: 7px 9px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+  td.song { white-space: normal; }
+  th.n, td.n { text-align: right; }
+  th { position: sticky; top: 0; background: var(--panel); color: var(--muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:hover td { background: rgba(255, 255, 255, 0.03); }
+  td.empty { color: var(--muted); text-align: center; white-space: normal; }
+  .btn { width: 120px; height: 36px; padding: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--text); font: inherit; font-weight: 600; cursor: pointer; }
+  .btn:hover { border-color: var(--accent); }
+  .footer { display: flex; flex-wrap: wrap; justify-content: flex-end; max-width: 852px; margin: 8px auto 0; padding: 12px 16px 24px; border-top: 1px solid var(--line); }
+  .footer-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+  .flink { font-size: 12px; text-decoration: none; white-space: nowrap; color: var(--footer-link); }
+  .flink:hover { text-decoration: underline; color: var(--footer-link-hover); }
+  .flink.flink-eerie { color: var(--accent); font-weight: 600; }
+  .flink.flink-eerie:hover { color: var(--accent); }
+  .flink.flink-coffee { color: var(--coffee); }
+  .flink.flink-coffee:hover { color: var(--coffee); }
+  .flink:not(:last-child)::after { content: "|"; display: inline-block; margin-left: 6px; color: var(--footer-sep); font-weight: 400; }
+  @media (max-width: 480px) {
+    th, td { white-space: normal; }
+    th { letter-spacing: 0; }
+    th, td { padding: 7px 4px; }
+    th { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<h1 class="sr-only">Guitar Hero Project - total notes for every Guitar Hero song</h1>
+<p class="sr-only">Guitar Hero Project lists the total number of notes in every song of Guitar Hero on PlayStation 2, on Easy, Medium, Hard and Expert. The table is sorted from the song with the fewest notes to the song with the most, and can be narrowed down by platform, difficulty and instrument. It covers the 30 career songs, the bonus tracks and the secret songs, 49 songs in all. The note counts come from the song stats on ScoreHero.</p>
+<header>
+  <div class="title"><span>Guitar Hero</span> Project</div>
+</header>
+<main>
+  <div class="intro">
+    <p>Total note counts for every song in Guitar Hero on PlayStation 2, on every difficulty, sorted from fewest to most notes. Note counts from <a href="https://www.scorehero.com/songstats.php" target="_blank" rel="noopener">ScoreHero</a>.</p>
+    <h2>How to use it</h2>
+    <ol>
+      <li>Tick the platforms, difficulties and instruments to show in the table.</li>
+      <li>Tick a group's heading to show or hide the whole group.</li>
+      <li>Read the table from the top: fewest notes first, most notes last.</li>
+    </ol>
+  </div>
+  <p class="note">Your ticks are saved in this browser.</p>
+  <div id="filters"><div class="cl-group"><label class="cl-head"><input type="checkbox" data-group="platform" checked><span class="cl-name">Platform</span><span class="cl-got full">1 / 1</span></label><label class="cl-item"><input type="checkbox" data-id="platform:ps2" checked><span class="cl-text">PS2</span></label></div><div class="cl-group"><label class="cl-head"><input type="checkbox" data-group="difficulty" checked><span class="cl-name">Difficulty</span><span class="cl-got full">4 / 4</span></label><label class="cl-item"><input type="checkbox" data-id="difficulty:easy" checked><span class="cl-text">Easy</span></label><label class="cl-item"><input type="checkbox" data-id="difficulty:medium" checked><span class="cl-text">Medium</span></label><label class="cl-item"><input type="checkbox" data-id="difficulty:hard" checked><span class="cl-text">Hard</span></label><label class="cl-item"><input type="checkbox" data-id="difficulty:expert" checked><span class="cl-text">Expert</span></label></div><div class="cl-group"><label class="cl-head"><input type="checkbox" data-group="instrument" checked><span class="cl-name">Instrument</span><span class="cl-got full">1 / 1</span></label><label class="cl-item"><input type="checkbox" data-id="instrument:guitar" checked><span class="cl-text">Guitar</span></label></div></div>
+  <div class="scroll">
+    <table id="notesTable">
+      <thead><tr><th>Game</th><th>Instrument</th><th>Difficulty</th><th>Song</th><th class="n">Total Notes</th></tr></thead>
+      <tbody>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Graveyard Shift</td><td class="n">184</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Behind The Mask</td><td class="n">214</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">I Love Rock &amp; Roll</td><td class="n">232</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Trippolette</td><td class="n">238</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Take It Off</td><td class="n">249</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Eureka, I&#x27;ve Found Love</td><td class="n">251</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Graveyard Shift</td><td class="n">256</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Fat Lip</td><td class="n">263</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">I Love Rock &amp; Roll</td><td class="n">266</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Ziggy Stardust</td><td class="n">266</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Hey</td><td class="n">272</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Killer Queen</td><td class="n">279</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Spanish Castle Magic</td><td class="n">290</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">I Love Rock &amp; Roll</td><td class="n">292</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Symphony Of Destruction</td><td class="n">292</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">I Wanna Be Sedated</td><td class="n">294</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Cochise</td><td class="n">296</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Infected</td><td class="n">296</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Hey You</td><td class="n">298</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Decontrol</td><td class="n">301</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Godzilla</td><td class="n">301</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Fly On The Wall</td><td class="n">308</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">I Love Rock &amp; Roll</td><td class="n">308</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Killer Queen</td><td class="n">314</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Heart Full of Black</td><td class="n">316</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">All of This</td><td class="n">317</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Eureka, I&#x27;ve Found Love</td><td class="n">317</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Ace Of Spades</td><td class="n">322</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Eureka, I&#x27;ve Found Love</td><td class="n">337</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Stellar</td><td class="n">337</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Get Ready 2 Rokk</td><td class="n">338</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">The Breaking Wheel</td><td class="n">339</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Higher Ground</td><td class="n">340</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">All of This</td><td class="n">342</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Iron Man</td><td class="n">359</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Trippolette</td><td class="n">361</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Ziggy Stardust</td><td class="n">364</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Frankenstein</td><td class="n">365</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Killer Queen</td><td class="n">367</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Hey You</td><td class="n">371</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Fly On The Wall</td><td class="n">375</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Guitar Hero</td><td class="n">375</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">You Got Another Thing Comin&#x27;</td><td class="n">375</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Take Me Out</td><td class="n">379</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Behind The Mask</td><td class="n">380</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Thunder Kiss 65</td><td class="n">382</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">I Wanna Be Sedated</td><td class="n">388</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Heart Full of Black</td><td class="n">397</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Take It Off</td><td class="n">401</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Farewell Myth</td><td class="n">403</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Killer Queen</td><td class="n">403</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Graveyard Shift</td><td class="n">406</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Caveman Rejoice</td><td class="n">409</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Godzilla</td><td class="n">411</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Ace Of Spades</td><td class="n">412</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Fire It Up</td><td class="n">414</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">More Than A Feeling</td><td class="n">416</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Eureka, I&#x27;ve Found Love</td><td class="n">421</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Iron Man</td><td class="n">436</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Sharp Dressed Man</td><td class="n">436</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Sail Your Ship By</td><td class="n">450</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Take It Off</td><td class="n">450</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Take It Off</td><td class="n">460</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Behind The Mask</td><td class="n">462</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Fat Lip</td><td class="n">464</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Stellar</td><td class="n">464</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Spanish Castle Magic</td><td class="n">466</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Story of My Love</td><td class="n">469</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">All of This</td><td class="n">473</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Fly On The Wall</td><td class="n">480</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Unsung</td><td class="n">480</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Decontrol</td><td class="n">481</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Hey</td><td class="n">481</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Hey</td><td class="n">481</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Hey</td><td class="n">481</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Texas Flood</td><td class="n">483</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Fire It Up</td><td class="n">484</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Callout</td><td class="n">486</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Symphony Of Destruction</td><td class="n">487</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Graveyard Shift</td><td class="n">494</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">You Got Another Thing Comin&#x27;</td><td class="n">495</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Fly On The Wall</td><td class="n">496</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">All of This</td><td class="n">499</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Farewell Myth</td><td class="n">500</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">More Than A Feeling</td><td class="n">501</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Bark At The Moon</td><td class="n">507</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Godzilla</td><td class="n">507</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Even Rats</td><td class="n">509</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Cochise</td><td class="n">513</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Stellar</td><td class="n">513</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Stellar</td><td class="n">513</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Thunder Kiss 65</td><td class="n">515</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Behind The Mask</td><td class="n">516</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Guitar Hero</td><td class="n">525</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Fire It Up</td><td class="n">527</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Caveman Rejoice</td><td class="n">528</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Cheat on the Church</td><td class="n">528</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Infected</td><td class="n">528</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Spanish Castle Magic</td><td class="n">528</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Frankenstein</td><td class="n">533</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Higher Ground</td><td class="n">536</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Take Me Out</td><td class="n">539</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Hey You</td><td class="n">544</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Iron Man</td><td class="n">546</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Callout</td><td class="n">548</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Get Ready 2 Rokk</td><td class="n">551</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Trippolette</td><td class="n">553</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Smoke On The Water</td><td class="n">557</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Crossroads</td><td class="n">560</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">I Wanna Be Sedated</td><td class="n">561</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Story of My Love</td><td class="n">563</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Texas Flood</td><td class="n">563</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Ziggy Stardust</td><td class="n">563</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Callout</td><td class="n">570</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Iron Man</td><td class="n">573</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Heart Full of Black</td><td class="n">576</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Farewell Myth</td><td class="n">582</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Fire It Up</td><td class="n">582</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Ace Of Spades</td><td class="n">584</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Infected</td><td class="n">587</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Godzilla</td><td class="n">588</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Callout</td><td class="n">589</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Sail Your Ship By</td><td class="n">590</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Fat Lip</td><td class="n">592</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Sail Your Ship By</td><td class="n">594</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Ace Of Spades</td><td class="n">595</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Sail Your Ship By</td><td class="n">599</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Decontrol</td><td class="n">604</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Spanish Castle Magic</td><td class="n">604</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Caveman Rejoice</td><td class="n">606</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Sharp Dressed Man</td><td class="n">606</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Caveman Rejoice</td><td class="n">607</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Cochise</td><td class="n">613</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Heart Full of Black</td><td class="n">614</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Symphony Of Destruction</td><td class="n">614</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Thunder Kiss 65</td><td class="n">620</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Trippolette</td><td class="n">620</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Get Ready 2 Rokk</td><td class="n">625</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Hey You</td><td class="n">632</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">More Than A Feeling</td><td class="n">633</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Even Rats</td><td class="n">634</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Fat Lip</td><td class="n">638</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Decontrol</td><td class="n">646</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Cheat on the Church</td><td class="n">647</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Guitar Hero</td><td class="n">648</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Ziggy Stardust</td><td class="n">648</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Farewell Myth</td><td class="n">658</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Symphony Of Destruction</td><td class="n">681</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Infected</td><td class="n">689</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Thunder Kiss 65</td><td class="n">695</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Sharp Dressed Man</td><td class="n">703</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">Cowboys From Hell</td><td class="n">705</td></tr>
+      <tr data-f="platform:ps2 difficulty:easy instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Easy</td><td class="song">No One Knows</td><td class="n">709</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Smoke On The Water</td><td class="n">709</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Get Ready 2 Rokk</td><td class="n">716</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">The Breaking Wheel</td><td class="n">716</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Cochise</td><td class="n">724</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">I Wanna Be Sedated</td><td class="n">725</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">More Than A Feeling</td><td class="n">726</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Cheat on the Church</td><td class="n">736</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Story of My Love</td><td class="n">736</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Story of My Love</td><td class="n">740</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Higher Ground</td><td class="n">742</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Guitar Hero</td><td class="n">758</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Sharp Dressed Man</td><td class="n">759</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Bark At The Moon</td><td class="n">769</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Frankenstein</td><td class="n">776</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">No One Knows</td><td class="n">777</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Crossroads</td><td class="n">784</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Smoke On The Water</td><td class="n">787</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Unsung</td><td class="n">791</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">You Got Another Thing Comin&#x27;</td><td class="n">803</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Take Me Out</td><td class="n">817</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Texas Flood</td><td class="n">825</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">You Got Another Thing Comin&#x27;</td><td class="n">850</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Cheat on the Church</td><td class="n">862</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Even Rats</td><td class="n">869</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Texas Flood</td><td class="n">870</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Take Me Out</td><td class="n">882</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Smoke On The Water</td><td class="n">898</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">No One Knows</td><td class="n">901</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Higher Ground</td><td class="n">902</td></tr>
+      <tr data-f="platform:ps2 difficulty:medium instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Medium</td><td class="song">Cowboys From Hell</td><td class="n">926</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Frankenstein</td><td class="n">933</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Crossroads</td><td class="n">968</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Unsung</td><td class="n">968</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Unsung</td><td class="n">968</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">No One Knows</td><td class="n">972</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Even Rats</td><td class="n">996</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Bark At The Moon</td><td class="n">1025</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Crossroads</td><td class="n">1038</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">The Breaking Wheel</td><td class="n">1171</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Bark At The Moon</td><td class="n">1189</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">The Breaking Wheel</td><td class="n">1291</td></tr>
+      <tr data-f="platform:ps2 difficulty:hard instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Hard</td><td class="song">Cowboys From Hell</td><td class="n">1321</td></tr>
+      <tr data-f="platform:ps2 difficulty:expert instrument:guitar"><td>Guitar Hero</td><td>Guitar</td><td>Expert</td><td class="song">Cowboys From Hell</td><td class="n">1401</td></tr>
+      <tr id="noRows" hidden><td class="empty" colspan="5">No songs match the ticked boxes.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+<footer class="footer">
+  <div class="footer-links">
+    <a class="flink flink-eerie" href="https://eeriegoesd.com" target="_blank" rel="noopener">Made by EERIE</a>
+    <a class="flink" href="https://support.eeriegoesd.com/report-issue/guitar-hero-project" target="_blank" rel="noopener">Report Issue</a>
+    <a class="flink" href="https://support.eeriegoesd.com/community/guitar-hero-project" target="_blank" rel="noopener">Discussions</a>
+    <a class="flink" href="https://support.eeriegoesd.com/suggest-feature/guitar-hero-project" target="_blank" rel="noopener">Suggest Feature</a>
+    <a class="flink flink-coffee" href="https://buymeacoffee.com/eeriegoesd" target="_blank" rel="noopener">&#9749; Support This Project</a>
+  </div>
+</footer>
+<script>
+  // Saves the boxes that are NOT ticked, so options added later start out ticked.
+  const KEY = "guitar-hero-project-filters";
+  let off = new Set();
+  try { off = new Set(JSON.parse(localStorage.getItem(KEY) || "[]")); } catch (err) {}
+  const filters = document.getElementById("filters");
+  const rows = [...document.querySelectorAll("#notesTable tbody tr[data-f]")];
+
+  function draw() {
+    filters.querySelectorAll(".cl-item input").forEach(box => { box.checked = !off.has(box.dataset.id); });
+    filters.querySelectorAll(".cl-group").forEach(group => {
+      const items = [...group.querySelectorAll(".cl-item input")], got = items.filter(b => b.checked).length;
+      const head = group.querySelector(".cl-head input"), count = group.querySelector(".cl-got");
+      head.checked = got === items.length;
+      head.indeterminate = got > 0 && got < items.length;
+      count.textContent = got + " / " + items.length;
+      count.classList.toggle("full", got === items.length);
+    });
+    let shown = 0;
+    rows.forEach(tr => {
+      const hide = tr.dataset.f.split(" ").some(id => off.has(id));
+      tr.hidden = hide;
+      if (!hide) shown++;
+    });
+    document.getElementById("noRows").hidden = shown > 0;
+  }
+
+  filters.addEventListener("change", ev => {
+    const t = ev.target;
+    if (t.dataset.group) {
+      t.closest(".cl-group").querySelectorAll(".cl-item input").forEach(box => {
+        if (t.checked) off.delete(box.dataset.id); else off.add(box.dataset.id);
+      });
+    } else if (t.dataset.id) {
+      if (t.checked) off.delete(t.dataset.id); else off.add(t.dataset.id);
+    } else return;
+    try { localStorage.setItem(KEY, JSON.stringify([...off])); } catch (err) {}
+    draw();
+  });
+  draw();
+</script>
+<div id="cookieBanner" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--panel);border-top:1px solid var(--line);padding:12px 16px;display:none;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;font-size:13px;color:var(--muted);"><span>Cookies for traffic analytics. <a href="/privacy/" style="color:var(--accent);">Learn more</a></span><span style="display:flex;gap:8px;"><button class="btn" onclick="acceptCookies()">Accept</button><button class="btn" onclick="rejectCookies()">Decline</button></span></div>
+<script>
+  try {
+    var c = localStorage.getItem('cookie-consent');
+    if (!c) document.getElementById('cookieBanner').style.display = 'flex';
+    else if (c === 'accepted') initGtag()
+  } catch (e) {
+    document.getElementById('cookieBanner').style.display = 'flex'
+  }
+</script>
+</body>
+</html>
