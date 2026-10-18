@@ -130,6 +130,14 @@
   td.song { white-space: normal; }
   th.n, td.n { text-align: right; }
   th.c, td.c { text-align: center; }
+  th button.sort { all: unset; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; }
+  th button.sort:hover { color: var(--text); }
+  th button.sort:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+  th .arrow { font-size: 10px; opacity: 0.5; }
+  th .arrow::after { content: "\2195"; }
+  th[aria-sort=ascending] .arrow, th[aria-sort=descending] .arrow { color: var(--accent); opacity: 1; }
+  th[aria-sort=ascending] .arrow::after { content: "\25B2"; }
+  th[aria-sort=descending] .arrow::after { content: "\25BC"; }
   td.c input { vertical-align: middle; }
   th { position: sticky; top: 0; background: var(--panel); color: var(--muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
   tbody tr:last-child td { border-bottom: 0; }
@@ -187,7 +195,7 @@
   <div id="filters"><div class="cl-group"><label class="cl-head"><input type="checkbox" data-group="game" checked><span class="cl-name">Game</span><span class="cl-got full">3 / 3</span></label><div class="cl-items"><label class="cl-item"><input type="checkbox" data-id="game:guitar-hero" checked><span class="cl-text">Guitar Hero</span></label><label class="cl-item"><input type="checkbox" data-id="game:guitar-hero-ii" checked><span class="cl-text">Guitar Hero II</span></label><label class="cl-item"><input type="checkbox" data-id="game:guitar-hero-encore-rocks-the-80s" checked><span class="cl-text">Guitar Hero Encore: Rocks the 80s</span></label></div></div><div class="cl-group"><label class="cl-head"><input type="checkbox" data-group="platform" checked><span class="cl-name">Platform</span><span class="cl-got full">2 / 2</span></label><div class="cl-items"><label class="cl-item"><input type="checkbox" data-id="platform:ps2" checked><span class="cl-text">PS2</span></label><label class="cl-item"><input type="checkbox" data-id="platform:360" checked><span class="cl-text">360</span></label></div></div><div class="cl-group"><label class="cl-head"><input type="checkbox" data-group="difficulty" checked><span class="cl-name">Difficulty</span><span class="cl-got full">4 / 4</span></label><div class="cl-items"><label class="cl-item"><input type="checkbox" data-id="difficulty:easy" checked><span class="cl-text">Easy</span></label><label class="cl-item"><input type="checkbox" data-id="difficulty:medium" checked><span class="cl-text">Medium</span></label><label class="cl-item"><input type="checkbox" data-id="difficulty:hard" checked><span class="cl-text">Hard</span></label><label class="cl-item"><input type="checkbox" data-id="difficulty:expert" checked><span class="cl-text">Expert</span></label></div></div><div class="cl-group"><label class="cl-head"><input type="checkbox" data-group="instrument" checked><span class="cl-name">Instrument</span><span class="cl-got full">1 / 1</span></label><div class="cl-items"><label class="cl-item"><input type="checkbox" data-id="instrument:guitar" checked><span class="cl-text">Guitar</span></label></div></div></div>
   <div class="scroll">
     <table id="notesTable">
-      <thead><tr><th class="n">#</th><th>Game</th><th>Platform</th><th>Instrument</th><th>Difficulty</th><th>Song</th><th>Venue</th><th class="n">Total Notes</th><th class="c">100%</th></tr></thead>
+      <thead><tr><th class="n">#</th><th class="" data-sort="game" aria-sort="none"><button type="button" class="sort">Game<span class="arrow" aria-hidden="true"></span></button></th><th class="" data-sort="platform" aria-sort="none"><button type="button" class="sort">Platform<span class="arrow" aria-hidden="true"></span></button></th><th class="" data-sort="instrument" aria-sort="none"><button type="button" class="sort">Instrument<span class="arrow" aria-hidden="true"></span></button></th><th class="" data-sort="difficulty" aria-sort="none"><button type="button" class="sort">Difficulty<span class="arrow" aria-hidden="true"></span></button></th><th class="" data-sort="song" aria-sort="none"><button type="button" class="sort">Song<span class="arrow" aria-hidden="true"></span></button></th><th class="" data-sort="venue" aria-sort="none"><button type="button" class="sort">Venue<span class="arrow" aria-hidden="true"></span></button></th><th class="n" data-sort="notes" aria-sort="none"><button type="button" class="sort">Total Notes<span class="arrow" aria-hidden="true"></span></button></th><th class="c" data-sort="done" aria-sort="none"><button type="button" class="sort">100%<span class="arrow" aria-hidden="true"></span></button></th></tr></thead>
       <tbody>
       <tr data-f="game:guitar-hero-encore-rocks-the-80s platform:ps2 difficulty:easy instrument:guitar"><td class="n">1</td><td>Guitar Hero Encore: Rocks the 80s</td><td>PS2</td><td>Guitar</td><td>Easy</td><td class="song">Because, It&#x27;s Midnite</td><td class="song">The Rat Cellar</td><td class="n">130</td><td class="c"><input type="checkbox" data-done="sh-1008" aria-label="100% on Because, It&#x27;s Midnite Easy"></td></tr>
       <tr data-f="game:guitar-hero-encore-rocks-the-80s platform:ps2 difficulty:easy instrument:guitar"><td class="n">2</td><td>Guitar Hero Encore: Rocks the 80s</td><td>PS2</td><td>Guitar</td><td>Easy</td><td class="song">Shakin&#x27;</td><td class="song">The Rat Cellar</td><td class="n">174</td><td class="c"><input type="checkbox" data-done="sh-993" aria-label="100% on Shakin&#x27; Easy"></td></tr>
@@ -1139,7 +1147,7 @@
       count.classList.toggle("full", got === items.length);
     });
     let shown = 0;
-    rows.forEach(tr => {
+    order.forEach(tr => {
       const hide = tr.dataset.f.split(" ").some(id => off.has(id));
       tr.hidden = hide;
       if (!hide) tr.firstElementChild.textContent = ++shown;
@@ -1168,6 +1176,45 @@
     try { localStorage.setItem(KEY, JSON.stringify([...off])); } catch (err) {}
     draw();
   });
+
+  // Column sorting: the first click sorts up (A-Z, fewest notes, ticked first), the next click reverses.
+  // Ties keep the default order, fewest notes first.
+  const SORT_KEY = "guitar-hero-project-sort";
+  const GAME_ORDER = ["Guitar Hero", "Guitar Hero II", "Guitar Hero Encore: Rocks the 80s"], DIFF_ORDER = ["Easy", "Medium", "Hard", "Expert"];
+  const COL = { game: 1, platform: 2, instrument: 3, difficulty: 4, song: 5, venue: 6, notes: 7 };
+  const tbody = document.querySelector("#notesTable tbody"), noRows = document.getElementById("noRows");
+  const heads = [...document.querySelectorAll("#notesTable th[data-sort]")];
+  let order = rows;
+  let sort = { key: "notes", dir: 1 };
+  try {
+    const saved = JSON.parse(localStorage.getItem(SORT_KEY));
+    if (saved && heads.some(th => th.dataset.sort === saved.key) && Math.abs(saved.dir) === 1) sort = saved;
+  } catch (err) {}
+
+  function sortValue(tr, key) {
+    if (key === "done") return tr.querySelector("[data-done]").checked ? 0 : 1;
+    const text = tr.children[COL[key]].textContent;
+    if (key === "notes") return +text;
+    if (key === "difficulty") return DIFF_ORDER.indexOf(text);
+    if (key === "game") return GAME_ORDER.indexOf(text);
+    return text.toLowerCase();
+  }
+
+  function applySort() {
+    order = rows.map((tr, i) => [sortValue(tr, sort.key), i, tr])
+      .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0) * sort.dir || a[1] - b[1])
+      .map(x => x[2]);
+    order.forEach(tr => tbody.insertBefore(tr, noRows));
+    heads.forEach(th => th.setAttribute("aria-sort", th.dataset.sort !== sort.key ? "none" : sort.dir === 1 ? "ascending" : "descending"));
+  }
+
+  heads.forEach(th => th.querySelector("button").addEventListener("click", () => {
+    sort = { key: th.dataset.sort, dir: sort.key === th.dataset.sort ? -sort.dir : 1 };
+    try { localStorage.setItem(SORT_KEY, JSON.stringify(sort)); } catch (err) {}
+    applySort();
+    draw();
+  }));
+  applySort();
 
   // Items in a group share one width: 112px, or the longest label in that group.
   filters.querySelectorAll(".cl-items").forEach(group => {
