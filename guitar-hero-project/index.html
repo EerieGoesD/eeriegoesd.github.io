@@ -131,6 +131,7 @@
   th.n, td.n { text-align: right; }
   th { position: sticky; top: 0; background: var(--panel); color: var(--muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
   tbody tr:last-child td { border-bottom: 0; }
+  th:not(:last-child), td:not(:last-child) { border-right: 1px solid var(--line); }
   tbody tr:hover td { background: rgba(255, 255, 255, 0.03); }
   td.empty { color: var(--muted); text-align: center; white-space: normal; }
   .btn { width: 120px; height: 36px; padding: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--text); font: inherit; font-weight: 600; cursor: pointer; }
