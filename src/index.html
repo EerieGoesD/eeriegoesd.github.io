@@ -439,6 +439,7 @@
 
     .sub-categories .gaming-toggle .gt-btn {
       flex: 1;
+      min-width: 0;
       padding: 6px 0;
       text-align: center;
       white-space: nowrap;
@@ -462,6 +463,13 @@
       color: rgb(var(--accent2-rgb));
       border-color: rgb(var(--accent2-rgb));
       text-shadow: 0 0 8px rgba(var(--accent2-rgb),.4)
+    }
+
+    /* On small phones "Mods/Patches" only fits its equal share without the letter spacing. */
+    @media(max-width:360px) {
+      .sub-categories .gaming-toggle .gt-btn {
+        letter-spacing: 0
+      }
     }
 
     .sub-categories .app-item {
@@ -1894,7 +1902,7 @@
           tg.classList.add("gaming-toggle");
           [
             ["guide", "Guides"],
-            ["mod", "Mods"],
+            ["mod", "Mods/Patches"],
             ["steamdeck", "Steam Deck"]
           ].forEach(([val, lab]) => {
             const bt = document.createElement("button");
