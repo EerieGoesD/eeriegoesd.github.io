@@ -4067,14 +4067,14 @@
     {
       "categoryKey": "videogame-guides",
       "category": "Pro Evolution Soccer 5 (PS2)",
-      "name": "Optimal Formation",
+      "name": "Optimal Squad",
       "type": "mod",
       "link": "",
-      "tooltip": "Adds Optimal Formation to the formation screen menu, on the PS2 version played in PCSX2. One press sets the formation and starting eleven with the highest total Overall, using only players who can play each position.",
+      "tooltip": "Adds Optimal Squad to the formation screen menu, on the PS2 version played in PCSX2. It picks the best starting eleven, using only players who can play each position.\n\n- Optimal Ability: highest total Overall\n- Optimal Condition: players in the best form first\n- Both: Overall after form, as the match uses it\n- Keep Formation: change only the players, or let it pick the formation too",
       "googleplay": "",
       "macos": "",
       "microsoft": "",
-      "github": "https://github.com/EerieGoesD/eerie-mods/tree/main/pes5/OptimalFormation",
+      "github": "https://github.com/EerieGoesD/eerie-mods/tree/main/pes5/OptimalSquad",
       "chrome": "",
       "steam": "",
       "steamworkshop": "",
@@ -4093,8 +4093,8 @@
       "youtube": "",
       "store": "",
       "google-drive": "",
-      "report": "https://tally.so/r/PdW0bV?app=Optimal%20Formation",
-      "suggest": "https://tally.so/r/WOk0BJ?app=Optimal%20Formation"
+      "report": "https://tally.so/r/PdW0bV?app=Optimal%20Squad",
+      "suggest": "https://tally.so/r/WOk0BJ?app=Optimal%20Squad"
     },
     {
       "categoryKey": "videogame-guides",
