@@ -392,7 +392,7 @@
       "link": "",
       "tooltip": "Plug-and-play file transfer tool that sends files from your PC to a Steam Deck over Ethernet or Wi-Fi via SFTP/SCP. Features auto-detection, folder browsing, real-time progress, and file conflict handling.",
       "googleplay": "",
-      "macos": "",
+      "macos": "https://apps.apple.com/us/app/deck-transfer/id6823441345?mt=12",
       "microsoft": "https://apps.microsoft.com/detail/9NRZ0CVFG1H8?hl=en-us&gl=PT&ocid=pdpshare",
       "github": "",
       "chrome": "",
