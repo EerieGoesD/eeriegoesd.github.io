@@ -61,6 +61,10 @@
     trashBig: svg('<path d="M4 7h16"/><path d="M10 11v6M14 11v6"/><path d="M6 7l1 13h10l1-13"/><path d="M9 7V4h6v3"/>', 24),
     close: svg('<path d="M7 7l10 10M17 7L7 17"/>', 18, ' stroke-width="2.5"'),
     up: svg('<path d="M6 15l6-6 6 6"/>', 14),
+    back: svg('<path d="M15 5l-7 7 7 7"/>', 20, ' stroke-width="2.4"'),
+    chev: svg('<path d="M9 5l7 7-7 7"/>', 14, ' stroke-width="2.4"'),
+    grip: svg('<path d="M5 8h14M5 12h14M5 16h14"/>', 18, ' stroke-width="2"'),
+    repeat: svg('<path d="M4 11V9.5A3.5 3.5 0 0 1 7.5 6H19"/><path d="M16 3l3 3-3 3"/><path d="M20 13v1.5a3.5 3.5 0 0 1-3.5 3.5H5"/><path d="M8 21l-3-3 3-3"/>', 16, ' stroke-width="2"'),
     down: svg('<path d="M6 9l6 6 6-6"/>', 14),
     tick: svg('<path d="M5 12.5l4.5 4.5L19 7.5"/>', 14, ' stroke-width="2.6"'),
     sound: svg('<path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/>', 15),
@@ -826,6 +830,16 @@
     if (m.textContent !== text) m.textContent = text;
   }
 
+  // Cards ease in one after another when a board (or its view) first shows,
+  // and a timer just added eases in on its own. Redraws in between stay still.
+  let deckShown = "";
+  const enterIds = new Set();
+  function easeIn(node, k) {
+    node.style.setProperty("--i", String(Math.min(k, 12)));
+    node.classList.add("card-in");
+    node.addEventListener("animationend", () => node.classList.remove("card-in"), { once: true });
+  }
+
   function renderDeck() {
     const locked = WEB && !cloud.code;
     document.body.classList.toggle("web-locked", locked);
@@ -858,6 +872,14 @@
       return;
     }
     deck.replaceChildren(...ids.map((id) => card(state.els[id], b.view)));
+    const key = b.id + ":" + b.view;
+    const fresh = deckShown !== key;
+    deckShown = key;
+    [...deck.children].forEach((c, k) => {
+      if (fresh) easeIn(c, k);
+      else if (enterIds.has(c.dataset.id)) easeIn(c, 0);
+    });
+    enterIds.clear();
     updateFaces(Date.now());
   }
 
@@ -1291,6 +1313,55 @@
     ];
   }
 
+  // The red row that ends a sheet, as Delete Alarm ends one in Apple's Clock.
+  function deleteRow(label, onClick) {
+    return group(null, h("div", { class: "row tap danger center", role: "button", tabindex: "0", onclick: onClick,
+      onkeydown: (e) => { if (e.key === "Enter") onClick(); } }, h("div", { class: "row-label", text: label })));
+  }
+  const nounOf = (el) => (el.type === "clock" ? "Clock" : el.type === "counter" ? "Counter" : "Timer");
+
+  // A page pushed inside the open sheet, as in an iOS navigation stack: the
+  // sheet's own content waits untouched underneath and slides back with Back.
+  // Returns the function that goes back.
+  function pushSheetPage(title, nodes, onBack) {
+    const saved = [...sheet.childNodes];
+    const top = sheet.scrollTop;
+    const seq = closeSeq;
+    let gone = false;
+    const back = () => {
+      if (gone || seq !== closeSeq || overlay.hidden) return;
+      gone = true;
+      if (onBack) onBack();
+      sheet.replaceChildren(...saved);
+      sheet.scrollTop = top;
+      for (const n of saved) if (n.classList && !n.classList.contains("sheet-handle")) n.classList.add("page-return");
+      setTimeout(() => { for (const n of saved) if (n.classList) n.classList.remove("page-return"); }, 420);
+    };
+    sheet.replaceChildren(h("div", { class: "sheet-handle" }),
+      h("div", { class: "sheet-page" },
+        h("div", { class: "sheet-head page-head" },
+          h("button", { class: "sheet-close page-back", type: "button", title: "Back", "aria-label": "Back", html: I.back, onclick: back }),
+          h("div", { class: "page-title", text: title }),
+          h("div", { class: "page-head-end" })),
+        ...nodes.flat().filter(Boolean)));
+    sheet.scrollTop = 0;
+    return back;
+  }
+
+  // A minus and plus pair around a number, as in the iOS stepper.
+  function stepper(value, min, max, label, onChange) {
+    let v = Math.max(min, Math.min(max, Number(value) || min));
+    const out = h("span", { class: "stepper-val", "aria-live": "polite" });
+    const minus = h("button", { class: "stepper-btn", type: "button", "aria-label": "Less", html: I.minus });
+    const plus = h("button", { class: "stepper-btn", type: "button", "aria-label": "More", html: I.plus });
+    const paint = () => { out.textContent = String(v); minus.disabled = v <= min; plus.disabled = v >= max; };
+    const set = (n) => { v = Math.max(min, Math.min(max, n)); paint(); onChange(v); out.classList.remove("bump"); void out.offsetWidth; out.classList.add("bump"); };
+    minus.addEventListener("click", () => set(v - 1));
+    plus.addEventListener("click", () => set(v + 1));
+    paint();
+    return h("div", { class: "stepper", role: "group", "aria-label": label }, minus, out, plus);
+  }
+
   // Small question on top of everything else.
   const dialogOverlay = $("#dialogOverlay");
   const dialogBox = $("#dialog");
@@ -1690,14 +1761,15 @@
           break;
         }
         case "interval": {
+          // The intervals come first: they are what this timer is.
+          const err = errLine();
+          checks.push(() => (E.steps({ cfg: draft }).length ? true : (showErrLine(err, "Add at least one interval with a time above zero."), false)));
+          out.push(intervalEditor(draft), err);
           out.push(group("Running",
-            switchRow("Pause between intervals", "Waits for you after each interval.", draft.pauseBetween, (v) => { draft.pauseBetween = v; }),
+            switchRow("Pause between intervals", "Waits for you to continue after each interval.", draft.pauseBetween, (v) => { draft.pauseBetween = v; }),
             switchRow("Autocompletion", "Resets by itself once the last interval ends.", draft.autoReset, (v) => { draft.autoReset = v; }),
             selectRow("Extra info", "Shown under the time.", EXTRA.interval, draft.extra, (v) => { draft.extra = v; }),
             selectRow("Units of time", null, UNITS, draft.units, (v) => { draft.units = v; redraw(); })));
-          const err = errLine();
-          checks.push(() => (E.steps({ cfg: draft }).length ? true : (showErrLine(err, "Add at least one interval with a time above zero."), false)));
-          out.push(h("div", { class: "group-title", text: "Intervals" }), intervalEditor(draft), err);
           out.push(addButtonsGroup(draft));
           out.push(noteGroup(draft));
           break;
@@ -1802,6 +1874,7 @@
       if (type === "counter") el.value = Number(draft.initial) || 0;
       state.els[el.id] = el;
       board().items.push(el.id);
+      enterIds.add(el.id);
       // A new timer starts running as soon as it is added.
       if (E.runnable(el)) E.start(el, Date.now(), type === "quick" ? { dur: el.cfg.last } : undefined);
       closeSheet();
@@ -1810,67 +1883,190 @@
     }
 
     redraw();
-    const actions = h("div", { class: "sheet-actions" },
-      existing ? h("button", { class: "btn btn-danger", type: "button", text: "Delete", onclick: async () => { if (await askDelete(existing.id)) closeSheet(); } }) : null,
-      h("div", { class: "spacer" }),
-      h("button", { class: "btn", type: "button", text: "Cancel", onclick: closeSheet }),
-      h("button", { class: "btn btn-accent", type: "button", text: existing ? "Save" : "Add", onclick: save }));
-    openSheet([sheetHead(existing ? "Change " + nameOf(existing) : "New " + E.TYPES[type].label.toLowerCase(), E.TYPES[type].desc), body, actions], { kind: "editor" });
+    // Close on the left cancels; Add or Save sits on the right of the same bar.
+    const saveBtn = h("button", { class: "head-btn accent", type: "button", text: existing ? "Save" : "Add", onclick: save });
+    openSheet([
+      sheetHead(existing ? "Edit " + nameOf(existing) : "New " + E.TYPES[type].label.toLowerCase(), E.TYPES[type].desc, saveBtn),
+      body,
+      existing ? deleteRow("Delete " + nounOf(existing), async () => { if (await askDelete(existing.id)) closeSheet(); }) : null,
+    ], { kind: "editor" });
     if (!existing && !isIOS) setTimeout(() => nameIn.focus(), 30);
   }
 
-  // Intervals and groups of intervals, each group repeated as a whole.
+  // Intervals as a plain list, as in Apple's Workout builder and the popular
+  // interval apps: a row shows the name and its time, and tapping it opens the
+  // interval on a page of its own. Edit shows handles to drag rows into a new
+  // order and buttons to remove them.
   function intervalEditor(draft) {
-    const wrap = h("div", { class: "group" });
-    const newInterval = () => ({ kind: "interval", id: E.uid(), name: "", dur: { s: 30 }, sound: "beep", repeat: 1, note: "" });
-    const moveTools = (arr, k, redrawAll) => [
-      ctlBtn(I.up, "Move up", () => { if (k > 0) { [arr[k - 1], arr[k]] = [arr[k], arr[k - 1]]; redrawAll(); } }, "ghost"),
-      ctlBtn(I.down, "Move down", () => { if (k < arr.length - 1) { [arr[k + 1], arr[k]] = [arr[k], arr[k + 1]]; redrawAll(); } }, "ghost"),
-      ctlBtn(I.trash, "Remove", () => { arr.splice(k, 1); redrawAll(); }, "ghost danger"),
-    ];
-    const intervalNode = (it, arr, k, redrawAll) => {
-      const name = h("input", { class: "text-in grow", type: "text", value: it.name, placeholder: "Name, like Work or Rest", maxlength: "40", "aria-label": "Interval name" });
+    let editing = false;
+    let enterId = null;
+    const box = h("div", { class: "iv" });
+    const soundName = (v) => { const s = SOUNDS.find((x) => x[0] === v); return s ? s[1] : "Chime"; };
+    const newInterval = (name, dur) => ({ kind: "interval", id: E.uid(), name: name || "", dur: dur || { s: 30 }, sound: "beep", repeat: 1, note: "" });
+    const timeText = (d) => (E.isZero(d) ? "No time" : E.describe(d));
+
+    const removeBtn = (arr, it, node) => h("button", { class: "iv-remove", type: "button", "aria-label": "Remove " + (it.name || "interval"), html: I.minus,
+      onclick: (e) => {
+        e.stopPropagation();
+        node.classList.add("iv-leave");
+        setTimeout(() => { const k = arr.indexOf(it); if (k >= 0) arr.splice(k, 1); draw(); }, 180);
+      } });
+    const grip = (arr, node) => {
+      const g = h("span", { class: "iv-grip", "aria-hidden": "true", html: I.grip });
+      g.addEventListener("pointerdown", (e) => dragRow(e, g, node, arr));
+      return g;
+    };
+    const tail = (arr, node) => (editing ? grip(arr, node) : h("span", { class: "iv-chev", "aria-hidden": "true", html: I.chev }));
+    const tapRowOf = (node, open) => {
+      node.addEventListener("click", () => { if (!editing) open(); });
+      node.addEventListener("keydown", (e) => { if (e.key === "Enter" && !editing) open(); });
+    };
+
+    const intervalRow = (it, arr, child) => {
+      const sub = [it.sound === "none" ? "No sound" : soundName(it.sound)];
+      if ((it.repeat || 1) > 1) sub.push(it.repeat + " times");
+      const node = h("div", { class: "iv-row" + (child ? " child" : "") + (it.id === enterId ? " iv-enter" : ""), role: "button", tabindex: editing ? "-1" : "0", "data-id": it.id });
+      node.append(...[
+        editing ? removeBtn(arr, it, node) : null,
+        h("span", { class: "iv-dot", "aria-hidden": "true" }),
+        h("div", { class: "iv-text" }, h("div", { class: "iv-name", text: it.name || "Interval" }), h("div", { class: "iv-sub", text: sub.join(" · ") })),
+        h("div", { class: "iv-time", text: timeText(it.dur) }),
+        tail(arr, node)].filter(Boolean));
+      tapRowOf(node, () => openInterval(it, arr, false));
+      return node;
+    };
+    const addRow = (label, onClick, child) => h("button", { class: "iv-add" + (child ? " child" : ""), type: "button", onclick: onClick },
+      h("span", { class: "iv-add-icon", "aria-hidden": "true", html: I.plus }), h("span", { text: label }));
+
+    const groupBlock = (g) => {
+      const block = h("div", { class: "iv-groupbox" + (g.id === enterId ? " iv-enter" : ""), "data-id": g.id });
+      const n = g.items.length;
+      const head = h("div", { class: "iv-row iv-ghead", role: "button", tabindex: editing ? "-1" : "0" },
+        editing ? removeBtn(draft.items, g, block) : null,
+        h("span", { class: "iv-gicon", "aria-hidden": "true", html: I.repeat }),
+        h("div", { class: "iv-text" }, h("div", { class: "iv-name", text: g.name || "Group" }), h("div", { class: "iv-sub", text: n === 1 ? "1 interval" : n + " intervals" })),
+        h("div", { class: "iv-time", text: (g.repeat || 1) === 1 ? "Once" : (g.repeat || 1) + " times" }),
+        tail(draft.items, block));
+      tapRowOf(head, () => openGroup(g));
+      block.append(head, ...g.items.map((c) => intervalRow(c, g.items, true)));
+      if (!editing) block.append(addRow("Add Interval", () => addInterval(g.items), true));
+      return block;
+    };
+
+    const summary = () => {
+      const steps = E.steps({ cfg: draft });
+      if (!steps.length) return "No interval has a time yet.";
+      const total = steps.reduce((t, s) => t + s.ms, 0);
+      return (steps.length === 1 ? "1 interval" : steps.length + " intervals") + " · " + E.describe(E.fromMs(total, "dhms")) + " in all";
+    };
+
+    function draw() {
+      const editBtn = h("button", { class: "iv-edit", type: "button", text: editing ? "Done" : "Edit",
+        onclick: () => { editing = !editing; draw(); } });
+      const list = h("div", { class: "group iv-list" + (editing ? " editing" : "") },
+        draft.items.map((it) => (it.kind === "group" ? groupBlock(it) : intervalRow(it, draft.items, false))),
+        editing ? null : addRow("Add Interval", () => addInterval(draft.items)),
+        editing ? null : addRow("Add Group", addGroup));
+      box.replaceChildren(
+        h("div", { class: "iv-title" }, h("div", { class: "group-title", text: "Intervals" }), draft.items.length ? editBtn : null),
+        list,
+        h("div", { class: "iv-summary", text: summary() }));
+      enterId = null;
+    }
+
+    function addInterval(arr) {
+      const it = newInterval("", { s: 30 });
+      arr.push(it);
+      enterId = it.id;
+      openInterval(it, arr, true);
+    }
+    function addGroup() {
+      const g = { kind: "group", id: E.uid(), name: "Rounds", repeat: 3, items: [newInterval("Work", { s: 30 }), newInterval("Rest", { s: 10 })] };
+      draft.items.push(g);
+      enterId = g.id;
+      draw();
+    }
+
+    // One interval on its own page: name, time, the sound at its end, repeats, note.
+    function openInterval(it, arr, isNew) {
+      const name = h("input", { class: "text-in", type: "text", value: it.name, placeholder: "Work, Rest, Morning...", maxlength: "40", "aria-label": "Interval name" });
       name.addEventListener("input", () => { it.name = name.value; });
       const d = durInput(draft.units, it.dur, (v) => { it.dur = v; });
-      const note = h("input", { class: "text-in grow", type: "text", value: it.note, placeholder: "Note", maxlength: "120", "aria-label": "Interval note" });
+      const note = h("input", { class: "text-in", type: "text", value: it.note, placeholder: "Shown while it runs", maxlength: "120", "aria-label": "Interval note" });
       note.addEventListener("input", () => { it.note = note.value; });
-      return h("div", { class: "iv-item" },
-        h("div", { class: "iv-line" }, name, h("div", { class: "iv-tools" }, moveTools(arr, k, redrawAll))),
-        d.node,
-        h("div", { class: "iv-line wrap" },
-          h("span", { class: "iv-meta", text: "Sound at the end" }), soundSelect(it.sound, (v) => { it.sound = v; }),
-          h("div", { class: "grow" }),
-          h("span", { class: "iv-meta", text: "Repeat" }),
-          h("div", { style: "width:64px;flex:0 0 auto" }, numberIn(it.repeat, (v) => { it.repeat = Math.max(1, Math.min(99, v || 1)); }, { label: "Repeat" }))),
-        h("div", { class: "iv-line" }, note));
-    };
-    const draw = () => {
-      wrap.replaceChildren();
-      draft.items.forEach((it, k) => {
-        if (it.kind === "group") {
-          const gname = h("input", { class: "text-in grow", type: "text", value: it.name, placeholder: "Group name, like Rounds", maxlength: "40", "aria-label": "Group name" });
-          gname.addEventListener("input", () => { it.name = gname.value; });
-          const kids = h("div", { class: "iv-children" });
-          it.items.forEach((child, j) => kids.append(intervalNode(child, it.items, j, draw)));
-          kids.append(h("div", { class: "stack" }, h("div", { class: "add-row one" },
-            h("button", { class: "btn", type: "button", text: "Add Interval to Group", onclick: () => { it.items.push(newInterval()); draw(); } }))));
-          wrap.append(h("div", { class: "iv-item iv-group" },
-            h("div", { class: "iv-line" }, gname, h("div", { class: "iv-tools" }, moveTools(draft.items, k, draw))),
-            h("div", { class: "iv-line" },
-              h("span", { class: "iv-meta", text: "Repeat the whole group" }), h("div", { class: "grow" }),
-              h("div", { style: "width:64px" }, numberIn(it.repeat, (v) => { it.repeat = Math.max(1, Math.min(99, v || 1)); }, { label: "Group repeat" })),
-              h("span", { class: "iv-meta", text: "times" })),
-            kids));
-        } else {
-          wrap.append(intervalNode(it, draft.items, k, draw));
-        }
-      });
-      wrap.append(h("div", { class: "stack" }, h("div", { class: "add-row" },
-        h("button", { class: "btn", type: "button", text: "Add Interval", onclick: () => { draft.items.push(newInterval()); draw(); } }),
-        h("button", { class: "btn", type: "button", text: "Add Group", onclick: () => { draft.items.push({ kind: "group", id: E.uid(), name: "", repeat: 3, items: [newInterval()] }); draw(); } }))));
-    };
+      const back = pushSheetPage(isNew ? "New Interval" : it.name || "Interval", [
+        h("div", { class: "field" }, h("div", { class: "field-label", text: "Name" }), name),
+        group("Time", h("div", { class: "stack" }, d.node)),
+        group("At the end",
+          row("Sound", null, soundSelect(it.sound, (v) => { it.sound = v; })),
+          row("Repeat", "Runs this interval more than once in a row.", stepper(it.repeat || 1, 1, 99, "Repeat", (v) => { it.repeat = v; }))),
+        h("div", { class: "field" }, h("div", { class: "field-label", text: "Note" }), note),
+        group(null, h("div", { class: "row tap danger", role: "button", tabindex: "0",
+          onclick: () => { const k = arr.indexOf(it); if (k >= 0) arr.splice(k, 1); back(); } },
+        h("div", { class: "row-label", text: "Delete Interval" }))),
+      ], draw);
+      if (isNew && !isIOS) setTimeout(() => name.focus(), 60);
+    }
+
+    // A group: its name and how many times it runs. Its intervals stay in the list.
+    function openGroup(g) {
+      const name = h("input", { class: "text-in", type: "text", value: g.name, placeholder: "Rounds", maxlength: "40", "aria-label": "Group name" });
+      name.addEventListener("input", () => { g.name = name.value; });
+      const back = pushSheetPage(g.name || "Group", [
+        h("div", { class: "field" }, h("div", { class: "field-label", text: "Name" }), name),
+        group(null, row("Repeat", "How many times the whole group runs.", stepper(g.repeat || 1, 1, 99, "Repeat", (v) => { g.repeat = v; }))),
+        group(null, h("div", { class: "row tap danger", role: "button", tabindex: "0",
+          onclick: () => { const k = draft.items.indexOf(g); if (k >= 0) draft.items.splice(k, 1); back(); } },
+        h("div", { class: "row-label", text: "Delete Group" }))),
+      ], draw);
+    }
+
+    // Dragging a row by its handle: the others slide out of the way, and the
+    // order is kept when the finger lifts.
+    function dragRow(e, handle, node, arr) {
+      e.preventDefault();
+      e.stopPropagation();
+      const parent = node.parentElement;
+      const rows = [...parent.children].filter((c) => c.dataset.id);
+      const from = rows.indexOf(node);
+      if (from < 0) return;
+      const rects = rows.map((r) => r.getBoundingClientRect());
+      const hgt = rects[from].height;
+      const startY = e.clientY;
+      let to = from;
+      node.classList.add("iv-dragging");
+      try { handle.setPointerCapture(e.pointerId); } catch {}
+      const move = (ev) => {
+        const dy = Math.max(rects[0].top - rects[from].top - 8, Math.min(rects[rows.length - 1].bottom - rects[from].bottom + 8, ev.clientY - startY));
+        node.style.transform = `translateY(${dy}px)`;
+        // A row moves aside once the dragged row's edge passes its middle.
+        const top = rects[from].top + dy;
+        const bottom = rects[from].bottom + dy;
+        to = from;
+        rows.forEach((r, k) => {
+          if (k === from) return;
+          const c = rects[k].top + rects[k].height / 2;
+          let shift = 0;
+          if (k > from && bottom > c) { shift = -hgt; to = Math.max(to, k); }
+          if (k < from && top < c) { shift = hgt; to = Math.min(to, k); }
+          r.style.transform = shift ? `translateY(${shift}px)` : "";
+        });
+      };
+      const up = () => {
+        handle.removeEventListener("pointermove", move);
+        handle.removeEventListener("pointerup", up);
+        handle.removeEventListener("pointercancel", up);
+        const [it] = arr.splice(from, 1);
+        arr.splice(to, 0, it);
+        draw();
+      };
+      handle.addEventListener("pointermove", move);
+      handle.addEventListener("pointerup", up);
+      handle.addEventListener("pointercancel", up);
+    }
+
     draw();
-    return wrap;
+    return box;
   }
 
   // ------------------------------------------------ quick timer: set a time
@@ -1997,12 +2193,14 @@
     const hist = h("div", { class: "sheet-part" });
     const note = (el.cfg.note || "").trim();
     openSheet([
-      sheetHead(nameOf(el), E.TYPES[el.type].label, h("div", { class: "head-group" },
-        h("button", { class: "sheet-close", type: "button", title: "Change", "aria-label": "Change", html: I.edit, onclick: () => openEditor(el.type, el.id) }),
-        h("button", { class: "sheet-close danger", type: "button", title: "Delete", "aria-label": "Delete", html: I.trash, onclick: () => askDelete(el.id) }))),
+      // As in Apple's own apps: Close on the left, Edit on the right, and the
+      // destructive action last, at the bottom of the sheet.
+      sheetHead(nameOf(el), E.TYPES[el.type].label,
+        h("button", { class: "head-btn", type: "button", text: "Edit", onclick: () => openEditor(el.type, el.id) })),
       face, ctls, adds, facts,
       note ? group("Note", h("div", { class: "note-box", text: note })) : null,
       laps, hist,
+      deleteRow("Delete " + nounOf(el), () => askDelete(el.id)),
     ], { kind: "detail", id });
     detail = { el, kind: "detail", time, sub, name: null, ring: ring && ring.querySelector(".bar"), dial, ctls, adds, facts, laps, hist, root: face, st: null, acts: null, factKeys: "", lapsKey: "", histKey: "" };
     paintDetail(Date.now());
@@ -2063,10 +2261,7 @@
     if (E.runnable(el) && d.histKey !== hkey) {
       d.histKey = hkey;
       const fmt = el.type === "stopwatch" ? E.fmtStopwatch : E.fmtElapsed;
-      const clear = el.hist.length
-        ? group(null, h("div", { class: "row tap danger", role: "button", tabindex: "0", onclick: () => askClearHistory(el),
-          onkeydown: (e) => { if (e.key === "Enter") askClearHistory(el); } }, h("div", { class: "row-label", text: "Remove History" })))
-        : [];
+      const clear = el.hist.length ? deleteRow("Remove History", () => askClearHistory(el)) : [];
       d.hist.replaceChildren(...group("History", el.hist.length
         ? el.hist.slice(0, 12).map((x) => h("div", { class: "fact" }, h("span", { text: E.fmtTime(x.start, now) }), h("span", { text: `${fmt(x.ms)} · ${x.result}` })))
         : h("div", { class: "list-empty", text: "Every run shows up here once it ends." })), ...clear.filter(Boolean));
