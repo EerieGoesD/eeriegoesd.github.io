@@ -629,6 +629,9 @@
   function audio() {
     const C = window.AudioContext || window.webkitAudioContext;
     if (!C) return null;
+    // On iPhone and iPad the page's sounds follow the silent switch unless
+    // they are marked as playback, as an alarm's must be.
+    try { if (navigator.audioSession && navigator.audioSession.type !== "playback") navigator.audioSession.type = "playback"; } catch {}
     if (!actx) actx = new C();
     if (actx.state === "suspended") actx.resume().catch(() => {});
     return actx;
@@ -652,6 +655,14 @@
     if (!name || name === "none") return;
     const c = audio();
     if (!c) return;
+    // Still asleep: wake it first, then play, so the first tap is heard.
+    if (c.state !== "running") {
+      c.resume().then(() => playNow(c, name)).catch(() => playNow(c, name));
+      return;
+    }
+    playNow(c, name);
+  }
+  function playNow(c, name) {
     const out = c.createGain();
     out.gain.value = volume;
     out.connect(c.destination);
@@ -683,12 +694,17 @@
   const faces = new Map();
   let lastOrder = "";
 
+  // Done, or an interval stopped between intervals: it is at zero and only
+  // goes on when the user starts it.
+  const needsInput = (el) => { const st = E.status(el); return st === "done" || st === "waiting"; };
+
   function orderedIds(b) {
     const ids = b.items.filter((id) => state.els[id]);
     const byName = (a, z) => nameOf(state.els[a]).localeCompare(nameOf(state.els[z]), undefined, { numeric: true, sensitivity: "base" });
     if (b.sort === "name") return ids.sort(byName);
     const now = Date.now();
-    const left = new Map(ids.map((id) => [id, E.view(state.els[id], now).remaining]));
+    // Anything waiting for the user counts as no time left, so it goes on top.
+    const left = new Map(ids.map((id) => [id, needsInput(state.els[id]) ? 0 : E.view(state.els[id], now).remaining]));
     return ids.sort((a, z) => {
       const x = left.get(a) == null ? Infinity : left.get(a);
       const y = left.get(z) == null ? Infinity : left.get(z);
@@ -1105,6 +1121,13 @@
     if (f.root && f.stKey !== st) {
       f.stKey = st;
       f.root.dataset.st = E.status(el);
+      // At zero and waiting for the user: grey with a blinking red outline,
+      // in place of the timer's own colour, until it is started again.
+      if (f.kind === "row" || f.kind === "circle") {
+        const need = needsInput(el);
+        f.root.classList.toggle("needs-input", need);
+        if (colorClass(el)) f.root.classList.toggle("colored", !need);
+      }
     }
     if (f.acts && f.st !== st) {
       const first = f.st == null;
@@ -1902,7 +1925,7 @@
     let enterId = null;
     const box = h("div", { class: "iv" });
     const soundName = (v) => { const s = SOUNDS.find((x) => x[0] === v); return s ? s[1] : "Chime"; };
-    const newInterval = (name, dur) => ({ kind: "interval", id: E.uid(), name: name || "", dur: dur || { s: 30 }, sound: "beep", repeat: 1, note: "" });
+    const newInterval = (name, dur) => ({ kind: "interval", id: E.uid(), name: name || "", dur: dur || {}, sound: "beep", repeat: 1, note: "" });
     const timeText = (d) => (E.isZero(d) ? "No time" : E.describe(d));
 
     const removeBtn = (arr, it, node) => h("button", { class: "iv-remove", type: "button", "aria-label": "Remove " + (it.name || "interval"), html: I.minus,
@@ -1961,6 +1984,8 @@
     };
 
     function draw() {
+      // With nothing left to edit, Edit ends by itself so the Add rows come back.
+      if (!draft.items.length) editing = false;
       const editBtn = h("button", { class: "iv-edit", type: "button", text: editing ? "Done" : "Edit",
         onclick: () => { editing = !editing; draw(); } });
       const list = h("div", { class: "group iv-list" + (editing ? " editing" : "") },
@@ -1975,7 +2000,7 @@
     }
 
     function addInterval(arr) {
-      const it = newInterval("", { s: 30 });
+      const it = newInterval("");
       arr.push(it);
       enterId = it.id;
       openInterval(it, arr, true);
@@ -2400,9 +2425,41 @@
       h("div", { class: "sheet-title", style: "text-align:center;white-space:normal", text: "What do you want to time?" }),
       h("div", { class: "sheet-text", style: "text-align:center;margin-top:-8px", text: "Add your first timer!" }),
       input,
-      h("div", { class: "sheet-actions" }, h("div", { class: "spacer" }),
+      h("div", { class: "sheet-actions even" }, h("div", { class: "spacer" }),
         h("button", { class: "btn", type: "button", text: "Not Now", onclick: closeSheet }),
+        h("button", { class: "btn", type: "button", text: "Import Sync Code", onclick: openWelcomeImport }),
         h("button", { class: "btn btn-accent", type: "button", text: "Add", onclick: add })),
+    ], { kind: "welcome" });
+    if (!isIOS) setTimeout(() => input.focus(), 30);
+  }
+
+  // The welcome's code box: the timers saved under the code come down here.
+  function openWelcomeImport() {
+    const input = h("input", { class: "text-in sync-input", type: "text", placeholder: "XXXX-XXXX-XXXX-XXXX", maxlength: "24",
+      autocomplete: "off", autocapitalize: "characters", spellcheck: "false", "aria-label": "Sync code" });
+    const note = h("div", { class: "sync-note", role: "status" });
+    const join = h("button", { class: "btn btn-accent", type: "button", text: "Join" });
+    const go = async () => {
+      join.disabled = true;
+      note.classList.remove("bad");
+      note.textContent = "Looking for that code...";
+      await joinSync(input.value);
+      join.disabled = false;
+      if (cloud.code === cleanCode(input.value)) return closeSheet();
+      note.textContent = cloud.note;
+      note.classList.toggle("bad", cloud.noteBad);
+    };
+    join.addEventListener("click", go);
+    input.addEventListener("keydown", (e) => { if (e.key === "Enter") go(); });
+    openSheet([
+      h("div", { class: "buy-page-icon", style: "width:64px;height:64px;border-radius:32px;margin:6px auto 0", html: I.mark.replace(/width="46" height="46"/, 'width="34" height="34"') }),
+      h("div", { class: "sheet-title", style: "text-align:center;white-space:normal", text: "Import Sync Code" }),
+      h("div", { class: "sheet-text", style: "text-align:center;margin-top:-8px", text: "Type the code shown in Clock Yard's Settings on your other device." }),
+      input,
+      note,
+      h("div", { class: "sheet-actions" }, h("div", { class: "spacer" }),
+        h("button", { class: "btn", type: "button", text: "Back", onclick: openWelcome }),
+        join),
     ], { kind: "welcome" });
     if (!isIOS) setTimeout(() => input.focus(), 30);
   }
