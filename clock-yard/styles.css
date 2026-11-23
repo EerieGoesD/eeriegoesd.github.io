@@ -476,7 +476,7 @@ select:hover { background-color: var(--fill-hover); }
   border-radius: 20px;
   background: var(--surface);
   cursor: pointer;
-  transition: background-color 0.15s, transform 0.25s var(--ease);
+  transition: background-color 0.15s, transform 0.25s var(--ease), filter 0.5s ease;
 }
 @media (hover: hover) {
   .rc:hover { background: var(--surface-hover); }
@@ -584,6 +584,7 @@ select + .ctl { width: 34px; height: 34px; }
   aspect-ratio: 1;
   border-radius: 50%;
   cursor: pointer;
+  transition: filter 0.5s ease;
 }
 .cc-disc {
   position: absolute;
@@ -712,6 +713,8 @@ select + .ctl { width: 34px; height: 34px; }
 @keyframes need-blink {
   50% { box-shadow: inset 0 0 0 2px rgba(var(--danger-rgb), 0.12); background: rgba(142, 142, 147, 0.08); }
 }
+/* Paused: the timer fades to grey, and back to its colour when it runs. */
+.is-paused, .rc.colored.is-paused:hover { filter: grayscale(1); }
 
 /* Colour chooser in the editor: seven to a row, all one size. */
 .swatches { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 12px 8px; justify-items: center; }
@@ -769,7 +772,7 @@ select + .ctl { width: 34px; height: 34px; }
   min-height: 54px;
   padding: 6px 8px 6px 16px;
   cursor: pointer;
-  transition: background-color 0.15s;
+  transition: background-color 0.15s, filter 0.5s ease;
 }
 .mini:hover { background: var(--fill); }
 .mini-time { font-size: 20px; font-weight: 300; white-space: nowrap; }
@@ -1123,6 +1126,20 @@ textarea.text-in { height: 84px; padding: 11px 14px; resize: vertical; line-heig
 .dur-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
 .dur-cell .num-in { height: 56px; font-size: 26px; font-weight: 300; border-radius: 12px; }
 .dur-cell span { font-size: 12px; color: var(--label-2); }
+/* The main time of a timer: first in the sheet, on a tinted card, with
+   large boxes, so it is easy to find among the other settings. */
+.time-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 20px;
+  background: rgba(var(--accent-rgb), 0.12);
+  box-shadow: inset 0 0 0 1.5px rgba(var(--accent-rgb), 0.5);
+}
+.time-hero-label { font-size: 15px; font-weight: 600; color: var(--accent-text); margin-left: 2px; }
+.dur.big .dur-cell .num-in { height: 76px; font-size: 40px; font-weight: 300; border-radius: 14px; background: var(--group); }
+.dur.big .dur-cell span { font-size: 13px; font-weight: 600; color: var(--label); }
 .chips { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
 .chip {
   height: 34px;
@@ -1287,8 +1304,9 @@ textarea.text-in { height: 84px; padding: 11px 14px; resize: vertical; line-heig
   max-width: 74%;
   aspect-ratio: 1;
   margin: 4px auto 0;
+  transition: filter 0.5s ease;
 }
-.detail-face.tap { cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform 0.2s var(--ease); }
+.detail-face.tap { cursor: pointer; -webkit-tap-highlight-color: transparent; transition: transform 0.2s var(--ease), filter 0.5s ease; }
 .detail-face.tap:active { transform: scale(0.98); }
 .detail-face .cc-disc { background: var(--group); }
 .detail-face .ring circle { stroke-width: 2.6; }
@@ -1712,7 +1730,7 @@ textarea.text-in { height: 84px; padding: 11px 14px; resize: vertical; line-heig
   color: #fff;
 }
 .swipe:not(.showing) > .swipe-del { visibility: hidden; }
-.swipe > .rc { z-index: 1; touch-action: pan-y; transition: transform 0.45s var(--spring), background-color 0.15s; }
+.swipe > .rc { z-index: 1; touch-action: pan-y; transition: transform 0.45s var(--spring), background-color 0.15s, filter 0.5s ease; }
 .swipe.dragging > .rc { transition: none; }
 
 /* Accessibility settings: solid controls without see-through, edges with

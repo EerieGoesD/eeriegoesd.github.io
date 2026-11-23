@@ -182,11 +182,11 @@
 
   const DEFAULTS = {
     countdown: () => ({
-      dur: { m: 5 }, loop: false, delay: {}, autoReset: false, extra: "finish",
+      dur: {}, loop: false, delay: {}, autoReset: false, extra: "finish",
       alert: alertCfg("chime"), add: [], note: "",
     }),
     quick: () => ({
-      autoReset: false, extra: "finish", alert: alertCfg("chime"), add: [], last: { m: 5 },
+      autoReset: false, extra: "finish", alert: alertCfg("chime"), add: [], last: {},
     }),
     countup: () => ({
       units: "hms", preset: {}, alerts: [], extra: "start", alert: alertCfg("bell"), add: [],
@@ -765,14 +765,15 @@
       if (r.st === "waiting") {
         v.main = fmtUnits(s.ms, c.units, true);
         v.sub = `Next: ${iv.label(s)} · tap to continue`;
-        v.remaining = s.ms + iv.rest(S, r.i);
+        v.remaining = s.ms;
         return v;
       }
       const left = r.st === "running" ? r.stepEnd - now : r.left;
       const after = iv.rest(S, r.i);
       v.main = fmtUnits(left, c.units, true);
       v.ring = Math.max(0, Math.min(1, left / s.ms));
-      v.remaining = Math.max(0, left) + after;
+      // Sorted by the time shown: what is left of the current interval.
+      v.remaining = Math.max(0, left);
       v.eta = r.st === "running" && !c.pauseBetween ? now + left + after : null;
       let extra = "";
       if (c.extra === "overall") extra = "Total left " + fmtUnits(left + after, c.units, true);

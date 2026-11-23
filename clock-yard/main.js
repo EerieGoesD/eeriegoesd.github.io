@@ -868,7 +868,13 @@
     const b = board();
     renderToolbar();
     faces.clear();
+    if (swipeOpen) {
+      const r = swipeOpen.querySelector(".rc");
+      if (r) r.style.transform = "";
+      swipeOpen.classList.remove("showing");
+    }
     swipeOpen = null;
+    for (const id of cardCache.keys()) if (!state.els[id]) cardCache.delete(id);
     deck.className = "deck " + b.view;
     let ids = orderedIds(b);
     lastOrder = ids.join(",");
@@ -887,16 +893,42 @@
           isIOS ? null : h("button", { class: "btn btn-accent", type: "button", text: "New Timer", onclick: openNew })));
       return;
     }
-    deck.replaceChildren(...ids.map((id) => card(state.els[id], b.view)));
     const key = b.id + ":" + b.view;
     const fresh = deckShown !== key;
+    // Where each card was, so a card that moves slides to its new place.
+    const before = new Map();
+    if (!fresh) for (const c of deck.children) if (c.dataset && c.dataset.id) before.set(c.dataset.id, c.getBoundingClientRect());
+    deck.replaceChildren(...ids.map((id) => keptCard(state.els[id], b.view)));
     deckShown = key;
     [...deck.children].forEach((c, k) => {
       if (fresh) easeIn(c, k);
       else if (enterIds.has(c.dataset.id)) easeIn(c, 0);
+      else slideFrom(c, before.get(c.dataset.id));
     });
     enterIds.clear();
     updateFaces(Date.now());
+  }
+
+  // A card is kept between redraws while nothing about it changed, so
+  // pausing fades and a new order slides instead of everything jumping.
+  const cardCache = new Map();
+  function keptCard(el, view) {
+    const wide = el.type === "container" || el.type === "buttons";
+    const sig = view + "|" + el.type + "|" + el.name + "|" + JSON.stringify(el.cfg);
+    const c = cardCache.get(el.id);
+    if (!wide && c && c.el === el && c.sig === sig) { faces.set(el.id, c.face); return c.node; }
+    const node = card(el, view);
+    if (wide) cardCache.delete(el.id);
+    else cardCache.set(el.id, { el, sig, node, face: faces.get(el.id) });
+    return node;
+  }
+  function slideFrom(node, was) {
+    if (!was || !node.animate) return;
+    const now = node.getBoundingClientRect();
+    const dx = was.left - now.left, dy = was.top - now.top;
+    if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+    node.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }],
+      { duration: 480, easing: "cubic-bezier(0.32, 0.72, 0, 1)" });
   }
 
   function card(el, view) {
@@ -1123,6 +1155,8 @@
       f.root.dataset.st = E.status(el);
       // At zero and waiting for the user: grey with a blinking red outline,
       // in place of the timer's own colour, until it is started again.
+      // Paused: the timer fades to grey until it runs again.
+      f.root.classList.toggle("is-paused", E.status(el) === "paused");
       if (f.kind === "row" || f.kind === "circle") {
         const need = needsInput(el);
         f.root.classList.toggle("needs-input", need);
@@ -1714,6 +1748,8 @@
     nameIn.addEventListener("input", () => { name = nameIn.value; });
     nameIn.addEventListener("keydown", (e) => { if (e.key === "Enter") save(); });
     const checks = [];
+    // The time a countdown runs for goes first, on its own card, larger.
+    let top = null;
 
     const sections = () => {
       const out = [];
@@ -1722,7 +1758,8 @@
           const err = errLine();
           const d = durInput("full", draft.dur, (v) => { draft.dur = v; showErrLine(err, ""); });
           checks.push(() => (E.isZero(draft.dur) ? (showErrLine(err, "Set a time above zero."), false) : true));
-          out.push(group("Time", h("div", { class: "stack" }, d.node, err)));
+          d.node.classList.add("big");
+          top = h("div", { class: "time-hero" }, h("div", { class: "time-hero-label", text: "Time" }), d.node, err);
           const delay = durInput("hms", draft.delay, (v) => { draft.delay = v; });
           out.push(group("Start",
             switchRow("Repeat", "Starts again by itself every time it ends.", draft.loop, (v) => { draft.loop = v; }),
@@ -1871,8 +1908,10 @@
 
     const redraw = () => {
       checks.length = 0;
-      body.replaceChildren(h("div", { class: "field" }, h("div", { class: "field-label", text: "Name" }), nameIn),
-        ...(type === "container" || type === "buttons" ? [] : colorGroup(draft)), ...sections().flat().filter(Boolean));
+      top = null;
+      const rest = sections().flat().filter(Boolean);
+      body.replaceChildren(...(top ? [top] : []), h("div", { class: "field" }, h("div", { class: "field-label", text: "Name" }), nameIn),
+        ...(type === "container" || type === "buttons" ? [] : colorGroup(draft)), ...rest);
     };
 
     function save() {
@@ -1899,10 +1938,12 @@
       board().items.push(el.id);
       enterIds.add(el.id);
       // A new timer starts running as soon as it is added.
-      if (E.runnable(el)) E.start(el, Date.now(), type === "quick" ? { dur: el.cfg.last } : undefined);
+      const started = E.runnable(el) && E.start(el, Date.now(), type === "quick" ? { dur: el.cfg.last } : undefined);
       closeSheet();
       renderDeck();
       persist();
+      // A quick timer has no time yet: ask for one straight away.
+      if (type === "quick" && !started) openQuickStart(el);
     }
 
     redraw();
@@ -2099,6 +2140,7 @@
     let d = E.dur(el.cfg.last);
     const err = errLine();
     const input = durInput("full", d, (v) => { d = v; showErrLine(err, ""); });
+    input.node.classList.add("big");
     const go = () => {
       if (E.isZero(d)) return showErrLine(err, "Set a time above zero.");
       const cur = state.els[el.id];
@@ -2110,7 +2152,8 @@
     };
     openSheet([
       sheetHead("Start " + nameOf(el), "How long this time?"),
-      h("div", { class: "group" }, h("div", { class: "stack" }, input.node, presetChips(TIME_PRESETS, (v) => { d = E.dur(v); input.set(v); showErrLine(err, ""); }), err)),
+      h("div", { class: "time-hero" }, input.node, err),
+      h("div", { class: "group" }, h("div", { class: "stack" }, presetChips(TIME_PRESETS, (v) => { d = E.dur(v); input.set(v); showErrLine(err, ""); }))),
       h("div", { class: "sheet-actions" }, h("div", { class: "spacer" }),
         h("button", { class: "btn", type: "button", text: "Cancel", onclick: closeSheet }),
         h("button", { class: "btn btn-accent", type: "button", text: "Start", onclick: go })),
