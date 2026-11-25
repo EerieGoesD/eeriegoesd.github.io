@@ -1430,9 +1430,14 @@ textarea.text-in { height: 84px; padding: 11px 14px; resize: vertical; line-heig
   flex-shrink: 0;
   gap: 16px;
   border-top: 0.5px solid var(--sep);
-  padding: 9px calc(var(--px) + env(safe-area-inset-right)) max(9px, calc(env(safe-area-inset-bottom) - 15px))
-    calc(var(--px) + env(safe-area-inset-left));
+  padding: 9px calc(var(--gutter) + env(safe-area-inset-right)) max(9px, calc(env(safe-area-inset-bottom) - 15px))
+    calc(var(--gutter) + env(safe-area-inset-left));
   overflow: hidden;
+}
+/* iPhone and iPad keep the credit clear of the iPad's resize handle. */
+.ios .footer {
+  padding-left: calc(var(--px) + env(safe-area-inset-left));
+  padding-right: calc(var(--px) + env(safe-area-inset-right));
 }
 .brand-sub {
   min-width: 0;

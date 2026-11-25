@@ -288,9 +288,11 @@
   }
 
   // ------------------------------------------- sync with your other devices
-  // app-related/tauri2/code_sync.txt. The whole file goes up 4 seconds after a
-  // change made here, and comes down on start, on focus and every 30 seconds
-  // while the app is on screen. Every upload carries the server's write time
+  // app-related/tauri2/code_sync.txt. The whole file goes up half a second
+  // after a change made here. The other devices hear about it at once over a
+  // live line to the service (liveSync below) and fetch it; they also check on
+  // start, on focus and every 30 seconds while the app is on screen, in case
+  // the line was down. Every upload carries the server's write time
   // this device last saw, so a stale one is refused instead of flattening a
   // newer copy. Last writer wins; this device's copy is parked on disk first
   // whenever it had changes not sent yet.
@@ -337,7 +339,65 @@
     if (!cloud.code) return;
     cloud.dirty = true;
     clearTimeout(cloud.pushTimer);
-    cloud.pushTimer = setTimeout(() => pushNow(false), 4000);
+    cloud.pushTimer = setTimeout(() => pushNow(false), 500);
+  }
+
+  // The live line: a socket to the service that hears every save made under
+  // this code by any device, so their changes come down at once.
+  const LIVE_URL = SYNC_URL.replace(/^http/, "ws").replace("/data/", "/live/");
+  const live = { ws: null, code: "", retry: 0, timer: null, ping: null };
+  function liveSync() {
+    const want = syncAllowed() ? cloud.code : "";
+    if (live.ws && live.ws.readyState <= 1 && live.code === want) return;
+    liveStop();
+    if (!want) return;
+    let ws;
+    try {
+      ws = new WebSocket(`${LIVE_URL}?code=${want}`);
+    } catch {
+      return liveLater();
+    }
+    live.ws = ws;
+    live.code = want;
+    ws.onopen = () => {
+      live.retry = 0;
+      // Anything saved while the line was down comes down now.
+      pullNow();
+      live.ping = setInterval(() => { try { ws.send("ping"); } catch {} }, 30000);
+    };
+    ws.onmessage = (e) => {
+      let at = 0;
+      try { at = JSON.parse(e.data).updatedAt; } catch { return; }
+      onLive(at);
+    };
+    ws.onclose = () => {
+      if (live.ws !== ws) return;
+      clearInterval(live.ping);
+      live.ws = null;
+      liveLater();
+    };
+  }
+  function liveStop() {
+    clearTimeout(live.timer);
+    clearInterval(live.ping);
+    const ws = live.ws;
+    live.ws = null;
+    live.code = "";
+    if (ws) {
+      ws.onclose = null;
+      try { ws.close(); } catch {}
+    }
+  }
+  // While the service cannot be reached: try again after 1, 2, 4 ... 30 s.
+  function liveLater() {
+    clearTimeout(live.timer);
+    live.timer = setTimeout(liveSync, Math.min(30000, 1000 * 2 ** live.retry++));
+  }
+  // A save landed. This device's own saves come back too; those already match.
+  function onLive(at) {
+    if (!at || at === cloud.stamp) return;
+    if (cloud.busy) return void setTimeout(() => onLive(at), 300);
+    pullNow();
   }
 
   async function pushNow(keepalive) {
@@ -459,6 +519,7 @@
     cloud.dirty = true;
     syncNote("");
     await pushNow(false);
+    liveSync();
   }
 
   async function joinSync(raw) {
@@ -487,6 +548,7 @@
     cloud.note = "";
     await takeServer(body.data, body.updatedAt, false);
     setCloudState("idle");
+    liveSync();
     showSnack("Synced. These are the timers from your other device.");
   }
 
@@ -507,6 +569,7 @@
     await saveSyncCode("").catch(() => {});
     clearTimeout(cloud.pushTimer);
     Object.assign(cloud, { code: "", stamp: 0, dirty: false, pending: null, note: "" });
+    liveSync();
     scheduleSave();
     setCloudState("off");
     showSnack("Sync is off. Your timers stay on this device.");
@@ -552,6 +615,7 @@
     await saveSyncCode("").catch(() => {});
     clearTimeout(cloud.pushTimer);
     Object.assign(cloud, { code: "", stamp: 0, dirty: false, pending: null, note: "", state: "off" });
+    liveSync();
     for (const id of [...ringing.keys()]) dismissRing(id);
     state = sanitize(null);
     closeSheet();
@@ -2831,6 +2895,8 @@
     } else {
       tickAll();
       pullNow();
+      live.retry = 0;
+      liveSync();
     }
   });
   window.addEventListener("focus", () => pullNow());
@@ -2862,9 +2928,10 @@
       }
       cloud.state = "idle";
       pullNow();
+      liveSync();
     }
-    // While the app is on screen, the other devices' changes are fetched
-    // every 30 seconds as well as on focus.
+    // While the app is on screen, the other devices' changes are also fetched
+    // every 30 seconds and on focus, in case the live line was down.
     setInterval(() => { if (!document.hidden) pullNow(); }, 30000);
     const b = board();
     if (!WEB && (firstRun || !Object.keys(state.els).length) && !b.items.length && !LIC.screen) openWelcome();
