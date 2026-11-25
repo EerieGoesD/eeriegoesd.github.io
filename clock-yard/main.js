@@ -626,12 +626,21 @@
   const VOLUMES = [["0.25", "Quiet"], ["0.55", "Medium"], ["0.9", "Loud"]];
   let volume = Number(store.get("volume")) || 0.55;
   let actx = null;
-  function audio() {
+  let soundUntil = 0;
+  function setSession(type) {
+    try { if (navigator.audioSession && navigator.audioSession.type !== type) navigator.audioSession.type = type; } catch {}
+  }
+  function audio(forSound) {
     const C = window.AudioContext || window.webkitAudioContext;
     if (!C) return null;
-    // On iPhone and iPad the page's sounds follow the silent switch unless
-    // they are marked as playback, as an alarm's must be.
-    try { if (navigator.audioSession && navigator.audioSession.type !== "playback") navigator.audioSession.type = "playback"; } catch {}
+    // A tap only wakes the audio, mixed with other apps, so their music keeps
+    // playing. A sound itself plays as playback, as an alarm's must, so the
+    // silent switch does not mute it; then it goes back to mixing.
+    if (forSound) {
+      setSession("playback");
+      soundUntil = Date.now() + 2600;
+      setTimeout(() => { if (Date.now() >= soundUntil) setSession("ambient"); }, 2700);
+    } else if (Date.now() >= soundUntil) setSession("ambient");
     if (!actx) actx = new C();
     if (actx.state === "suspended") actx.resume().catch(() => {});
     return actx;
@@ -653,7 +662,7 @@
   }
   function playSound(name) {
     if (!name || name === "none") return;
-    const c = audio();
+    const c = audio(true);
     if (!c) return;
     // Still asleep: wake it first, then play, so the first tap is heard.
     if (c.state !== "running") {
@@ -1194,7 +1203,7 @@
       case "toggle": {
         const r = E.toggle(el, now);
         if (r === "needs-time") return openQuickStart(el);
-        if (r === "start" || r === "restart") dismissRing(el.id);
+        if (r === "start" || r === "restart" || r === "resume") dismissRing(el.id);
         break;
       }
       case "start":
@@ -1223,9 +1232,19 @@
 
   function afterChange() {
     persist();
+    reorderOrPaint(Date.now());
+  }
+
+  // A new order is shown with the cards sliding into place. While a sheet
+  // covers the deck it waits, so the slide plays once the sheet is gone.
+  let orderPending = false;
+  function reorderOrPaint(now) {
     const b = board();
-    if (b.sort === "remaining" && orderedIds(b).join(",") !== lastOrder) renderDeck();
-    else updateFaces(Date.now());
+    if (b && b.sort === "remaining" && orderedIds(b).join(",") !== lastOrder) {
+      if ($("#overlay").hidden) { orderPending = false; renderDeck(); return; }
+      orderPending = true;
+    }
+    updateFaces(now);
   }
 
   function runButton(owner, bt) {
@@ -1241,7 +1260,7 @@
       if (bt.action === "reset") { E.reset(el, now); dismissRing(el.id); continue; }
       if (!E.runnable(el)) continue;
       if (bt.action === "start") {
-        if (st === "paused" || st === "waiting") E.resume(el, now);
+        if (st === "paused" || st === "waiting") { E.resume(el, now); dismissRing(el.id); }
         else if (st === "idle" || st === "done") {
           if (el.type === "quick") E.start(el, now, { dur: el.cfg.last });
           else E.start(el, now);
@@ -1252,6 +1271,7 @@
       } else if (bt.action === "toggle") {
         if (el.type === "quick" && (st === "idle" || st === "done")) E.start(el, now, { dur: el.cfg.last });
         else E.toggle(el, now);
+        if (E.status(el) === "running" || E.status(el) === "delay") dismissRing(el.id);
       }
     }
     afterChange();
@@ -1325,9 +1345,7 @@
       if (runKey(el) !== before) changed = true;
     }
     if (changed) persist(true);
-    const b = board();
-    if (b && b.sort === "remaining" && orderedIds(b).join(",") !== lastOrder) renderDeck();
-    else updateFaces(now);
+    reorderOrPaint(now);
   }
 
   // ---------------------------------------------------------- sheets
@@ -1354,6 +1372,7 @@
     overlay.hidden = true;
     setTimeout(() => { if (seq === closeSeq) overlay.classList.remove("closing"); }, 240);
     if (cloud.pending) setTimeout(applyPendingSync, 0);
+    if (orderPending) setTimeout(() => { if (orderPending && overlay.hidden) reorderOrPaint(Date.now()); }, 200);
   }
   overlay.addEventListener("pointerdown", (e) => { overlay.downOnScrim = e.target === overlay; });
   overlay.addEventListener("click", (e) => { if (e.target === overlay && overlay.downOnScrim) closeSheet(); });
