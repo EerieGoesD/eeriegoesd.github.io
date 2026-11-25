@@ -9,9 +9,12 @@
   const TAURI = window.__TAURI__ || null;
   const invoke = TAURI ? TAURI.core.invoke : () => Promise.reject(new Error("Not running inside the app."));
   const root = document.documentElement;
+  // isIOS is the touch layout (iPhone, iPad, and Android phones and tablets,
+  // theme.js); isAndroid is what differs on Android.
   const isIOS = root.classList.contains("ios");
+  const isAndroid = root.classList.contains("android");
   const isMac = root.classList.contains("mac");
-  const isApple = isIOS || isMac;
+  const isApple = (isIOS && !isAndroid) || isMac;
   // The website (eeriegoesd.com/clock-yard) opens only with a sync code from
   // the app, and works on the timers saved under it. "?web" tries it locally.
   const WEB = !TAURI && (/(^|\.)eeriegoesd\.com$/i.test(location.hostname) || /[?&]web\b/.test(location.search));
@@ -86,7 +89,9 @@
   };
 
   const nameOf = (el) => (el && el.name.trim()) || (el ? E.TYPES[el.type].label : "");
-  const TRIAL_DAYS = 7;
+  // Google Play's trial is 15 days, so it outlasts Play's 14-day closed test.
+  // MUST match TRIAL_MS in licensing.rs for each store.
+  const TRIAL_DAYS = isAndroid ? 15 : 7;
 
   // ------------------------------------------------------------------- theme
   function currentTheme() {
@@ -159,6 +164,8 @@
     report: "https://support.eeriegoesd.com/report-issue/clock-yard",
     discussions: "https://support.eeriegoesd.com/community/clock-yard",
     feature: "https://support.eeriegoesd.com/suggest-feature/clock-yard",
+    // The footer's coffee link on Windows; a row in Settings on Android.
+    coffee: "https://buymeacoffee.com/eeriegoesd",
   };
   function openUrl(url) {
     if (TAURI) invoke("open_url", { url }).catch((e) => showError("Couldn't open the link. " + errText(e)));
@@ -973,13 +980,17 @@
     if (!fresh) for (const c of deck.children) if (c.dataset && c.dataset.id) before.set(c.dataset.id, c.getBoundingClientRect());
     deck.replaceChildren(...ids.map((id) => keptCard(state.els[id], b.view)));
     deckShown = key;
+    // Paint before anything measures the new cards. Measuring first gives a
+    // rebuilt card its empty fill and full ring as a starting style, and the
+    // bar and ring then sweep from there to the real time (every card does
+    // this when another device's copy arrives).
+    updateFaces(Date.now());
     [...deck.children].forEach((c, k) => {
       if (fresh) easeIn(c, k);
       else if (enterIds.has(c.dataset.id)) easeIn(c, 0);
       else slideFrom(c, before.get(c.dataset.id));
     });
     enterIds.clear();
-    updateFaces(Date.now());
   }
 
   // A card is kept between redraws while nothing about it changed, so
@@ -2508,12 +2519,15 @@
   // ------------------------------------------------------------ settings
   function openSettings() {
     const rows = [];
+    // Android: until bought, the purchase card comes first.
+    if (isAndroid && LIC.store && LIC.known && !LIC.owned) rows.push(settingsBuyCard());
     rows.push(...syncBlock());
     rows.push(...group("Display",
       switchRow("Show app usage", "How much this app is using, shown at the bottom of the window.", metricsOn, applyMetrics)));
     rows.push(...group("Alerts",
       selectRow("Alert volume", "How loud alarms ring while Clock Yard is open.", VOLUMES, String(VOLUMES.reduce((b, v) => (Math.abs(Number(v[0]) - volume) < Math.abs(Number(b[0]) - volume) ? v : b))[0]),
-        (v) => { volume = Number(v); store.set("volume", v); playSound("chime"); })));
+        (v) => { volume = Number(v); store.set("volume", v); playSound("chime"); }),
+      isAndroid && TAURI ? alertAccessRows() : null));
     if (isIOS && LIC.store) {
       rows.push(...group("Purchase", tapRow("Restore Purchases", () => restoreUnlock(null))));
     }
@@ -2523,12 +2537,65 @@
         tapRow("Discussions", () => openUrl(LINKS.discussions), true),
         tapRow("Feature Request", () => openUrl(LINKS.feature), true)));
     }
+    // Android: the footer's donate link, as its own one-row list.
+    if (isAndroid) {
+      const coffee = tapRow("Support This Project", () => openUrl(LINKS.coffee), true);
+      coffee.classList.add("coffee-row");
+      rows.push(...group(null, coffee));
+    }
     const actions = h("div", { class: "sheet-actions" },
       isMac && LIC.store ? h("button", { class: "btn wide-btn", type: "button", text: "Restore Purchases", onclick: () => restoreUnlock(null) }) : null,
       h("div", { class: "spacer" }),
       h("button", { class: "btn btn-accent", type: "button", text: "Done", onclick: closeSheet }));
     openSheet([sheetHead("Settings"), rows, actions], { kind: "settings" });
   }
+  // Android: the purchase card at the top of Settings, until bought. Its
+  // button goes straight to Play's purchase sheet.
+  function settingsBuyCard() {
+    const left = LIC.trialStartMs > 0 ? trialLeftMs() : 0;
+    const days = Math.max(1, Math.ceil(left / 86400000));
+    const line = LIC.pending ? PENDING_NOTE
+      : left > 0 ? (days === 1 ? "1 day left in your free trial" : `${days} days left in your free trial`)
+      : "Clock Yard is a one-time purchase";
+    return h("div", { class: "settings-buy" },
+      h("div", { class: "settings-buy-top" },
+        h("div", { class: "settings-buy-mark", html: I.mark.replace(/width="46" height="46"/, 'width="26" height="26"') }),
+        h("div", { style: "min-width:0" },
+          h("div", { class: "settings-buy-title", text: "Clock Yard" }),
+          h("div", { class: "settings-buy-text", text: line }))),
+      h("button", { class: "settings-buy-btn", type: "button", text: "Buy Clock Yard",
+        onclick: () => { closeSheet(); buyUnlock(null); } }));
+  }
+
+  // Android: notifications refused, or alerts that may arrive late because
+  // "Alarms & reminders" is off. Filled in when the phone has answered, and
+  // again when the app comes back to the front.
+  let alertAccessBox = null;
+  function alertAccessRows() {
+    alertAccessBox = h("div", { class: "access-box", style: "display:contents" });
+    paintAlertAccess();
+    return alertAccessBox;
+  }
+  function paintAlertAccess() {
+    const box = alertAccessBox;
+    if (!box) return;
+    invoke("alert_access").then((a) => {
+      const kids = [];
+      if (a.notify === "denied") {
+        kids.push(row("Notifications are off", "Alerts will not show while Clock Yard is closed. Turn notifications on for Clock Yard in your phone's settings.", null));
+      } else if (!a.exact) {
+        const open = () => invoke("open_exact_alarm_settings").catch(() => {});
+        kids.push(h("div", { class: "row tap", role: "button", tabindex: "0", onclick: open,
+          onkeydown: (e) => { if (e.key === "Enter") open(); } },
+        h("div", { class: "row-text" },
+          h("div", { class: "row-label", text: "Allow exact times" }),
+          h("div", { class: "row-desc", text: "Alerts may arrive a few minutes late while the app is closed." })),
+        h("span", { class: "arrow-out" })));
+      }
+      box.replaceChildren(...kids);
+    }).catch(() => {});
+  }
+
   function tapRow(label, onClick, out) {
     const r = h("div", { class: "row tap", role: "button", tabindex: "0", onclick: onClick,
       onkeydown: (e) => { if (e.key === "Enter") onClick(); } },
@@ -2591,11 +2658,20 @@
   }
 
   // ------------------------------------------------- trial and purchase
-  const STORE_UNREACHABLE = "Can't connect to the App Store. Check your internet connection and try again.";
+  // Apple: 7 days free, then one purchase. Google Play: 15 days free, then one
+  // purchase, with no trial bar: the buy page opens by itself once per launch
+  // instead (app_related/android/google_app_billing_models.txt).
+  const STORE_UNREACHABLE = `Can't connect to ${isAndroid ? "Google Play" : "the App Store"}. Check your internet connection and try again.`;
   const CANCEL_NOTE = "Purchase canceled.";
-  const NOT_STORE = "Purchases only work in the App Store version of Clock Yard.";
+  const NOT_STORE = `Purchases only work in the ${isAndroid ? "Google Play" : "App Store"} version of Clock Yard.`;
+  const PENDING_NOTE = "Your purchase is waiting for Google Play.";
   const LIC = {
-    store: isApple && !!TAURI, live: false, owned: false, trialStartMs: 0, clockAhead: 0, price: "", screen: null, preview: false,
+    store: (isApple || isAndroid) && !!TAURI, live: false, owned: false, trialStartMs: 0, clockAhead: 0, price: "", screen: null, preview: false,
+    // Android: known once the first answer is in, so the start screen never
+    // flashes for someone who has bought; ready when Play and the Worker both
+    // answered; setup while Play does not know the product yet (test builds
+    // only); offerShown is the buy page's once-per-launch flag.
+    known: false, ready: false, setup: false, pending: false, offerShown: false,
   };
   const isUserCancel = (e) => /cancel/i.test(String(e || ""));
   function friendlyStoreError(e) {
@@ -2605,6 +2681,18 @@
   }
 
   function applyStatus(s) {
+    if (isAndroid) {
+      // Offline, Rust judges from the answers it kept, so those count too.
+      LIC.clockAhead = Math.max(0, Number(s && s.nowMs || 0) - Date.now());
+      LIC.known = true;
+      LIC.ready = !!(s && s.storeReady);
+      LIC.setup = !!(s && s.setup);
+      LIC.live = !LIC.setup;
+      LIC.owned = !!(s && s.owned);
+      LIC.pending = !!(s && s.pending);
+      LIC.trialStartMs = Number(s && s.trialStartMs) || 0;
+      return;
+    }
     LIC.live = !!(s && s.storeReady);
     LIC.clockAhead = Math.max(0, Number(s && s.nowMs || 0) - Date.now());
     if (LIC.live) {
@@ -2614,7 +2702,7 @@
   }
 
   async function refreshStore() {
-    try { applyStatus(await invoke("iap_status")); } catch { LIC.live = false; }
+    try { applyStatus(await invoke("iap_status")); } catch { if (!isAndroid) LIC.live = false; }
     try { LIC.price = (await invoke("iap_price")) || ""; } catch {}
   }
 
@@ -2626,17 +2714,41 @@
       if (dev) {
         LIC.preview = true;
         LIC.live = true;
+        LIC.known = true;
         const [mode, flag] = dev.split(":");
         LIC.price = flag === "noprice" ? "" : "$4.99";
         LIC.owned = mode === "owned";
-        LIC.trialStartMs = mode === "trial" ? Date.now() - 2 * 86400000 : mode === "expired" ? Date.now() - 8 * 86400000 : 0;
+        LIC.trialStartMs = mode === "trial" ? Date.now() - 2 * 86400000 : mode === "expired" ? Date.now() - (TRIAL_DAYS + 1) * 86400000 : 0;
         if (mode === "silent") LIC.live = false;
+        if (mode === "setup") { LIC.setup = true; LIC.live = false; }
         computeAccessAndUI();
         return;
       }
     }
     await refreshStore();
     computeAccessAndUI();
+    if (isAndroid) {
+      // Until Play has answered, ask again at 2 and 6 seconds; again whenever
+      // the app comes back to the front, which also frees a Buy button left
+      // waiting by a pending purchase; and judge again every minute, so the
+      // paywall shows the moment the trial ends.
+      for (const wait of [2000, 6000]) {
+        setTimeout(async () => {
+          if (LIC.ready || LIC.setup) return;
+          await refreshStore();
+          computeAccessAndUI();
+        }, wait);
+      }
+      document.addEventListener("visibilitychange", async () => {
+        if (document.hidden) return;
+        if (alertAccessBox && alertAccessBox.isConnected) paintAlertAccess();
+        await refreshStore();
+        computeAccessAndUI();
+        const btn = $("#buyPage .buy-page-main");
+        if (btn) btn.disabled = false;
+      });
+      setInterval(computeAccessAndUI, 60000);
+    }
   }
 
   function trialLeftMs() {
@@ -2661,6 +2773,7 @@
       if (LIC.screen) closeBuyPage();
       return;
     }
+    if (isAndroid) return androidAccess();
     if (!LIC.live) {
       if (LIC.screen && LIC.screen !== "offer") closeBuyPage();
       text.textContent = "Clock Yard is a one-time purchase";
@@ -2688,6 +2801,27 @@
     showBuyPage("start");
   }
 
+  // Android: no trial bar. The start screen and the paywall cannot be closed;
+  // the buy page opens by itself once per launch for anyone who has not
+  // bought, and closes with its cross or Back. Nothing shows until the first
+  // answer is in.
+  function androidAccess() {
+    $("#trialBar").hidden = true;
+    if (!LIC.known) return;
+    if (!LIC.setup) {
+      const kind = LIC.trialStartMs === 0 ? "start" : trialLeftMs() <= 0 ? "paywall" : null;
+      if (kind) {
+        if (LIC.screen !== kind) showBuyPage(kind);
+        return;
+      }
+    }
+    if (LIC.screen && LIC.screen !== "offer") closeBuyPage();
+    if (!LIC.offerShown) {
+      LIC.offerShown = true;
+      showBuyPage("offer");
+    }
+  }
+
   async function openOffer() {
     showBuyPage("offer");
     if (LIC.preview) return;
@@ -2713,23 +2847,48 @@
     LIC.screen = kind;
     const price = LIC.price;
     const icon = h("div", { class: "buy-page-icon", html: I.mark });
-    const title = kind === "start" ? "Clock Yard" : kind === "paywall" ? "Your free trial has ended" : "Buy Clock Yard";
-    const line = kind === "start"
+    let title = kind === "start" ? "Clock Yard" : kind === "paywall" ? "Your free trial has ended" : "Buy Clock Yard";
+    let line = kind === "start"
       ? "Every kind of timer on one deck, with alerts that ring while the app is closed." + (price ? "" : " You pay once.")
       : `Buy Clock Yard to keep ${WHAT_STOPS}.` + (price ? "" : " You pay once.");
-    const intro = [icon, h("h2", { class: "buy-page-title", text: title }), h("p", { class: "buy-page-line", text: line })];
-    const priceBox = price ? h("div", { class: "buy-page-price" },
+    let priceBox = price ? h("div", { class: "buy-page-price" },
       h("span", { class: "buy-page-plan", text: "Lifetime" }), h("strong", { text: price }), h("span", { class: "buy-page-paid", text: "Paid once. Not a subscription." })) : null;
+    let afterThat = "Timers and alerts stop until you buy Clock Yard.";
+    let todayText = `Every feature, free for ${TRIAL_DAYS} days.`;
+    let mainLabel = kind === "start" ? "Start Free Trial" : price ? "Buy for " + price : "Buy Clock Yard";
+    let smallText = kind === "start" ? "Nothing is charged automatically." : "";
+    if (isAndroid) {
+      // The price is large only where something is bought: on the start
+      // screen it is one line in the timeline.
+      const left = LIC.trialStartMs > 0 && !LIC.setup ? trialLeftMs() : 0;
+      const days = Math.max(1, Math.ceil(left / 86400000));
+      title = kind === "start" ? `Try Clock Yard free for ${TRIAL_DAYS} days`
+        : kind === "paywall" ? "Your free trial has ended"
+        : left > 0 ? (days === 1 ? "1 day left in your free trial" : `${days} days left in your free trial`)
+        : "Buy Clock Yard";
+      line = kind === "start" ? "Every feature included. No account, no card, no ads."
+        : kind === "paywall" ? `Unlock Clock Yard to keep ${WHAT_STOPS}. Your timers are right where you left them.`
+        : `Unlock it now and keep ${WHAT_STOPS} for good.`;
+      priceBox = kind !== "start" && price ? h("div", { class: "buy-plan" },
+        h("div", { class: "buy-plan-words" },
+          h("span", { class: "buy-plan-name", text: "Lifetime" }),
+          h("span", { class: "buy-plan-note", text: "Pay once. Yours for good." })),
+        h("strong", { class: "buy-plan-price", text: price })) : null;
+      todayText = "Every feature, free.";
+      afterThat = `${price ? price + " once" : "One payment"} to keep ${WHAT_STOPS}. Not a subscription.`;
+      mainLabel = kind === "start" ? "Start Free Trial" : price ? "Unlock for " + price : "Buy Clock Yard";
+      smallText = kind === "start" ? "Nothing is charged automatically." : "One payment through Google Play. No subscription.";
+    }
+    const intro = [icon, h("h2", { class: "buy-page-title", text: title }), h("p", { class: "buy-page-line", text: line })];
     const steps = kind === "start" ? h("ol", { class: "buy-page-steps" },
-      h("li", null, h("strong", { text: "Today" }), h("span", { text: `Every feature, free for ${TRIAL_DAYS} days.` })),
+      h("li", null, h("strong", { text: "Today" }), h("span", { text: todayText })),
       h("li", null, h("strong", { text: `Day ${TRIAL_DAYS}` }), h("span", { text: "The free trial ends. Nothing is charged." })),
-      h("li", null, h("strong", { text: "After that" }), h("span", { text: "Timers and alerts stop until you buy Clock Yard." }))) : null;
+      h("li", null, h("strong", { text: "After that" }), h("span", { text: afterThat }))) : null;
     const benefits = h("ul", { class: "buy-page-benefits" }, BENEFITS.map((b) => h("li", null, h("span", { class: "buy-page-tick", html: I.tick }), b)));
-    const msg = h("p", { class: "buy-page-msg", "aria-live": "polite" });
-    const mainLabel = kind === "start" ? "Start Free Trial" : price ? "Buy for " + price : "Buy Clock Yard";
+    const msg = h("p", { class: "buy-page-msg", "aria-live": "polite", text: isAndroid && LIC.pending && kind !== "start" ? PENDING_NOTE : "" });
     const main = h("button", { class: "buy-page-main", type: "button", text: mainLabel,
       onclick: () => (kind === "start" ? startTrial() : buyUnlock(buyMsg)) });
-    const small = kind === "start" ? h("p", { class: "buy-page-small", text: "Nothing is charged automatically." }) : null;
+    const small = smallText ? h("p", { class: "buy-page-small", text: smallText }) : null;
     const restore = h("button", { class: "buy-page-restore", type: "button", text: "Restore Purchases", onclick: () => restoreUnlock(buyMsg) });
     const close = kind === "offer" ? h("button", { class: "buy-page-close", type: "button", "aria-label": "Not Now", html: I.close, onclick: closeBuyPage }) : null;
 
@@ -2740,9 +2899,11 @@
           h("div", { class: "buy-mac-left" }, intro, benefits),
           h("div", { class: "buy-mac-right" }, priceBox, steps, main, small, restore, msg)));
     } else {
+      // Android: the benefits first, then the timeline or the plan.
+      const body = isAndroid ? [intro, benefits, steps, priceBox] : [intro, priceBox, steps, benefits];
       page.replaceChildren(
         h("div", { class: "buy-page-top" + (close ? " with-close" : "") }, close),
-        h("div", { class: "buy-page-scroll" }, h("div", { class: "buy-page-col" }, intro, priceBox, steps, benefits)),
+        h("div", { class: "buy-page-scroll" }, h("div", { class: "buy-page-col" }, body)),
         h("div", { class: "buy-page-bottom" }, h("div", { class: "buy-page-col" }, msg, main, small, restore)));
     }
     page.classList.remove("closing");
@@ -2758,12 +2919,16 @@
     page.hidden = true;
     setTimeout(() => page.classList.remove("closing"), 220);
     computeAccessAndUI();
+    // Android: the welcome waits for the buy page.
+    if (isAndroid && !LIC.screen) maybeWelcome();
   }
 
   async function startTrial() {
     const msg = buyMsg();
     const btn = $("#buyPage .buy-page-main");
     btn.disabled = true;
+    // The buy page does not open by itself again in this launch.
+    LIC.offerShown = true;
     try {
       if (LIC.preview) { LIC.trialStartMs = Date.now(); }
       else { await invoke("iap_start_trial"); await refreshStore(); }
@@ -2804,7 +2969,7 @@
       computeAccessAndUI();
       const after = LIC.screen ? buyMsg() : msg;
       if (LIC.owned) showLicenseNote(after, "Purchase restored.");
-      else showLicenseNote(after, "No purchase found for this Apple ID.");
+      else showLicenseNote(after, isAndroid ? "No purchase found for this Google account." : "No purchase found for this Apple ID.");
     } catch (e) {
       if (isUserCancel(e)) showLicenseNote(msg, CANCEL_NOTE);
       else showLicenseError(msg, friendlyStoreError(e));
@@ -2871,6 +3036,38 @@
     else if (mod && (e.key === "f" || e.key === "F")) { e.preventDefault(); openSearch(); }
   });
 
+  // ------------------------------------------------------------ Android Back
+  // Back closes what is open, topmost first, the way Escape does on a
+  // desktop. A listener is registered only while something is open: with one
+  // registered, Back does nothing else, so with nothing open Back is Android's
+  // own and the app goes to the background. The start screen and the paywall
+  // have no way out, so Back there leaves the app too.
+  let backListener = null;
+  function closeTopmost() {
+    if (dialogDone) dialogDone(false);
+    else if (LIC.screen === "offer") closeBuyPage();
+    else if (!overlay.hidden) closeSheet();
+    else if (drawerOpen()) closeDrawer();
+  }
+  function syncBack() {
+    if (!TAURI || !TAURI.app || !TAURI.app.onBackButtonPress) return;
+    const open = !!dialogDone || LIC.screen === "offer" || !overlay.hidden || drawerOpen();
+    if (open && !backListener) {
+      backListener = TAURI.app.onBackButtonPress(closeTopmost).catch(() => null);
+    } else if (!open && backListener) {
+      const listener = backListener;
+      backListener = null;
+      listener.then((l) => l && l.unregister()).catch(() => {});
+    }
+  }
+  if (isAndroid) {
+    const watch = new MutationObserver(syncBack);
+    for (const el of [overlay, $("#dialogOverlay"), $("#buyPage")]) {
+      watch.observe(el, { attributes: true, attributeFilter: ["hidden"] });
+    }
+    watch.observe(root, { attributes: true, attributeFilter: ["class"] });
+  }
+
   // Entering full screen on a Mac can leave the new area unpainted until
   // something forces a redraw, so force one on every resize.
   let repaintQueued = false;
@@ -2934,7 +3131,19 @@
     // every 30 seconds and on focus, in case the live line was down.
     setInterval(() => { if (!document.hidden) pullNow(); }, 30000);
     const b = board();
-    if (!WEB && (firstRun || !Object.keys(state.els).length) && !b.items.length && !LIC.screen) openWelcome();
+    const wantWelcome = !WEB && (firstRun || !Object.keys(state.els).length) && !b.items.length;
+    if (wantWelcome && !LIC.screen) openWelcome();
+    // Android: the welcome comes up once the buy page is closed.
+    else if (wantWelcome && isAndroid) welcomeWaiting = true;
+  }
+
+  // Once per launch, never over a purchase page or an open sheet, and only
+  // while the board is still empty.
+  let welcomeWaiting = false;
+  function maybeWelcome() {
+    if (!welcomeWaiting || LIC.screen || !overlay.hidden || board().items.length) return;
+    welcomeWaiting = false;
+    openWelcome();
   }
 
   // The browser's own right-click menu stays where words can be typed or

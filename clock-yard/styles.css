@@ -1006,7 +1006,8 @@ select + .ctl { width: 34px; height: 34px; }
 }
 /* Lines between rows start where the text starts. */
 .row + .row::before, .row + .stack::before, .stack + .row::before, .stack + .stack::before,
-.iv-item + .iv-item::before, .fact + .fact::before, .lap + .lap::before, .mini + .mini::before {
+.iv-item + .iv-item::before, .fact + .fact::before, .lap + .lap::before, .mini + .mini::before,
+.row + .access-box > .row::before {
   content: "";
   position: absolute;
   top: 0;
@@ -1439,6 +1440,12 @@ textarea.text-in { height: 84px; padding: 11px 14px; resize: vertical; line-heig
   padding-left: calc(var(--px) + env(safe-area-inset-left));
   padding-right: calc(var(--px) + env(safe-area-inset-right));
 }
+/* Android has no such handle, and a Chromebook or a tablet is a desktop:
+   the usage line and the links go in the window's bottom corners. */
+.android .footer {
+  padding-left: calc(var(--gutter) + env(safe-area-inset-left));
+  padding-right: calc(var(--gutter) + env(safe-area-inset-right));
+}
 .brand-sub {
   min-width: 0;
   font-size: 12px;
@@ -1451,6 +1458,8 @@ textarea.text-in { height: 84px; padding: 11px 14px; resize: vertical; line-heig
 /* A phone browser: the links go on two lines rather than off the edge. */
 @media (max-width: 600px) {
   .footer, .footer-links { flex-wrap: wrap; row-gap: 6px; }
+  /* The Android app: one line, the usage line trimmed with an ellipsis. */
+  .android .footer, .android .footer-links { flex-wrap: nowrap; }
 }
 .flink { font-size: 12px; text-decoration: none; cursor: pointer; white-space: nowrap; color: var(--label-2); transition: color 0.15s; }
 .flink:hover { color: var(--label); }
@@ -1711,6 +1720,72 @@ textarea.text-in { height: 84px; padding: 11px 14px; resize: vertical; line-heig
   right: min(0px, calc(50% - 22px));
 }
 .ios .flink::after { content: ""; position: absolute; top: -6px; bottom: -18px; left: -8px; right: -8px; }
+/* Android's minimum tap area is 48dp (Apple's 44pt), whatever is drawn. */
+.android .ctl::after, .android .chip::after, .android .sheet-close::after, .android .seg button::after {
+  top: min(0px, calc(50% - 24px));
+  bottom: min(0px, calc(50% - 24px));
+  left: min(0px, calc(50% - 24px));
+  right: min(0px, calc(50% - 24px));
+}
+
+/* Android: no purchase bar (the buy page opens by itself once per launch),
+   and the footer holds only the usage line and "Made by EERIE"; Support This
+   Project is a row of its own in Settings. */
+.android .trial-bar { display: none !important; }
+.android #coffeeLink { display: none; }
+.coffee-row .row-label { color: var(--coffee); font-weight: 600; }
+.coffee-row .arrow-out { background: var(--coffee); }
+
+/* Android Settings: the purchase card, first until bought. */
+.settings-buy {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--accent-fill);
+  box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.45);
+}
+.settings-buy-top { display: flex; align-items: center; gap: 12px; }
+.settings-buy-mark {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+}
+.settings-buy-title { font-size: 16px; font-weight: 600; color: var(--label); }
+.settings-buy-text { font-size: 13px; color: var(--label-2); margin-top: 2px; }
+.settings-buy-btn {
+  height: 44px;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Android buy page: where something is bought, the price is the plan. */
+.buy-plan {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: 16px;
+  background: var(--accent-fill);
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+.buy-plan-words { display: flex; flex-direction: column; gap: 2px; min-width: 0; text-align: left; }
+.buy-plan-name { font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent-light); }
+.buy-plan-note { font-size: 14px; color: var(--text); }
+.buy-plan-price { font-size: 26px; font-weight: 700; color: var(--text); white-space: nowrap; }
 /* iPhone and iPad draw menus at 16px, so "Time remaining" needs a wider menu;
    the List/Grid switch beside it grows to the same width. */
 @media (min-width: 701px) {
