@@ -41,6 +41,7 @@
       }
     </script>
     <link rel="stylesheet" href="app.css" />
+    <script src="platform.js"></script>
 
     <script>
       // Analytics, same account and same rules as the rest of eeriegoesd.com:
@@ -99,120 +100,438 @@
     </p>
 
     <div id="app">
-      <header class="header">
-        <div class="brand">
-          <div class="brand-row">
-            <div class="brand-mark" aria-hidden="true">
-              <svg width="20" height="20" viewBox="0 0 24 24">
-                <circle cx="5.6" cy="6.2" r="3" fill="currentColor" />
-                <circle cx="18.4" cy="6.2" r="3" fill="currentColor" />
-                <circle cx="12" cy="13.4" r="8" fill="currentColor" />
-                <ellipse cx="12" cy="16.6" rx="3.6" ry="2.8" fill="var(--panel)" />
-                <ellipse cx="12" cy="15.2" rx="1.5" ry="1.1" fill="currentColor" />
-                <circle cx="8.9" cy="11.4" r="1.15" fill="var(--panel)" />
-                <circle cx="15.1" cy="11.4" r="1.15" fill="var(--panel)" />
-              </svg>
+      <div class="shell">
+        <!-- The only part that scrolls. The header sticks to its top, so the
+             list starts right under it and slides beneath it. -->
+        <main class="content" id="content">
+          <header class="header" id="header">
+            <div class="header-in">
+              <div class="tb-title">
+                <div class="brand-row">
+                  <!-- Android only: the app's mark before its name. -->
+                  <div class="brand-mark" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                      <circle cx="5.6" cy="6.2" r="3" fill="currentColor" />
+                      <circle cx="18.4" cy="6.2" r="3" fill="currentColor" />
+                      <circle cx="12" cy="13.4" r="8" fill="currentColor" />
+                      <ellipse cx="12" cy="16.6" rx="3.6" ry="2.8" fill="var(--panel)" />
+                      <ellipse cx="12" cy="15.2" rx="1.5" ry="1.1" fill="currentColor" />
+                      <circle cx="8.9" cy="11.4" r="1.15" fill="var(--panel)" />
+                      <circle cx="15.1" cy="11.4" r="1.15" fill="var(--panel)" />
+                    </svg>
+                  </div>
+                  <h1 class="board-name">Bear in Mind</h1>
+                </div>
+                <!-- What is on the list: "3 to do · 2 done". -->
+                <div class="board-meta" id="boardMeta"></div>
+              </div>
+
+              <div class="brand-progress" id="brandProgress">
+                <!-- Android only: "2 of 5 done" over the bar. -->
+                <span class="count" id="brandCount"></span>
+                <span class="bar"><span class="bar-fill" id="brandBarFill"></span></span>
+                <strong class="pct" id="brandPct">0%</strong>
+              </div>
+
+              <!-- Search, Theme and Settings share one capsule. -->
+              <div class="header-actions">
+                <div class="tool-group glass">
+                  <button id="searchBtn" class="round-btn" type="button" title="Search" aria-label="Search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none"
+                      stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+                      <circle cx="11" cy="11" r="6.5" /><path d="M16 16l4.5 4.5" />
+                    </svg>
+                  </button>
+                  <button id="themeToggle" class="round-btn" type="button" aria-label="Switch theme"></button>
+                  <button id="menuButton" class="round-btn" type="button" title="Settings" aria-label="Settings">
+                    <svg width="21" height="21" viewBox="0 0 24 24" aria-hidden="true" fill="none"
+                      stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="3" />
+                      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
             </div>
-            <div class="brand-title">Bear in Mind</div>
-            <button
-              id="themeToggle"
-              class="theme-toggle"
-              title="Switch to light theme"
-              aria-label="Switch theme"
-            ></button>
-          </div>
-          <div class="brand-sub" id="brandSub"></div>
-        </div>
 
-        <div class="brand-progress" id="brandProgress">
-          <span class="bar"><span class="bar-fill" id="brandBarFill"></span></span>
-          <strong class="pct" id="brandPct">0%</strong>
-        </div>
+            <!-- Desktop: the box stays in the header, so adding is always one
+                 keystroke away however far down the list is scrolled. -->
+            <div class="capture" id="capture">
+              <div class="capture-row">
+                <div class="capture-field">
+                  <input
+                    id="captureInput"
+                    class="capture-input"
+                    type="text"
+                    maxlength="500"
+                    autocomplete="off"
+                    spellcheck="false"
+                    placeholder="What do you need to bear in mind?"
+                  />
+                </div>
+                <button id="addButton" class="round-btn add-btn" type="button" title="Add" aria-label="Add">
+                  <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+                  </svg>
+                </button>
+              </div>
+              <textarea
+                id="captureDetails"
+                class="capture-details"
+                rows="3"
+                maxlength="2000"
+                spellcheck="false"
+                placeholder="Anything else worth remembering about it (optional)"
+              ></textarea>
+            </div>
+          </header>
 
-        <div class="header-spacer"></div>
+          <div class="problem" id="problem" role="alert" hidden></div>
 
-        <div class="header-actions">
-          <button id="menuButton" class="icon-btn menu-btn" title="Settings" aria-label="Settings">
-            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="5" cy="12" r="2.2" fill="currentColor" />
-              <circle cx="12" cy="12" r="2.2" fill="currentColor" />
-              <circle cx="19" cy="12" r="2.2" fill="currentColor" />
-            </svg>
-          </button>
-        </div>
-      </header>
-
-      <div class="capture" id="capture">
-        <div class="capture-row">
-          <input
-            id="captureInput"
-            class="capture-input"
-            type="text"
-            maxlength="500"
-            autocomplete="off"
-            spellcheck="false"
-            placeholder="What do you need to bear in mind?"
-          />
-          <button id="addButton" class="icon-btn add-btn" title="Add" aria-label="Add">
-            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                d="M12 5v14M5 12h14"
-                stroke="currentColor"
-                stroke-width="2.6"
-                stroke-linecap="round"
-              />
-            </svg>
-          </button>
-        </div>
-        <textarea
-          id="captureDetails"
-          class="capture-details"
-          rows="3"
-          maxlength="2000"
-          spellcheck="false"
-          placeholder="Anything else worth remembering about it (optional)"
-        ></textarea>
+          <div class="list" id="list"></div>
+        </main>
       </div>
 
-      <div class="problem" id="problem" hidden></div>
+      <!-- Zero-height line above the footer: the add button and the notes hang
+           off it, so they clear the footer. -->
+      <div class="float-anchor">
+        <!-- Android: adding is the round button bottom right, which opens the
+             sheet below. The desktop keeps the box at the top. -->
+        <button class="fab" id="fab" type="button" title="New reminder" aria-label="New reminder">
+          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" />
+          </svg>
+        </button>
+        <!-- Short notes, and Undo after a delete. -->
+        <div class="snack" id="snack" role="status" aria-live="polite" hidden>
+          <span id="snackText"></span>
+          <button class="snack-action" id="snackAction" type="button" hidden></button>
+        </div>
+      </div>
 
-      <div class="list" id="list"></div>
-
-      <footer class="footer">
+      <!-- The usage line in the bottom-left corner, the links in the
+           bottom-right. Android keeps only "Made by EERIE"; the rest are in
+           Settings. -->
+      <footer class="footer" id="footer">
+        <div class="brand-sub" id="brandSub"></div>
         <div class="footer-links">
-          <a id="linkCoffee" class="flink" href="#">Support This Project</a>
-          <span class="sep">|</span>
-          <span class="made">Made by</span>
-          <a id="linkEerie" class="flink" href="#">EERIE</a>
-          <span class="sep">|</span>
+          <a id="linkEerie" class="flink flink-eerie" href="#">Made by EERIE</a>
           <a id="linkReport" class="flink" href="#">Report Issue</a>
-          <span class="sep">|</span>
           <a id="linkFeedback" class="flink" href="#">Discussions</a>
-          <span class="sep">|</span>
           <a id="linkFeature" class="flink" href="#">Feature Request</a>
+          <a id="linkPrivacy" class="flink" href="#">Privacy Policy</a>
+          <a id="linkCoffee" class="flink flink-coffee" href="#">&#9749; Support This Project</a>
         </div>
       </footer>
+    </div>
 
-      <div class="menu-panel" id="menuPanel" hidden>
-        <label class="menu-row">
-          <input type="checkbox" class="tick" id="chkProgress" />
-          <span>Show overall progress</span>
-        </label>
-        <label class="menu-row">
-          <input type="checkbox" class="tick" id="chkMetrics" />
-          <span>Show storage used</span>
-        </label>
-        <div class="menu-sep"></div>
-        <button class="menu-action" id="btnImport">Import</button>
-        <button class="menu-action" id="btnExport">Export</button>
-        <div class="menu-sep"></div>
-        <button class="menu-action" id="btnClearDone">Clear the finished ones</button>
-        <button class="menu-action danger" id="btnClearAll">Clear everything</button>
+    <!-- Android: one sheet for adding, changing, and the first-run welcome
+         when the list is empty. Filled in by openSheet() in main.js. -->
+    <div class="sheet-scrim" id="sheetScrim" hidden></div>
+    <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <div class="sheet-hero" id="sheetHero">
+        <div class="sheet-hero-mark" aria-hidden="true">
+          <svg width="36" height="36" viewBox="0 0 24 24">
+            <circle cx="5.6" cy="6.2" r="3" fill="currentColor" />
+            <circle cx="18.4" cy="6.2" r="3" fill="currentColor" />
+            <circle cx="12" cy="13.4" r="8" fill="currentColor" />
+            <ellipse cx="12" cy="16.6" rx="3.6" ry="2.8" fill="var(--hero-cut)" />
+            <ellipse cx="12" cy="15.2" rx="1.5" ry="1.1" fill="currentColor" />
+            <circle cx="8.9" cy="11.4" r="1.15" fill="var(--hero-cut)" />
+            <circle cx="15.1" cy="11.4" r="1.15" fill="var(--hero-cut)" />
+          </svg>
+        </div>
+        <h2 class="sheet-hero-title" id="sheetHeroTitle">What do you need to bear in mind?</h2>
+        <p class="sheet-hero-text">Include your first reminder!</p>
+      </div>
+      <h2 class="sheet-title" id="sheetTitle">New reminder</h2>
+      <input
+        id="sheetText"
+        class="field"
+        type="text"
+        maxlength="500"
+        autocomplete="off"
+        spellcheck="false"
+        enterkeyhint="done"
+        placeholder="What do you need to bear in mind?"
+      />
+      <textarea
+        id="sheetDetails"
+        class="field field-area"
+        rows="3"
+        maxlength="2000"
+        spellcheck="false"
+        placeholder="Add details (optional)"
+      ></textarea>
+      <!-- One chip: tap it to pick the time; once set, the cross at its end
+           takes the reminder off. -->
+      <div class="remind-row">
+        <div class="chip" id="sheetRemindChip">
+          <button class="chip-main" id="sheetRemind" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.9"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span id="sheetRemindLabel">Remind me</span>
+          </button>
+          <button class="chip-clear" id="sheetRemindClear" type="button" title="Remove the reminder" aria-label="Remove the reminder" hidden>
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+        <input id="sheetRemindInput" class="remind-input" type="datetime-local" tabindex="-1" aria-hidden="true" />
+      </div>
+      <p class="sheet-note" id="sheetNote" hidden>
+        <span id="sheetNoteText"></span>
+        <button class="sheet-note-link" id="sheetNoteLink" type="button" hidden>Allow exact times</button>
+      </p>
+      <div class="sheet-actions">
+        <button class="sheet-delete" id="sheetDelete" type="button">Delete</button>
+        <button class="sheet-btn" id="sheetCancel" type="button">Cancel</button>
+        <button class="sheet-btn primary" id="sheetSave" type="button">Save</button>
+      </div>
+    </div>
+
+    <!-- Settings. A sheet in the middle of the window on a desktop; on a phone
+         it covers the list. Takes the tap that closes it, so that tap can never
+         also tick something underneath. -->
+    <div class="menu-backdrop" id="menuBackdrop" hidden></div>
+
+    <div class="menu-panel" id="menuPanel" role="dialog" aria-modal="true" aria-labelledby="menuTitle" hidden>
+      <div class="menu-head">
+        <span class="menu-title" id="menuTitle">Settings</span>
+        <button class="menu-close" id="menuClose" type="button" title="Close" aria-label="Close settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M7 7l10 10M17 7L7 17" />
+          </svg>
+        </button>
+      </div>
+      <!-- Android, until the app is bought: the first thing in Settings, a card
+           with the app's mark, where the trial stands, and the Buy button. -->
+      <div class="menu-buy" id="menuBuy" hidden>
+        <div class="menu-buy-top">
+          <div class="menu-buy-mark" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <circle cx="5.6" cy="6.2" r="3" fill="currentColor" />
+              <circle cx="18.4" cy="6.2" r="3" fill="currentColor" />
+              <circle cx="12" cy="13.4" r="8" fill="currentColor" />
+              <ellipse cx="12" cy="16.6" rx="3.6" ry="2.8" fill="var(--accent)" />
+              <ellipse cx="12" cy="15.2" rx="1.5" ry="1.1" fill="currentColor" />
+              <circle cx="8.9" cy="11.4" r="1.15" fill="var(--accent)" />
+              <circle cx="15.1" cy="11.4" r="1.15" fill="var(--accent)" />
+            </svg>
+          </div>
+          <div class="menu-buy-words">
+            <div class="menu-buy-title">Bear in Mind</div>
+            <div class="menu-buy-text" id="menuBuyText"></div>
+          </div>
+        </div>
+        <button class="menu-buy-btn" id="btnBuy" type="button">Buy Bear in Mind</button>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-label">Display</div>
+        <div class="menu-list">
+          <label class="menu-row">
+            <input type="checkbox" class="tick" id="chkProgress" />
+            <span class="menu-row-text">
+              <span class="menu-row-label">Show overall progress</span>
+              <span class="menu-row-desc">The bar at the top that shows how much of your list is done.</span>
+            </span>
+          </label>
+          <label class="menu-row">
+            <input type="checkbox" class="tick" id="chkMetrics" />
+            <span class="menu-row-text">
+              <span class="menu-row-label">Show storage used</span>
+              <span class="menu-row-desc" id="usageDesc">How much space your list takes in this browser, shown at the bottom of the window.</span>
+            </span>
+          </label>
+        </div>
+      </div>
+      <div class="menu-section">
+        <div class="menu-label">Your list</div>
+        <div class="menu-list">
+          <button class="menu-action" id="btnImport" type="button">Import</button>
+          <button class="menu-action" id="btnExport" type="button">Export</button>
+          <button class="menu-action" id="btnClearDone" type="button">Clear Finished Items</button>
+          <button class="menu-action danger" id="btnClearAll" type="button">Clear Everything</button>
+        </div>
+      </div>
+      <!-- The account that keeps the list in step across devices. Drawn by
+           main.js (renderAccount), since it has a screen for every step. -->
+      <div class="menu-section menu-account">
+        <div class="menu-label">Your account</div>
+        <div class="account" id="accountPanel"></div>
+      </div>
+      <div class="menu-section menu-purchase">
+        <div class="menu-label">Purchase</div>
+        <div class="menu-list">
+          <button class="menu-action" id="btnRestore" type="button">Restore Purchases</button>
+        </div>
+      </div>
+      <div class="menu-section menu-support">
+        <div class="menu-label">Support</div>
+        <div class="menu-list">
+          <button class="menu-action link" id="btnReport" type="button">Report Issue</button>
+          <button class="menu-action link" id="btnDiscussions" type="button">Discussions</button>
+          <button class="menu-action link" id="btnFeature" type="button">Feature Request</button>
+          <button class="menu-action link" id="btnPrivacy" type="button">Privacy Policy</button>
+        </div>
+      </div>
+      <!-- Android: the footer's donate link lives here, on its own under
+           Support, in the same yellow. -->
+      <div class="menu-section menu-support menu-coffee">
+        <div class="menu-list">
+          <button class="menu-action link coffee" id="btnCoffee" type="button">Support This Project</button>
+        </div>
+      </div>
+      <!-- Desktop: Done stays at the bottom while the sheet scrolls. -->
+      <div class="menu-actions">
+        <button class="btn btn-accent" id="menuDone" type="button">Done</button>
+      </div>
+    </div>
+
+    <!-- Search. Finds anything on the list by its words or its description;
+         picking one shows it. -->
+    <div class="ovl" id="searchOverlay" hidden>
+      <div class="pane search-pane" id="searchPane" role="dialog" aria-modal="true" aria-labelledby="searchTitle">
+        <div class="pane-handle" aria-hidden="true"></div>
+        <div class="pane-head">
+          <span class="pane-title" id="searchTitle">Search</span>
+          <button class="pane-close" id="searchClose" type="button" title="Close" aria-label="Close search">
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none"
+              stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <path d="M7 7l10 10M17 7L7 17" />
+            </svg>
+          </button>
+        </div>
+        <div class="search-field">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none"
+            stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+            <circle cx="11" cy="11" r="6.5" /><path d="M16 16l4.5 4.5" />
+          </svg>
+          <input
+            id="searchInput"
+            class="search-input"
+            type="text"
+            maxlength="100"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            enterkeyhint="search"
+            placeholder="Search your list"
+            aria-label="Search your list"
+          />
+          <button class="search-clear" id="searchClear" type="button" title="Clear" aria-label="Clear the search" hidden>
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" />
+            </svg>
+          </button>
+        </div>
+        <div class="search-count" id="searchCount" aria-live="polite"></div>
+        <div class="search-results" id="searchResults"></div>
+      </div>
+    </div>
+
+    <!-- A small question over everything else: Delete? Clear? -->
+    <div class="ovl dialog-ovl" id="dialogOverlay" hidden>
+      <div class="pane dialog" id="dialog" role="alertdialog" aria-modal="true" aria-labelledby="dialogTitle" aria-describedby="dialogText">
+        <div class="pane-title dialog-title" id="dialogTitle"></div>
+        <div class="pane-text" id="dialogText"></div>
+        <div class="pane-actions">
+          <button class="btn" id="dialogCancel" type="button">Cancel</button>
+          <button class="btn btn-danger" id="dialogOk" type="button"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Android: the start screen, the ended trial and the purchase offer. One
+         full-screen page, filled in by renderCard() in main.js: what the app
+         gives, then (start screen) how the free trial runs or (ended trial and
+         offer) the one price, and the button pinned at the bottom. -->
+    <div class="license-overlay" id="licenseOverlay" role="dialog" aria-modal="true" aria-labelledby="licTitle" hidden>
+      <div class="lic-scroll">
+        <div class="lic-inner">
+          <!-- The offer only: a cross, top left. The start screen and the
+               ended trial have no way out. -->
+          <div class="lic-bar">
+            <button class="lic-close" id="licClose" type="button" title="Not now" aria-label="Not now">
+              <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+              </svg>
+            </button>
+          </div>
+          <div class="lic-hero" aria-hidden="true">
+            <svg width="46" height="46" viewBox="0 0 24 24">
+              <circle cx="5.6" cy="6.2" r="3" fill="currentColor" />
+              <circle cx="18.4" cy="6.2" r="3" fill="currentColor" />
+              <circle cx="12" cy="13.4" r="8" fill="currentColor" />
+              <ellipse cx="12" cy="16.6" rx="3.6" ry="2.8" fill="var(--hero-cut)" />
+              <ellipse cx="12" cy="15.2" rx="1.5" ry="1.1" fill="currentColor" />
+              <circle cx="8.9" cy="11.4" r="1.15" fill="var(--hero-cut)" />
+              <circle cx="15.1" cy="11.4" r="1.15" fill="var(--hero-cut)" />
+            </svg>
+          </div>
+          <h3 class="license-title" id="licTitle"></h3>
+          <p class="license-text" id="licText"></p>
+
+          <ul class="lic-benefits">
+            <li>Jot down anything you must not forget</li>
+            <li>Reminders at the time you choose</li>
+            <li>Tick things off and watch your progress</li>
+            <li>Your list stays on your phone</li>
+          </ul>
+
+          <!-- The start screen: how the free trial runs. -->
+          <ol class="lic-timeline" id="licTimeline">
+            <li class="now">
+              <strong>Today</strong>
+              <span>Every feature, free.</span>
+            </li>
+            <li>
+              <strong id="licTrialEnd">Day 15</strong>
+              <span>The free trial ends. Nothing is charged.</span>
+            </li>
+            <li>
+              <strong>After that</strong>
+              <span id="licAfter"></span>
+            </li>
+          </ol>
+
+          <!-- The ended trial and the offer: the one price, as a plan. -->
+          <div class="license-price" id="licPrice">
+            <div class="lic-plan-words">
+              <span class="lic-plan-name">Lifetime</span>
+              <span class="lic-plan-note">Pay once. Yours for good.</span>
+            </div>
+            <strong id="licPriceAmount"></strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pinned at the bottom. The message line has its own height, so a
+           message never moves the button. -->
+      <div class="lic-foot">
+        <p class="license-msg" id="licMsg" aria-live="polite"></p>
+        <button class="license-main" id="licMain" type="button"></button>
+        <p class="lic-fine" id="licFine"></p>
+        <button class="license-link" id="licRestore" type="button">Restore Purchases</button>
       </div>
     </div>
 
 
-    <input type="file" id="importFile" accept="application/json,.json" hidden />
+
+
+
 
     <div class="cookie-banner" id="cookieBanner">
       <span>Cookies for traffic analytics. <a href="/privacy/">Learn more</a></span>
