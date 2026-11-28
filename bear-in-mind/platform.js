@@ -10,7 +10,7 @@
 
 (function () {
   // Bumped by hand when this page changes. There is no manifest to read it from.
-  const APP_VERSION = "1.0.3";
+  const APP_VERSION = "1.0.4";
 
   // The same keys the earlier web build used, so a list already saved here is
   // still there after this update.

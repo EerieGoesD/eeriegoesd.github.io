@@ -765,10 +765,22 @@ let syncEmail = "";
 // goes up next time instead of being replaced by the older copy up there.
 let serverStamp = 0;
 let syncDirty = false;
+// Set from signing in until this device's notes are on the account's list.
+// Kept between launches, so a sign-in that could not reach the service still
+// adds them the next time it can.
+let syncMerge = false;
 try {
   serverStamp = Number(localStorage.getItem("bim.syncStamp")) || 0;
   syncDirty = localStorage.getItem("bim.syncDirty") === "1";
+  syncMerge = localStorage.getItem("bim.syncMerge") === "1";
 } catch {}
+
+function setMerge(on) {
+  syncMerge = on;
+  try {
+    localStorage.setItem("bim.syncMerge", on ? "1" : "0");
+  } catch {}
+}
 
 function setStamp(n) {
   serverStamp = n;
@@ -841,16 +853,34 @@ function parseServerList(text) {
   );
 }
 
+// Signing in adds this device's notes to the account's list, in front of it,
+// the way Import does. A note already on the account (the same one, or the
+// same words and description, as after an export and import) is not added
+// twice.
+function mergeLists(server, local) {
+  const ids = new Set(server.map((i) => i.id));
+  const key = (i) => String(i.text || "").trim() + "\u0000" + String(i.details || "").trim();
+  const words = new Set(server.map(key));
+  const extra = local.filter((i) => !ids.has(i.id) && !words.has(key(i)));
+  return extra.concat(server);
+}
+
 // Takes whatever the server has. Changes this device had not sent yet are put
 // aside in a file next to the list first, so nothing is ever thrown away.
-async function takeServerList(text, stamp) {
-  const next = parseServerList(text);
-  if (!next) return false;
-  if (syncDirty) await invoke("park_conflict", { data: JSON.stringify(items) }).catch(() => {});
+// Right after signing in (`merge`), this device's notes are added to it
+// instead, and the combined list goes up.
+async function takeServerList(text, stamp, merge) {
+  const fromServer = parseServerList(text);
+  if (!fromServer) return false;
+  const next = merge ? mergeLists(fromServer, items) : fromServer;
+  if (syncDirty && !merge) {
+    await invoke("park_conflict", { data: JSON.stringify(items) }).catch(() => {});
+  }
   const before = items;
   items = next;
   setStamp(stamp);
   setDirty(false);
+  const added = next.length - fromServer.length;
 
   // Android: alarms for rows that are gone or ticked off on the other device
   // go; every one still to come is set. The same number replaces the same
@@ -872,6 +902,16 @@ async function takeServerList(text, stamp) {
     await invoke("set_notes", { data: JSON.stringify(items), synced: true });
   } catch {}
   scheduleCacheSize();
+
+  // The notes added from this device go up to the account at once.
+  if (merge) {
+    if (added > 0) {
+      setDirty(true);
+      pushList();
+    } else {
+      setMerge(false);
+    }
+  }
   return true;
 }
 
@@ -899,7 +939,12 @@ async function pullList(announce) {
       if (syncDirty) pushList();
       return;
     }
-    if ((await takeServerList(body.data, body.updatedAt)) && announce) {
+    const merge = syncMerge;
+    const before = items.length;
+    if (!(await takeServerList(body.data, body.updatedAt, merge))) return;
+    if (merge && items.length > before) {
+      showNote("Your list now has the notes from your other devices too.");
+    } else if (announce) {
       showNote("Updated from your other device.");
     }
   } catch {
@@ -931,7 +976,10 @@ function pushList() {
       if (code !== syncCode) return;
       if (res.status === 409) {
         const body = await res.json();
-        if (await takeServerList(body.data, body.updatedAt)) {
+        // Still adding this device's notes after signing in: add them to the
+        // newer list too, rather than putting them aside.
+        const merge = syncMerge;
+        if ((await takeServerList(body.data, body.updatedAt, merge)) && !merge) {
           showNote("Your other device had newer changes, so its list was loaded.");
         }
         return;
@@ -939,6 +987,8 @@ function pushList() {
       if (!res.ok) throw new Error(String(res.status));
       const body = await res.json();
       setStamp(body.updatedAt);
+      // This device's notes are on the account now.
+      setMerge(false);
       // Clean only if nothing changed while this was on its way.
       if (JSON.stringify(items) === data) setDirty(false);
     } catch {
@@ -1019,8 +1069,8 @@ function failure(e) {
 }
 
 // Signed in: keep the code and the address, and let the sync take over.
-// Whatever is on this device is put aside before the account's list replaces
-// it, so nothing is lost on the way in.
+// Whatever is on this device is added to the account's list, so nothing is
+// lost on the way in.
 async function startSync(code, address) {
   await invoke("set_sync_code", { code });
   await invoke("set_sync_email", { email: address });
@@ -1028,6 +1078,7 @@ async function startSync(code, address) {
   syncEmail = address;
   setStamp(0);
   setDirty(items.length > 0);
+  setMerge(items.length > 0);
   pullList(false);
 }
 
@@ -1181,6 +1232,7 @@ async function forgetAccount() {
   syncEmail = "";
   setStamp(0);
   setDirty(false);
+  setMerge(false);
 }
 
 // Leaves the account alone and stops this device keeping in step with it.
